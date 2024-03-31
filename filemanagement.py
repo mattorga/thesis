@@ -10,6 +10,9 @@ import sys
 import toml
 import shutil
 
+#Add a separate class here for the OpenPose tab
+# class OpenPose(QWidget):
+
 class DataProcessor(QWidget):
     def __init__(self):
         super(DataProcessor, self).__init__()
@@ -31,9 +34,11 @@ class DataProcessor(QWidget):
         if self.process_button.isChecked():
             print("Cloud Computing Mode is used")
             QMessageBox.information(self, "Cloud Computing", "Cloud Computing Mode is used")
+            #Add code here that uses cloud computing in the edit config popup window
         else:
             print("Local Computing Mode is used")
             QMessageBox.information(self, "Local Computing", "Local Computing Mode is used")
+            #Add code here that uses local computing in the edit config popup window
 
 class ConfigEditor(QDialog):
     def __init__(self, file_path=''):
@@ -47,21 +52,21 @@ class ConfigEditor(QDialog):
         layout = QVBoxLayout()
         self.tabs = QTabWidget()
         project_tab = QWidget()
-        processing_tab = DataProcessor()  # Integration from Code 2
-        opensim_tab = QWidget()
+        processing_tab = DataProcessor()  
+        opensim_tab = QWidget() #Modify this to Opensim Class
         self.tabs.addTab(project_tab, "Project")
-        self.tabs.addTab(processing_tab, "Processing")  # Updated from Code 2
+        self.tabs.addTab(processing_tab, "Processing")  
         self.tabs.addTab(opensim_tab, "OpenSim")
 
-        # Project Tab Layout from Code 1
+       #Lines 60-73 may be modified to add functions for reading data from a toml file
         project_layout = QGridLayout()
         project_tab.setLayout(project_layout)
         frame_rate_label = QLabel('Frame rate:')
-        self.frame_rate_display = QLabel('')  # Placeholder for frame rate value
+        self.frame_rate_display = QLabel('')  # Placeholder for frame rate value, add function here that displays these depending on the inputted toml file
         project_layout.addWidget(frame_rate_label, 0, 0)
         project_layout.addWidget(self.frame_rate_display, 0, 1)
         frame_range_label = QLabel('Frame range:')
-        self.frame_range_display = QLabel('')  # Placeholder for frame range value
+        self.frame_range_display = QLabel('')  # Placeholder for frame range value, add function here that displays these depending on the inputted toml file
         project_layout.addWidget(frame_range_label, 1, 0)
         project_layout.addWidget(self.frame_range_display, 1, 1)
         self.info_button = QPushButton('i', self)
@@ -86,7 +91,7 @@ class ConfigEditor(QDialog):
         self.setLayout(layout)
 
     def eventFilter(self, source, event):
-        # Event filter logic from Code 1
+        # Event filter 
         if event.type() == QEvent.Enter and source is self.info_button:
             if self.tabs.currentIndex() == 0:
                 QToolTip.showText(event.globalPos(), source.toolTip())
@@ -95,7 +100,7 @@ class ConfigEditor(QDialog):
         return super().eventFilter(source, event)
 
     def saveConfig(self):
-        # Save configuration logic from Code 1
+        # Save configuration 
         options = QFileDialog.Options()
         fileName, _ = QFileDialog.getSaveFileName(self,
                                                   "Save Configuration",
@@ -114,7 +119,7 @@ class ConfigEditor(QDialog):
                 QMessageBox.warning(self, "Save Error", f"An error occurred while saving the file: {e}")
 
     def loadConfig(self):
-        # Load configuration logic from Code 1
+        # Load configuration 
         if os.path.exists(self.file_path):
             try:
                 config = toml.load(self.file_path)
@@ -139,7 +144,7 @@ class FileManager(QWidget):
 
         self.fileList = QListWidget()
         self.browseButton = QPushButton('Browse Folder')
-        self.openButton = QPushButton('Open')  # The new "Open" button
+        self.openButton = QPushButton('Open')  # The "Open" button
         self.createFolderButton = QPushButton('Create New Folder')
         self.deleteButton = QPushButton('Delete Selected')
 
