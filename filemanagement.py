@@ -1,10 +1,8 @@
 from PyQt5.QtWidgets import (
-    QApplication, QDialog, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, 
-    QListWidget, QListWidgetItem, QFileDialog, QMessageBox, QTabWidget, QToolTip, QPushButton,
-    QLabel, QGridLayout
+    QApplication, QDialog, QWidget, QVBoxLayout, QPushButton, QListWidget,
+    QListWidgetItem, QFileDialog, QMessageBox, QTabWidget, QToolTip, QLabel,
+    QGridLayout, QMainWindow, QRadioButton,QHBoxLayout
 )
-
-
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt, QEvent
 import os
@@ -12,6 +10,30 @@ import sys
 import toml
 import shutil
 
+class DataProcessor(QWidget):
+    def __init__(self):
+        super(DataProcessor, self).__init__()
+        self.initUI()
+
+    def initUI(self):
+        self.setGeometry(100, 100, 400, 200)
+        self.layout = QVBoxLayout(self)
+        self.local_mode_radio = QRadioButton("Local Computing", self)
+        self.cloud_mode_radio = QRadioButton("Cloud Computing", self)
+        self.local_mode_radio.setChecked(True)
+        self.layout.addWidget(self.local_mode_radio)
+        self.layout.addWidget(self.cloud_mode_radio)
+        self.process_button = QPushButton('Save Settings', self)
+        self.process_button.clicked.connect(self.process_data)
+        self.layout.addWidget(self.process_button)
+        self.process_button.setFixedSize(120, 40) 
+    def process_data(self):
+        if self.process_button.isChecked():
+            print("Cloud Computing Mode is used")
+            QMessageBox.information(self, "Cloud Computing", "Cloud Computing Mode is used")
+        else:
+            print("Local Computing Mode is used")
+            QMessageBox.information(self, "Local Computing", "Local Computing Mode is used")
 
 class ConfigEditor(QDialog):
     def __init__(self, file_path=''):
@@ -22,38 +44,28 @@ class ConfigEditor(QDialog):
     def initUI(self):
         self.setWindowTitle('Configuration Editor for Markerless Gait Analysis')
         self.setGeometry(300, 300, 600, 300)
-        
-        layout = QVBoxLayout()  # Create the QVBoxLayout object
-
-        # Tabs
-        self.tabs = QTabWidget()  # Changed to instance attribute to access in eventFilter
+        layout = QVBoxLayout()
+        self.tabs = QTabWidget()
         project_tab = QWidget()
-        processing_tab = QWidget()
+        processing_tab = DataProcessor()  # Integration from Code 2
         opensim_tab = QWidget()
-
         self.tabs.addTab(project_tab, "Project")
-        self.tabs.addTab(processing_tab, "Processing")
+        self.tabs.addTab(processing_tab, "Processing")  # Updated from Code 2
         self.tabs.addTab(opensim_tab, "OpenSim")
 
-        # Project Tab Layout
+        # Project Tab Layout from Code 1
         project_layout = QGridLayout()
         project_tab.setLayout(project_layout)
-
-        # Frame rate display (not an input)
         frame_rate_label = QLabel('Frame rate:')
         self.frame_rate_display = QLabel('')  # Placeholder for frame rate value
         project_layout.addWidget(frame_rate_label, 0, 0)
         project_layout.addWidget(self.frame_rate_display, 0, 1)
-
-        # Frame range display (not an input)
         frame_range_label = QLabel('Frame range:')
         self.frame_range_display = QLabel('')  # Placeholder for frame range value
         project_layout.addWidget(frame_range_label, 1, 0)
         project_layout.addWidget(self.frame_range_display, 1, 1)
-
-        # Create info_button as a small circular button
         self.info_button = QPushButton('i', self)
-        self.info_button.setToolTip('Set n to limit processing frames') ###Modify this when other codes are integrated
+        self.info_button.setToolTip('Set n to limit processing frames')
         self.info_button.setFixedSize(15, 15)  # Set fixed size for a small circle
         self.info_button.setStyleSheet(
             "QPushButton {"
@@ -64,29 +76,26 @@ class ConfigEditor(QDialog):
         )
         self.info_button.setMouseTracking(True)
         self.info_button.installEventFilter(self)
-        
-        # Position the button horizontally opposite the frame range display
         project_layout.addWidget(self.info_button, 1, 2, alignment=Qt.AlignRight)
 
-        # Save button
+        # Save button setup from Code 1
         self.save_button = QPushButton('Save')
         self.save_button.clicked.connect(self.saveConfig)
-
         layout.addWidget(self.tabs)
         layout.addWidget(self.save_button)
-
-        self.setLayout(layout)  # Apply the layout to the ConfigEditor dialog
+        self.setLayout(layout)
 
     def eventFilter(self, source, event):
+        # Event filter logic from Code 1
         if event.type() == QEvent.Enter and source is self.info_button:
-            if self.tabs.currentIndex() == 0:  # Check if the current tab is "Project"
+            if self.tabs.currentIndex() == 0:
                 QToolTip.showText(event.globalPos(), source.toolTip())
         elif event.type() == QEvent.Leave and source is self.info_button:
             QToolTip.hideText()
         return super().eventFilter(source, event)
 
     def saveConfig(self):
-        # Open file dialog to choose where to save the file
+        # Save configuration logic from Code 1
         options = QFileDialog.Options()
         fileName, _ = QFileDialog.getSaveFileName(self,
                                                   "Save Configuration",
@@ -100,10 +109,12 @@ class ConfigEditor(QDialog):
                 with open(fileName, 'w') as file:
                     toml.dump(config, file)
                 QMessageBox.information(self, "Success", "File saved successfully.")
-                self.accept()  # Close the dialog
+                self.accept()
             except Exception as e:
                 QMessageBox.warning(self, "Save Error", f"An error occurred while saving the file: {e}")
+
     def loadConfig(self):
+        # Load configuration logic from Code 1
         if os.path.exists(self.file_path):
             try:
                 config = toml.load(self.file_path)
@@ -217,6 +228,7 @@ class FileManager(QWidget):
         elif item.text().lower().endswith('.toml'):
             self.openSelectedTOML()
 
+# Main application code
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = FileManager()
