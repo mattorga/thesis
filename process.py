@@ -52,6 +52,10 @@ class ConverterCalculatorApp(QWidget):
         self.setLayout(self.layout)
         self.setWindowTitle('Convert or Calculate')
         self.show()
+
+        self.method_dropdown = QComboBox()
+        self.model_dropdown = QComboBox()
+        self.initializeMethodDropdown()
 #-------------------------CONVERT--------------------------
     def createConvertOptions(self):
         # Group box for conversion settings
@@ -224,7 +228,53 @@ class ConverterCalculatorApp(QWidget):
 
         self.calculation_window_layout.addWidget(self.extra_settings_stack)
 
-    
+    #-----------------------------------POSE FRAMEWORK----------------------------------------------------------
+
+    # Function to initialize the method dropdown and connect its signal
+    def initializeMethodDropdown(self):
+         # Create labels for the dropdowns
+        self.pose_framework_label = QLabel("Pose Framework:")
+        self.pose_model_label = QLabel("Pose Model:")
+
+        # Initialize the method dropdown and add items
+        self.method_dropdown = QComboBox()
+        self.method_dropdown.addItem("Select")
+        self.method_dropdown.addItems(["OpenPose", "MediaPipe", "AlphaPose", "DeepLabCut"])
+        self.method_dropdown.currentIndexChanged.connect(self.methodDropdownChanged)
+
+        # Initialize the model dropdown and add the placeholder item
+        self.model_dropdown = QComboBox()
+        self.model_dropdown.addItem("Select")
+
+        # Create the overwrite pose toggle
+        self.overwrite_pose = QCheckBox("Overwrite Pose")
+
+        # Add the labels and dropdowns to the layout
+        self.calculation_window_layout.addWidget(self.pose_framework_label)
+        self.calculation_window_layout.addWidget(self.method_dropdown)
+        self.calculation_window_layout.addWidget(self.pose_model_label)
+        self.calculation_window_layout.addWidget(self.model_dropdown)
+        # Add the overwrite pose toggle to the layout
+        self.calculation_window_layout.addWidget(self.overwrite_pose)
+
+    # Handler for method dropdown changes to update the model dropdown
+    def methodDropdownChanged(self, index):
+        # Clear and populate the model dropdown based on the selected method
+        self.model_dropdown.clear()
+        self.model_dropdown.addItem("Select")  # Placeholder option
+        method = self.method_dropdown.currentText()
+
+        if method == "OpenPose":
+            self.model_dropdown.addItems(["BODY_25B", "BODY_25", "BODY_135", "COCO", "MPII"])
+        elif method == "MediaPipe":
+            self.model_dropdown.addItems(["BlazePose"])
+        elif method == "AlphaPose":
+            self.model_dropdown.addItems(["HALPE_26", "HALPE_68", "HALPE_136", "COCO_133"])
+        elif method == "DeepLabCut":
+            self.model_dropdown.addItems(["CUSTOM"])
+
+
+
     #-----------------------------------HANDLER FUNCTIONS----------------------------------------------------------------
 
     def extrinsicsMethodChanged(self, index):
@@ -401,12 +451,6 @@ class ConverterCalculatorApp(QWidget):
         else:  # for "Select" or any other option, hide both
             self.convert_layout_widget.hide()
             self.calculation_scroll_area.hide()
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    ex = ConverterCalculatorApp()
-    sys.exit(app.exec_())
-
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
