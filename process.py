@@ -1,7 +1,7 @@
 import sys
 from PyQt5.QtWidgets import (QApplication, QWidget, QVBoxLayout, QComboBox, QHBoxLayout,
                              QRadioButton, QLabel, QLineEdit, QGroupBox, QScrollArea, QFrame, QCheckBox, QDoubleSpinBox,
-                              QLabel, QButtonGroup, QStackedWidget,QTableWidget) 
+                              QLabel, QButtonGroup, QStackedWidget,QTableWidget,QSpinBox) 
 from PyQt5.QtGui import QFont
 from PyQt5.QtCore import pyqtSlot
 class ConverterCalculatorApp(QWidget):
@@ -10,7 +10,7 @@ class ConverterCalculatorApp(QWidget):
         self.initUI()
 
     def initUI(self):
-        # Main layout
+        # Main layout, note that order of arguments matters here
         self.layout = QVBoxLayout()
 
         # Dropdown for selecting mode with a default "Select" option
@@ -38,6 +38,9 @@ class ConverterCalculatorApp(QWidget):
         self.calculation_scroll_area.setWidgetResizable(True)
         self.layout.addWidget(self.calculation_scroll_area, 2)
         self.createCalculationOptions()
+        
+        
+
 
         self.extrinsics_method_group = QButtonGroup(self)
         self.extrinsics_method_group.setExclusive(False)
@@ -56,6 +59,9 @@ class ConverterCalculatorApp(QWidget):
         self.method_dropdown = QComboBox()
         self.model_dropdown = QComboBox()
         self.initializeMethodDropdown()
+        self.createSynchronizationUI()
+        self.createTriangulationUI()
+        
 #-------------------------CONVERT--------------------------
     def createConvertOptions(self):
         # Group box for conversion settings
@@ -274,6 +280,169 @@ class ConverterCalculatorApp(QWidget):
             self.model_dropdown.addItems(["CUSTOM"])
 
 
+    #-----------------------------------SYNCHRONIZATION, FIX INPUT FIELD SIZES----------------------------------------------------------------
+
+
+    def createSynchronizationUI(self):
+    # Header for synchronization
+        self.synchronization_header = QLabel("Synchronization")
+        self.synchronization_header.setFont(QFont("Arial", 12))
+        self.frames_input1 = QDoubleSpinBox()
+        self.frames_input2 = QDoubleSpinBox()
+        self.cut_off_frequency_input = QDoubleSpinBox()
+        self.setupSpinBox(self.frames_input1)
+        self.setupSpinBox(self.frames_input2)
+        self.setupSpinBox(self.cut_off_frequency_input)
+
+        # Create the synchronization UI elements
+        self.reset_sync = QCheckBox("Reset Sync")
+        
+        self.frames_label = QLabel("Frames:")
+        #####
+
+        self.frames_input1 = QDoubleSpinBox()
+        self.frames_input2 = QDoubleSpinBox()
+
+        self.cut_off_frequency_label = QLabel("Cut Off Frequency:")
+        self.cut_off_frequency_input = QDoubleSpinBox()
+
+        self.speed_kind_label = QLabel("Speed Kind:")
+        self.speed_kind_dropdown = QComboBox()
+        self.speed_kind_dropdown.addItems(["Select", "x", "y", "z", "2D"])
+
+        self.vmax_label = QLabel("Vmax:")
+        self.vmax_input = QDoubleSpinBox()
+
+        self.cam1_nb_label = QLabel("Cam1 Nb:")
+        self.cam1_nb_input = QDoubleSpinBox()
+
+        self.cam2_nb_label = QLabel("Cam2 Nb:")
+        self.cam2_nb_input = QDoubleSpinBox()
+
+        self.id_kpt_label = QLabel("ID Kpt:")
+        self.id_kpt_input1 = QDoubleSpinBox()
+        self.id_kpt_input2 = QDoubleSpinBox()
+
+        self.weights_kpt_label = QLabel("Weights Kpt:")
+        self.weights_kpt_input1 = QDoubleSpinBox()
+        self.weights_kpt_input2 = QDoubleSpinBox()
+
+        # Add the synchronization UI elements to the layout
+        self.calculation_window_layout.addWidget(self.synchronization_header)
+        self.calculation_window_layout.addWidget(self.reset_sync)
+        self.calculation_window_layout.addWidget(self.frames_label)
+        self.calculation_window_layout.addWidget(self.frames_input1)
+        self.calculation_window_layout.addWidget(self.frames_input2)
+        self.calculation_window_layout.addWidget(self.cut_off_frequency_label)
+        self.calculation_window_layout.addWidget(self.cut_off_frequency_input)
+        self.calculation_window_layout.addWidget(self.speed_kind_label)
+        self.calculation_window_layout.addWidget(self.speed_kind_dropdown)
+        self.calculation_window_layout.addWidget(self.vmax_label)
+        self.calculation_window_layout.addWidget(self.vmax_input)
+        self.calculation_window_layout.addWidget(self.cam1_nb_label)
+        self.calculation_window_layout.addWidget(self.cam1_nb_input)
+        self.calculation_window_layout.addWidget(self.cam2_nb_label)
+        self.calculation_window_layout.addWidget(self.cam2_nb_input)
+        self.calculation_window_layout.addWidget(self.id_kpt_label)
+        self.calculation_window_layout.addWidget(self.id_kpt_input1)
+        self.calculation_window_layout.addWidget(self.id_kpt_input2)
+        self.calculation_window_layout.addWidget(self.weights_kpt_label)
+        self.calculation_window_layout.addWidget(self.weights_kpt_input1)
+        self.calculation_window_layout.addWidget(self.weights_kpt_input2)
+    
+    #-----------------------------------PERSON ASSOCIATION --------------------------------
+
+        self.person_association_header = QLabel("Person Association")
+        self.person_association_header.setFont(QFont("Arial", 12))
+
+        # Toggle for 'Single Person', toggled by default
+        self.single_person_toggle = QCheckBox("Single Person")
+        self.single_person_toggle.setChecked(True)
+
+        # Dropdown list for 'Tracked Keypoint'
+        self.tracked_keypoint_label = QLabel("Tracked Keypoint:")
+        self.tracked_keypoint_dropdown = QComboBox()
+        self.tracked_keypoint_dropdown.addItem("Neck")  # Assuming only one option is needed as specified
+
+        # Input for 'Reprojection Error Threshold Association'
+        self.reproj_error_threshold_association_label = QLabel("Reproj Error Threshold Association:")
+        self.reproj_error_threshold_association_input = QDoubleSpinBox()
+        self.setupSpinBox(self.reproj_error_threshold_association_input)
+
+        # Input for 'Likelihood Threshold Association'
+        self.likelihood_threshold_association_label = QLabel("Likelihood Threshold Association:")
+        self.likelihood_threshold_association_input = QDoubleSpinBox()
+        self.likelihood_threshold_association_input.setSingleStep(0.1)
+        self.setupSpinBox(self.likelihood_threshold_association_input)
+
+        # Add the 'Person Association' UI elements to the layout
+        self.calculation_window_layout.addWidget(self.person_association_header)
+        self.calculation_window_layout.addWidget(self.single_person_toggle)
+        self.calculation_window_layout.addWidget(self.tracked_keypoint_label)
+        self.calculation_window_layout.addWidget(self.tracked_keypoint_dropdown)
+        self.calculation_window_layout.addWidget(self.reproj_error_threshold_association_label)
+        self.calculation_window_layout.addWidget(self.reproj_error_threshold_association_input)
+        self.calculation_window_layout.addWidget(self.likelihood_threshold_association_label)
+        self.calculation_window_layout.addWidget(self.likelihood_threshold_association_input)
+
+    #-----------------------------------TRIANGULATION-----------------------------------
+
+    def createTriangulationUI(self):
+        # Header for triangulation
+        self.triangulation_header = QLabel("Triangulation")
+        self.triangulation_header.setFont(QFont("Arial", 12))
+
+        # Labels and input fields for triangulation settings
+        self.reproj_error_threshold_triangulation_label = QLabel("Reprojection Error Threshold Triangulation:")
+        self.reproj_error_threshold_triangulation_input = QDoubleSpinBox()
+        
+        self.likelihood_threshold_triangulation_label = QLabel("Likelihood Threshold Triangulation:")
+        self.likelihood_threshold_triangulation_input = QDoubleSpinBox()
+        
+        self.min_cameras_for_triangulation_label = QLabel("Minimum Cameras for triangulation:")
+        self.min_cameras_for_triangulation_input = QSpinBox()
+        
+        self.interpolation_type_label = QLabel("Interpolation Type:")
+        self.interpolation_dropdown = QComboBox()
+        
+        self.interp_if_gap_smaller_than_label = QLabel("Interpolate if Gap is Smaller Than:")
+        self.interp_if_gap_smaller_than_input = QDoubleSpinBox()
+        
+        self.show_interp_indices_toggle = QCheckBox("Show Interp Indices")
+        self.handle_LR_swap_toggle = QCheckBox("Handle L/R Swap")
+        self.undistort_points_toggle = QCheckBox("Undistort Points")
+        self.make_c3d_toggle = QCheckBox("Make C3D")
+
+        # Set default values and configurations for the widgets
+        self.setupSpinBox(self.reproj_error_threshold_triangulation_input)
+        self.setupSpinBox(self.likelihood_threshold_triangulation_input)
+        self.setupSpinBox(self.interp_if_gap_smaller_than_input)
+        self.min_cameras_for_triangulation_input.setRange(0, 100)  # Update this as needed
+        self.show_interp_indices_toggle.setChecked(True)  # Checked by default
+
+        # Setup the interpolation dropdown
+        self.interpolation_dropdown.addItems(["Select", "linear", "slinear", "quadratic", "cubic", "none"])
+
+        # Add the triangulation UI elements to the layout with labels
+        self.calculation_window_layout.addWidget(self.triangulation_header)
+        self.calculation_window_layout.addWidget(self.reproj_error_threshold_triangulation_label)
+        self.calculation_window_layout.addWidget(self.reproj_error_threshold_triangulation_input)
+        self.calculation_window_layout.addWidget(self.likelihood_threshold_triangulation_label)
+        self.calculation_window_layout.addWidget(self.likelihood_threshold_triangulation_input)
+        self.calculation_window_layout.addWidget(self.min_cameras_for_triangulation_label)
+        self.calculation_window_layout.addWidget(self.min_cameras_for_triangulation_input)
+        self.calculation_window_layout.addWidget(self.interpolation_type_label)
+        self.calculation_window_layout.addWidget(self.interpolation_dropdown)
+        self.calculation_window_layout.addWidget(self.interp_if_gap_smaller_than_label)
+        self.calculation_window_layout.addWidget(self.interp_if_gap_smaller_than_input)
+        self.calculation_window_layout.addWidget(self.show_interp_indices_toggle)
+        self.calculation_window_layout.addWidget(self.handle_LR_swap_toggle)
+        self.calculation_window_layout.addWidget(self.undistort_points_toggle)
+        self.calculation_window_layout.addWidget(self.make_c3d_toggle)
+
+
+
+
 
     #-----------------------------------HANDLER FUNCTIONS----------------------------------------------------------------
 
@@ -384,10 +553,20 @@ class ConverterCalculatorApp(QWidget):
                 spin_box.setDecimals(2)
                 self.object_coordinates_table.setCellWidget(i, j, spin_box)
 
+    def setupSpinBox(self, spin_box):
+        spin_box.setFixedWidth(100)  # Set the maximum width to match the existing UI
+        spin_box.setDecimals(2)
+        spin_box.setRange(0.00, 500.00) 
     def setupDoubleSpinBox(self, spin_box):
         spin_box.setMaximumWidth(100)
         spin_box.setDecimals(2)
         spin_box.setRange(0, 10000)  # Set an appropriate range
+
+    def setupIntSpinBox(self, spin_box):
+        spin_box.setFixedWidth(100)
+        spin_box.setRange(0, 500) 
+
+   
 
     @pyqtSlot(bool)
     def on_board_toggled(self, checked):
