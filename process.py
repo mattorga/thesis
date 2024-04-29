@@ -61,6 +61,13 @@ class ConverterCalculatorApp(QWidget):
         self.initializeMethodDropdown()
         self.createSynchronizationUI()
         self.createTriangulationUI()
+        self.createFilteringUI()
+        self.createButterworthLayout()
+        self.createKalmanLayout()
+        self.createGaussianLayout()
+        self.createLoessLayout()
+        self.createMedianLayout()
+
         
 #-------------------------CONVERT--------------------------
     def createConvertOptions(self):
@@ -164,9 +171,7 @@ class ConverterCalculatorApp(QWidget):
         self.calculate_extrinsics_toggle = QCheckBox("Calculate Extrinsics")
         self.calculation_window_layout.addWidget(self.calculate_extrinsics_toggle)
 
-        self.calibrate_extrinsics_header = QLabel("Calibrate Extrinsics")
-        self.calibrate_extrinsics_header.setFont(header_font)  # Use the same font as for 'Calculate Intrinsics'
-        self.calculation_window_layout.addWidget(self.calibrate_extrinsics_header)
+       
 
         # Dropdown for 'Extrinsics Method'
         self.extrinsics_method_dropdown = QComboBox()
@@ -262,6 +267,8 @@ class ConverterCalculatorApp(QWidget):
         self.calculation_window_layout.addWidget(self.model_dropdown)
         # Add the overwrite pose toggle to the layout
         self.calculation_window_layout.addWidget(self.overwrite_pose)
+        self.method_dropdown.currentIndexChanged.connect(self.poseOptionsChanged)
+        self.model_dropdown.currentIndexChanged.connect(self.poseOptionsChanged)
 
     # Handler for method dropdown changes to update the model dropdown
     def methodDropdownChanged(self, index):
@@ -441,8 +448,178 @@ class ConverterCalculatorApp(QWidget):
         self.calculation_window_layout.addWidget(self.make_c3d_toggle)
 
 
+    #-----------------------------------FILTERING------------------------------------------------------
+
+    def createFilteringUI(self):
+        # Header for filtering
+        self.filtering_header = QLabel("Filtering")
+        self.filtering_header.setFont(QFont("Arial", 12))
+        self.calculation_window_layout.addWidget(self.filtering_header)
+
+        self.filtering_type_dropdown = QComboBox()
+        self.filtering_type_dropdown.addItem("Select") 
+        self.filtering_type_dropdown.addItems([
+            "butterworth", "kalman", "gaussian", "LOESS", "median", "butterworth_on_speed"
+        ])
+        
+        # Connect the dropdown selection change to the handler function
+        self.filtering_type_dropdown.currentIndexChanged.connect(self.onFilteringTypeChanged)
+        self.calculation_window_layout.addWidget(self.filtering_type_dropdown)
+        
+        # Create a stacked widget to hold the different settings for each filtering type
+        self.filtering_settings_stack = QStackedWidget()
+        self.filtering_settings_stack.addWidget(QWidget())
+        
+
+        # Layouts for each filtering type
+        self.filtering_settings_stack.addWidget(self.createButterworthLayout())  # Index 0
+        self.filtering_settings_stack.addWidget(self.createKalmanLayout())      # Index 1
+        self.filtering_settings_stack.addWidget(self.createGaussianLayout())    # Index 2
+        self.filtering_settings_stack.addWidget(self.createLoessLayout())       # Index 3
+        self.filtering_settings_stack.addWidget(self.createMedianLayout())      # Index 4
+        self.filtering_settings_stack.addWidget(self.createButterworthLayout()) # Index 5 for butterworth_on_speed
+        
+        # Add the 'Display Figures' toggle
+        self.display_figures_label = QLabel("Display Figures:")
+        self.display_figures_toggle = QCheckBox()
+        self.display_figures_toggle.setChecked(True)  # Checked by default
+
+        # Create a layout for the 'Display Figures' toggle
+        self.display_figures_layout = QHBoxLayout()
+        self.display_figures_layout.addWidget(self.display_figures_label)
+        self.display_figures_layout.addWidget(self.display_figures_toggle)
+        self.display_figures_layout.addStretch()  # Add stretch to push everything to the left
+
+        # Add the 'Display Figures' layout to the main layout below the stacked widget
+        self.calculation_window_layout.addLayout(self.display_figures_layout)
+
+        self.calculation_window_layout.addWidget(self.filtering_settings_stack)
 
 
+    #-----------------------------------FILTERING OPTIONS------------------------------------------------------
+
+    @pyqtSlot(int)
+    def onFilteringTypeChanged(self, index):
+        # Switch to the corresponding UI elements based on the selected filtering type
+        self.filtering_settings_stack.setCurrentIndex(index)
+
+    def createButterworthLayout(self):
+        layout = QWidget()
+        layout_hbox = QHBoxLayout(layout)
+        order_label = QLabel("Order:")
+        order_input = QSpinBox()
+        order_input.setRange(1, 10)  # Example range, adjust as needed
+        cut_off_frequency_label = QLabel("Cut off Frequency:")
+        cut_off_frequency_input = QDoubleSpinBox()
+        cut_off_frequency_input.setRange(0.01, 1000.00)  # Example range, adjust as needed
+        layout_hbox.addWidget(order_label)
+        layout_hbox.addWidget(order_input)
+        layout_hbox.addWidget(cut_off_frequency_label)
+        layout_hbox.addWidget(cut_off_frequency_input)
+        return layout
+
+    def createKalmanLayout(self):
+        layout = QWidget()
+        layout_hbox = QHBoxLayout(layout)
+        trust_ratio_label = QLabel("Trust Ratio:")
+        trust_ratio_input = QDoubleSpinBox()
+        trust_ratio_input.setRange(0.00, 1000.00)  # Example range, adjust as needed
+        smooth_label = QLabel("Smooth:")
+        smooth_toggle = QCheckBox()
+        smooth_toggle.setChecked(True)  # Checked by default
+        layout_hbox.addWidget(trust_ratio_label)
+        layout_hbox.addWidget(trust_ratio_input)
+        layout_hbox.addWidget(smooth_label)
+        layout_hbox.addWidget(smooth_toggle)
+        return layout
+
+    def createGaussianLayout(self):
+        layout = QWidget()
+        layout_hbox = QHBoxLayout(layout)
+        sigma_kernel_label = QLabel("Sigma Kernel:")
+        sigma_kernel_input = QDoubleSpinBox()
+        sigma_kernel_input.setRange(0.01, 100.00)  # Example range, adjust as needed
+        layout_hbox.addWidget(sigma_kernel_label)
+        layout_hbox.addWidget(sigma_kernel_input)
+        return layout
+
+    def createLoessLayout(self):
+        layout = QWidget()
+        layout_hbox = QHBoxLayout(layout)
+        nb_values_used_label = QLabel("Nb Values Used:")
+        nb_values_used_input = QSpinBox()
+        nb_values_used_input.setRange(1, 1000)  # Example range, adjust as needed
+        layout_hbox.addWidget(nb_values_used_label)
+        layout_hbox.addWidget(nb_values_used_input)
+        return layout
+
+    def createMedianLayout(self):
+        layout = QWidget()
+        layout_hbox = QHBoxLayout(layout)
+        kernel_size_label = QLabel("Kernel Size:")
+        kernel_size_input = QSpinBox()
+        kernel_size_input.setRange(1, 100)  # Example range, adjust as needed
+        layout_hbox.addWidget(kernel_size_label)
+        layout_hbox.addWidget(kernel_size_input)
+        return layout
+    
+
+
+
+
+
+
+
+
+
+    #-----------------------------------MARKER AUGMENTATION-----------------------------
+
+
+    def createMarkerAugmentationUI(self):
+        # Create 'Marker Augmentation' header
+        self.marker_augmentation_header = QLabel("Marker Augmentation")
+        self.marker_augmentation_header.setFont(QFont("Arial", 12))
+
+        # Participant height input
+        self.participant_height_label = QLabel("Participant height (m):")
+        self.participant_height_input = QDoubleSpinBox()
+        self.participant_height_input.setRange(0.00, 3.00)  # Example range, adjust as needed
+
+        # Participant mass input
+        self.participant_mass_label = QLabel("Participant Mass (kg):")
+        self.participant_mass_input = QDoubleSpinBox()
+        self.participant_mass_input.setRange(0.00, 300.00)  # Example range, adjust as needed
+
+        # Layout for Marker Augmentation section
+        self.marker_augmentation_layout = QVBoxLayout()
+        self.marker_augmentation_layout.addWidget(self.marker_augmentation_header)
+        self.marker_augmentation_layout.addWidget(self.participant_height_label)
+        self.marker_augmentation_layout.addWidget(self.participant_height_input)
+        self.marker_augmentation_layout.addWidget(self.participant_mass_label)
+        self.marker_augmentation_layout.addWidget(self.participant_mass_input)
+
+        return self.marker_augmentation_layout
+
+    def poseOptionsChanged(self):
+        # Check conditions and display "Marker Augmentation" if met
+        framework = self.method_dropdown.currentText()
+        model = self.model_dropdown.currentText()
+        if framework == "OpenPose" and model in ["BODY_25A", "BODY_25B"]:
+            if not hasattr(self, 'marker_augmentation_layout'):
+                self.marker_augmentation_layout = self.createMarkerAugmentationUI()
+            self.calculation_window_layout.addLayout(self.marker_augmentation_layout)
+        else:
+            # Hide or remove the "Marker Augmentation" section
+            if hasattr(self, 'marker_augmentation_layout'):
+                self.clearLayout(self.marker_augmentation_layout)
+
+    def clearLayout(self, layout):
+        if layout is not None:
+            while layout.count():
+                item = layout.takeAt(0)
+                widget = item.widget()
+                if widget is not None:
+                    widget.deleteLater()
 
     #-----------------------------------HANDLER FUNCTIONS----------------------------------------------------------------
 
@@ -635,3 +812,5 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = ConverterCalculatorApp()
     sys.exit(app.exec_())
+
+
