@@ -628,18 +628,37 @@ class ConverterCalculatorApp(QWidget):
 
     #-----------------------------------HANDLER FUNCTIONS----------------------------------------------------------------
 
-    def extrinsicsMethodChanged(self, index):
+    
     # Hide all settings by default
-        self.hideAllExtrinsicsSettings()
-        
-        # Convert index to method name using the dropdown item text
+    def extrinsicsMethodChanged(self, index):
         method = self.extrinsics_method_dropdown.itemText(index)
-        if method in ["Board", "Scene"]:
-            # Show the settings for 'Board' and 'Scene'
-            self.showBoardAndSceneSettings()
-       # else:
-            # Hide the settings for other methods
-          #  self.hideExtrinsicsSettings()
+        self.hideAllExtrinsicsSettings()
+        if method == "Scene":
+            self.showSceneSettings()
+        elif method == "Board":
+            self.showBoardSettings()
+        elif method == "Select":
+        # Hide all specific settings for 'Scene' and 'Board'
+            if hasattr(self, 'show_reprojection_error_toggle'):
+                self.show_reprojection_error_toggle.setVisible(False)
+            if hasattr(self, 'extrinsics_extension_dropdown'):
+                self.extrinsics_extension_dropdown.setVisible(False)
+            if hasattr(self, 'extrinsics_corners_nb_input1'):
+                self.extrinsics_corners_nb_input1.setVisible(False)
+            if hasattr(self, 'extrinsics_corners_nb_input2'):
+                self.extrinsics_corners_nb_input2.setVisible(False)
+            if hasattr(self, 'extrinsics_square_size_input1'):
+                self.extrinsics_square_size_input1.setVisible(False)
+            if hasattr(self, 'extrinsics_square_size_input2'):
+                self.extrinsics_square_size_input2.setVisible(False)
+            if hasattr(self, 'num_rows_input'):
+                self.num_rows_input.setVisible(False)
+            if hasattr(self, 'object_coordinates_table'):
+                self.object_coordinates_table.setVisible(False)
+            
+    # else:
+        # Handle other methods or reset
+
 
     # Function to show extrinsics settings
         
@@ -692,8 +711,8 @@ class ConverterCalculatorApp(QWidget):
 
     # Function to show settings for 'Board' and 'Scene' methods
    
-    def showBoardAndSceneSettings(self):
-    # Show common settings for both 'Board' and 'Scene'
+    def showSceneSettings(self):
+    # Show common settings for 'Scene'
         self.show_reprojection_error_toggle.setVisible(True)
         self.extrinsics_extension_dropdown.setVisible(True)
         # Hide the corners number and square size inputs which are not used for 'Scene'
@@ -702,15 +721,13 @@ class ConverterCalculatorApp(QWidget):
         self.extrinsics_square_size_input1.setVisible(False)
         self.extrinsics_square_size_input2.setVisible(False)
 
-        method = self.extrinsics_method_dropdown.currentText()
-        if method == "Scene":
-            # Ensure the input for number of rows is created and visible
-            if not hasattr(self, 'num_rows_input'):
-                self.num_rows_input = QSpinBox()
-                self.num_rows_input.setMinimum(1)
-                self.num_rows_input.setMaximum(100)
-                self.num_rows_input.valueChanged.connect(self.updateObjectCoordinatesTable)
-                self.num_rows_label = QLabel("Enter number of rows here:")
+        # Ensure the input for number of rows is created and visible
+        if not hasattr(self, 'num_rows_input'):
+            self.num_rows_input = QSpinBox()
+            self.num_rows_input.setMinimum(1)
+            self.num_rows_input.setMaximum(100)
+            self.num_rows_input.valueChanged.connect(self.updateObjectCoordinatesTable)
+            self.num_rows_label = QLabel("Enter number of rows here:")
 
             # Find correct index for inserting below 'Extrinsics Square Size'
             extrinsics_size_index = self.calculation_window_layout.indexOf(self.extrinsics_square_size_layout) + 1
@@ -719,41 +736,37 @@ class ConverterCalculatorApp(QWidget):
             self.calculation_window_layout.insertWidget(extrinsics_size_index + 13, self.num_rows_label)
             self.calculation_window_layout.insertWidget(extrinsics_size_index + 14, self.num_rows_input)
 
-            # Create or update 3D Object Coordinates table
-            if not hasattr(self, 'object_coordinates_table'):
-                self.createObjectCoordinatesTable(self.num_rows_input.value())
+        # Create or update 3D Object Coordinates table
+        if not hasattr(self, 'object_coordinates_table'):
+            self.createObjectCoordinatesTable(self.num_rows_input.value())
 
             self.calculation_window_layout.insertWidget(extrinsics_size_index + 15, self.object_coordinates_table_label)
             self.calculation_window_layout.insertWidget(extrinsics_size_index + 16, self.object_coordinates_table)
             
-            self.object_coordinates_table.setVisible(True)
-            self.num_rows_input.setVisible(True)
+        
+        self.object_coordinates_table.setVisible(True)
+        self.num_rows_input.setVisible(True)
+        # Create or move the 3D Object Coordinates table to be immediately below the number of rows input
+        
 
-        elif method == "Board":
-            # Specific for 'Board': Show corners number and square size inputs
-            self.extrinsics_corners_nb_input1.setVisible(True)
-            self.extrinsics_corners_nb_input2.setVisible(True)
-            self.extrinsics_square_size_input1.setVisible(True)
-            self.extrinsics_square_size_input2.setVisible(True)
-            # Hide the 3D Object Coordinates table and number of rows input if they exist
-            if hasattr(self, 'num_rows_input'):
-                self.num_rows_input.setVisible(False)
-            if hasattr(self, 'object_coordinates_table'):
-                self.object_coordinates_table.setVisible(False)
+    def showBoardSettings(self):
+        # Specific for 'Board': Show corners number and square size inputs
+        self.extrinsics_corners_nb_input1.setVisible(True)
+        self.extrinsics_corners_nb_input2.setVisible(True)
+        self.extrinsics_square_size_input1.setVisible(True)
+        self.extrinsics_square_size_input2.setVisible(True)
+        # Ensure the 3D Object Coordinates table and number of rows input are hidden if they exist
+        if hasattr(self, 'num_rows_input'):
+            self.num_rows_input.setVisible(False)
+        if hasattr(self, 'object_coordinates_table'):
+            self.object_coordinates_table.setVisible(False)
+
+        self.show_reprojection_error_toggle.setVisible(True)
+        self.extrinsics_extension_dropdown.setVisible(True)
 
 
-        elif method == "Board":
-            # Specific for 'Board': Show corners number and square size inputs
-            self.extrinsics_corners_nb_input1.setVisible(True)
-            self.extrinsics_corners_nb_input2.setVisible(True)
-            self.extrinsics_square_size_input1.setVisible(True)
-            self.extrinsics_square_size_input2.setVisible(True)
-            # Ensure the 3D Object Coordinates table and number of rows input are hidden if they exist
-            if hasattr(self, 'num_rows_input'):
-                self.num_rows_input.setVisible(False)
-            if hasattr(self, 'object_coordinates_table'):
-                self.object_coordinates_table.setVisible(False)
 
+       
 
    
      
@@ -886,3 +899,4 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = ConverterCalculatorApp()
     sys.exit(app.exec_())
+
