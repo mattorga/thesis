@@ -1,0 +1,1110 @@
+
+
+---------------------------------------------------------------------
+Camera calibration
+On Saturday 04. May 2024, 10:30:45
+---------------------------------------------------------------------
+
+Calibration directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_Calibration
+Converting C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_Calibration\Calib.qca.txt to .toml calibration file...
+
+--> Residual (RMS) calibration errors for each camera are respectively [0.221, 0.235, 0.171, 0.191] px, 
+which corresponds to [0.402, 0.445, 0.45, 0.505] mm.
+
+Calibration file is stored at C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_Calibration\Calib_qualisys.toml.
+
+Calibration took 0.12 s.
+
+
+---------------------------------------------------------------------
+Camera synchronization
+On Saturday 04. May 2024, 10:30:47
+---------------------------------------------------------------------
+
+Project directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P00_SingleParticipant\S00_P00_T00_StaticTrial
+Resetting synchronization...
+Synchronization reset.
+
+Synchronization took 00h00m00s.
+
+
+---------------------------------------------------------------------
+Associating persons for S00_P00_T00_StaticTrial, for all frames.
+On Saturday 04. May 2024, 10:30:47
+---------------------------------------------------------------------
+
+Project directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P00_SingleParticipant\S00_P00_T00_StaticTrial
+
+Single-person analysis selected.
+
+--> Mean reprojection error for Neck point on all frames is 13.6 px, which roughly corresponds to 24.8 mm. 
+--> In average, 0.0 cameras had to be excluded to reach the demanded 20 px error threshold after excluding points with likelihood below 0.3.
+
+Tracked json files are stored in C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P00_SingleParticipant\S00_P00_T00_StaticTrial\pose-associated.
+
+Associating persons took 00h00m00s.
+
+
+---------------------------------------------------------------------
+Triangulation of 2D points for S00_P00_T00_StaticTrial, for all frames.
+On Saturday 04. May 2024, 10:30:47
+---------------------------------------------------------------------
+
+Project directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P00_SingleParticipant\S00_P00_T00_StaticTrial
+
+Mean reprojection error for RHip is 10.1 px (~ 0.018 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RKnee is 9.5 px (~ 0.017 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RAnkle is 9.9 px (~ 0.018 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RBigToe is 9.5 px (~ 0.017 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RSmallToe is 9.6 px (~ 0.017 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RHeel is 10.2 px (~ 0.019 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LHip is 9.9 px (~ 0.018 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LKnee is 9.5 px (~ 0.017 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LAnkle is 9.9 px (~ 0.018 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LBigToe is 9.5 px (~ 0.017 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LSmallToe is 9.6 px (~ 0.017 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LHeel is 10.2 px (~ 0.019 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for Neck is 13.6 px (~ 0.025 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for Head is 8.0 px (~ 0.015 m), reached with 1.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for Nose is 13.8 px (~ 0.025 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RShoulder is 13.4 px (~ 0.024 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RElbow is 11.7 px (~ 0.021 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RWrist is 11.0 px (~ 0.02 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LShoulder is 12.7 px (~ 0.023 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LElbow is 10.8 px (~ 0.02 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LWrist is 9.9 px (~ 0.018 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+
+--> Mean reprojection error for all points on all frames is 10.6 px, which roughly corresponds to 19.3 mm. 
+Cameras were excluded if likelihood was below 0.3 and if the reprojection error was above 15 px.
+Gaps were interpolated with cubic method if smaller than 10 frames.
+In average, 0.05 cameras had to be excluded to reach these thresholds.
+Camera cam_03 was excluded 5% of the time, 
+
+3D coordinates are stored at C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P00_SingleParticipant\S00_P00_T00_StaticTrial\pose-3d\S00_P00_T00_StaticTrial_0-12.trc.
+
+
+
+Limb swapping was not handled.
+Lens distortions were not taken into account.
+
+Triangulation took 00h00m00s.
+
+
+---------------------------------------------------------------------
+Filtering 3D coordinates for S00_P00_T00_StaticTrial, for all frames.
+On Saturday 04. May 2024, 10:30:48
+---------------------------------------------------------------------
+
+Project directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P00_SingleParticipant\S00_P00_T00_StaticTrial
+
+--> Filter type: Butterworth low-pass. Order 4, Cut-off frequency 6 Hz.
+Filtered 3D coordinates are stored at C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P00_SingleParticipant\S00_P00_T00_StaticTrial\pose-3d\S00_P00_T00_StaticTrial_0-12_filt_butterworth.trc.
+
+
+
+---------------------------------------------------------------------
+Camera calibration
+On Saturday 04. May 2024, 10:40:36
+---------------------------------------------------------------------
+
+Calibration directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_Calibration
+Converting C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_Calibration\Calib.qca.txt to .toml calibration file...
+
+--> Residual (RMS) calibration errors for each camera are respectively [0.221, 0.235, 0.171, 0.191] px, 
+which corresponds to [0.402, 0.445, 0.45, 0.505] mm.
+
+Calibration file is stored at C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_Calibration\Calib_qualisys.toml.
+
+Calibration took 0.09 s.
+
+
+---------------------------------------------------------------------
+Camera synchronization
+On Saturday 04. May 2024, 10:40:38
+---------------------------------------------------------------------
+
+Project directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P00_SingleParticipant\S00_P00_T00_StaticTrial
+Resetting synchronization...
+Synchronization reset.
+
+Synchronization took 00h00m00s.
+
+
+---------------------------------------------------------------------
+Associating persons for S00_P00_T00_StaticTrial, for all frames.
+On Saturday 04. May 2024, 10:40:38
+---------------------------------------------------------------------
+
+Project directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P00_SingleParticipant\S00_P00_T00_StaticTrial
+
+Single-person analysis selected.
+
+--> Mean reprojection error for Neck point on all frames is 13.6 px, which roughly corresponds to 24.8 mm. 
+--> In average, 0.0 cameras had to be excluded to reach the demanded 20 px error threshold after excluding points with likelihood below 0.3.
+
+Tracked json files are stored in C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P00_SingleParticipant\S00_P00_T00_StaticTrial\pose-associated.
+
+Associating persons took 00h00m00s.
+
+
+---------------------------------------------------------------------
+Triangulation of 2D points for S00_P00_T00_StaticTrial, for all frames.
+On Saturday 04. May 2024, 10:40:39
+---------------------------------------------------------------------
+
+Project directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P00_SingleParticipant\S00_P00_T00_StaticTrial
+
+Mean reprojection error for RHip is 10.1 px (~ 0.018 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RKnee is 9.5 px (~ 0.017 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RAnkle is 9.9 px (~ 0.018 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RBigToe is 9.5 px (~ 0.017 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RSmallToe is 9.6 px (~ 0.017 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RHeel is 10.2 px (~ 0.019 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LHip is 9.9 px (~ 0.018 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LKnee is 9.5 px (~ 0.017 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LAnkle is 9.9 px (~ 0.018 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LBigToe is 9.5 px (~ 0.017 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LSmallToe is 9.6 px (~ 0.017 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LHeel is 10.2 px (~ 0.019 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for Neck is 13.6 px (~ 0.025 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for Head is 8.0 px (~ 0.015 m), reached with 1.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for Nose is 13.8 px (~ 0.025 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RShoulder is 13.4 px (~ 0.024 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RElbow is 11.7 px (~ 0.021 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RWrist is 11.0 px (~ 0.02 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LShoulder is 12.7 px (~ 0.023 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LElbow is 10.8 px (~ 0.02 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LWrist is 9.9 px (~ 0.018 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+
+--> Mean reprojection error for all points on all frames is 10.6 px, which roughly corresponds to 19.3 mm. 
+Cameras were excluded if likelihood was below 0.3 and if the reprojection error was above 15 px.
+Gaps were interpolated with cubic method if smaller than 10 frames.
+In average, 0.05 cameras had to be excluded to reach these thresholds.
+Camera cam_03 was excluded 5% of the time, 
+
+3D coordinates are stored at C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P00_SingleParticipant\S00_P00_T00_StaticTrial\pose-3d\S00_P00_T00_StaticTrial_0-12.trc.
+
+
+
+Limb swapping was not handled.
+Lens distortions were not taken into account.
+
+Triangulation took 00h00m00s.
+
+
+---------------------------------------------------------------------
+Filtering 3D coordinates for S00_P00_T00_StaticTrial, for all frames.
+On Saturday 04. May 2024, 10:40:39
+---------------------------------------------------------------------
+
+Project directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P00_SingleParticipant\S00_P00_T00_StaticTrial
+
+--> Filter type: Butterworth low-pass. Order 4, Cut-off frequency 6 Hz.
+Filtered 3D coordinates are stored at C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P00_SingleParticipant\S00_P00_T00_StaticTrial\pose-3d\S00_P00_T00_StaticTrial_0-12_filt_butterworth.trc.
+
+
+
+---------------------------------------------------------------------
+Camera calibration
+On Saturday 04. May 2024, 10:46:38
+---------------------------------------------------------------------
+
+Calibration directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_Calibration
+Converting C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_Calibration\Calib.qca.txt to .toml calibration file...
+
+--> Residual (RMS) calibration errors for each camera are respectively [0.221, 0.235, 0.171, 0.191] px, 
+which corresponds to [0.402, 0.445, 0.45, 0.505] mm.
+
+Calibration file is stored at C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_Calibration\Calib_qualisys.toml.
+
+Calibration took 0.01 s.
+
+
+---------------------------------------------------------------------
+Camera synchronization
+On Saturday 04. May 2024, 10:46:39
+---------------------------------------------------------------------
+
+Project directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P00_SingleParticipant\S00_P00_T00_StaticTrial
+Resetting synchronization...
+Synchronization reset.
+
+Synchronization took 00h00m00s.
+
+
+---------------------------------------------------------------------
+Associating persons for S00_P00_T00_StaticTrial, for all frames.
+On Saturday 04. May 2024, 10:46:39
+---------------------------------------------------------------------
+
+Project directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P00_SingleParticipant\S00_P00_T00_StaticTrial
+
+Single-person analysis selected.
+
+--> Mean reprojection error for Neck point on all frames is 13.6 px, which roughly corresponds to 24.8 mm. 
+--> In average, 0.0 cameras had to be excluded to reach the demanded 20 px error threshold after excluding points with likelihood below 0.3.
+
+Tracked json files are stored in C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P00_SingleParticipant\S00_P00_T00_StaticTrial\pose-associated.
+
+Associating persons took 00h00m00s.
+
+
+---------------------------------------------------------------------
+Triangulation of 2D points for S00_P00_T00_StaticTrial, for all frames.
+On Saturday 04. May 2024, 10:46:39
+---------------------------------------------------------------------
+
+Project directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P00_SingleParticipant\S00_P00_T00_StaticTrial
+
+Mean reprojection error for RHip is 10.1 px (~ 0.018 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RKnee is 9.5 px (~ 0.017 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RAnkle is 9.9 px (~ 0.018 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RBigToe is 9.5 px (~ 0.017 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RSmallToe is 9.6 px (~ 0.017 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RHeel is 10.2 px (~ 0.019 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LHip is 9.9 px (~ 0.018 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LKnee is 9.5 px (~ 0.017 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LAnkle is 9.9 px (~ 0.018 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LBigToe is 9.5 px (~ 0.017 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LSmallToe is 9.6 px (~ 0.017 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LHeel is 10.2 px (~ 0.019 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for Neck is 13.6 px (~ 0.025 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for Head is 8.0 px (~ 0.015 m), reached with 1.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for Nose is 13.8 px (~ 0.025 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RShoulder is 13.4 px (~ 0.024 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RElbow is 11.7 px (~ 0.021 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RWrist is 11.0 px (~ 0.02 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LShoulder is 12.7 px (~ 0.023 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LElbow is 10.8 px (~ 0.02 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LWrist is 9.9 px (~ 0.018 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+
+--> Mean reprojection error for all points on all frames is 10.6 px, which roughly corresponds to 19.3 mm. 
+Cameras were excluded if likelihood was below 0.3 and if the reprojection error was above 15 px.
+Gaps were interpolated with cubic method if smaller than 10 frames.
+In average, 0.05 cameras had to be excluded to reach these thresholds.
+Camera cam_03 was excluded 5% of the time, 
+
+3D coordinates are stored at C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P00_SingleParticipant\S00_P00_T00_StaticTrial\pose-3d\S00_P00_T00_StaticTrial_0-12.trc.
+
+
+
+Limb swapping was not handled.
+Lens distortions were not taken into account.
+
+Triangulation took 00h00m00s.
+
+
+---------------------------------------------------------------------
+Filtering 3D coordinates for S00_P00_T00_StaticTrial, for all frames.
+On Saturday 04. May 2024, 10:46:40
+---------------------------------------------------------------------
+
+Project directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P00_SingleParticipant\S00_P00_T00_StaticTrial
+
+--> Filter type: Butterworth low-pass. Order 4, Cut-off frequency 6 Hz.
+Filtered 3D coordinates are stored at C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P00_SingleParticipant\S00_P00_T00_StaticTrial\pose-3d\S00_P00_T00_StaticTrial_0-12_filt_butterworth.trc.
+
+
+
+---------------------------------------------------------------------
+Augmentation process for S00_P00_T00_StaticTrial, for all frames.
+On Saturday 04. May 2024, 10:46:47
+---------------------------------------------------------------------
+
+Project directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P00_SingleParticipant\S00_P00_T00_StaticTrial
+
+Using Stanford augmenter model: v0.3
+Augmented marker coordinates are stored at C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P00_SingleParticipant\S00_P00_T00_StaticTrial\pose-3d\S00_P00_T00_StaticTrial_0-12_filt_butterworth_LSTM.trc.
+
+
+
+Marker augmentation took 00h00m07s.
+
+
+---------------------------------------------------------------------
+Camera synchronization
+On Saturday 04. May 2024, 10:46:54
+---------------------------------------------------------------------
+
+Project directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P00_SingleParticipant\S00_P00_T01_BalancingTrial
+Resetting synchronization...
+Synchronization reset.
+
+Synchronization took 00h00m00s.
+
+
+---------------------------------------------------------------------
+Associating persons for S00_P00_T01_BalancingTrial, for all frames.
+On Saturday 04. May 2024, 10:46:54
+---------------------------------------------------------------------
+
+Project directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P00_SingleParticipant\S00_P00_T01_BalancingTrial
+
+Single-person analysis selected.
+
+--> Mean reprojection error for Neck point on all frames is 12.3 px, which roughly corresponds to 22.4 mm. 
+--> In average, 0.01 cameras had to be excluded to reach the demanded 20 px error threshold after excluding points with likelihood below 0.3.
+
+Tracked json files are stored in C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P00_SingleParticipant\S00_P00_T01_BalancingTrial\pose-associated.
+
+Associating persons took 00h00m01s.
+
+
+---------------------------------------------------------------------
+Triangulation of 2D points for S00_P00_T01_BalancingTrial, for all frames.
+On Saturday 04. May 2024, 10:46:56
+---------------------------------------------------------------------
+
+Project directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P00_SingleParticipant\S00_P00_T01_BalancingTrial
+
+Mean reprojection error for RHip is 8.0 px (~ 0.015 m), reached with 0.99 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RKnee is 9.4 px (~ 0.017 m), reached with 0.61 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RAnkle is 10.8 px (~ 0.02 m), reached with 0.1 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RBigToe is 10.8 px (~ 0.02 m), reached with 0.56 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RSmallToe is 10.4 px (~ 0.019 m), reached with 0.43 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RHeel is 11.2 px (~ 0.02 m), reached with 0.3 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LHip is 8.8 px (~ 0.016 m), reached with 0.83 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LKnee is 10.6 px (~ 0.019 m), reached with 0.8 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LAnkle is 12.3 px (~ 0.022 m), reached with 0.15 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LBigToe is 10.1 px (~ 0.018 m), reached with 0.32 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LSmallToe is 11.3 px (~ 0.021 m), reached with 0.45 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LHeel is 10.6 px (~ 0.019 m), reached with 0.37 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for Neck is 11.1 px (~ 0.02 m), reached with 0.17 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for Head is 9.8 px (~ 0.018 m), reached with 0.56 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for Nose is 2.8 px (~ 0.005 m), reached with 1.95 excluded cameras. 
+  Frames 4 to 8, 15 to 15 were interpolated.
+Mean reprojection error for RShoulder is 9.4 px (~ 0.017 m), reached with 0.61 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RElbow is 9.0 px (~ 0.016 m), reached with 0.63 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RWrist is 9.7 px (~ 0.018 m), reached with 0.47 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LShoulder is 10.2 px (~ 0.019 m), reached with 0.5 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LElbow is 12.1 px (~ 0.022 m), reached with 0.39 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LWrist is 11.6 px (~ 0.021 m), reached with 0.38 excluded cameras. 
+  No frames needed to be interpolated.
+
+--> Mean reprojection error for all points on all frames is 10.0 px, which roughly corresponds to 18.2 mm. 
+Cameras were excluded if likelihood was below 0.3 and if the reprojection error was above 15 px.
+Gaps were interpolated with cubic method if smaller than 10 frames.
+In average, 0.55 cameras had to be excluded to reach these thresholds.
+Camera cam_03 was excluded 33% of the time, Camera cam_01: 11%, Camera cam_04: 8%, and Camera cam_02: 3%.
+
+3D coordinates are stored at C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P00_SingleParticipant\S00_P00_T01_BalancingTrial\pose-3d\S00_P00_T01_BalancingTrial_0-100.trc.
+
+
+
+Limb swapping was not handled.
+Lens distortions were not taken into account.
+
+Triangulation took 00h00m03s.
+
+
+---------------------------------------------------------------------
+Filtering 3D coordinates for S00_P00_T01_BalancingTrial, for all frames.
+On Saturday 04. May 2024, 10:46:59
+---------------------------------------------------------------------
+
+Project directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P00_SingleParticipant\S00_P00_T01_BalancingTrial
+
+--> Filter type: Butterworth low-pass. Order 4, Cut-off frequency 6 Hz.
+Filtered 3D coordinates are stored at C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P00_SingleParticipant\S00_P00_T01_BalancingTrial\pose-3d\S00_P00_T01_BalancingTrial_0-100_filt_butterworth.trc.
+
+
+
+---------------------------------------------------------------------
+Augmentation process for S00_P00_T01_BalancingTrial, for all frames.
+On Saturday 04. May 2024, 10:46:59
+---------------------------------------------------------------------
+
+Project directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P00_SingleParticipant\S00_P00_T01_BalancingTrial
+
+Using Stanford augmenter model: v0.3
+Augmented marker coordinates are stored at C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P00_SingleParticipant\S00_P00_T01_BalancingTrial\pose-3d\S00_P00_T01_BalancingTrial_0-100_filt_butterworth_LSTM.trc.
+
+
+
+Marker augmentation took 00h00m06s.
+
+
+---------------------------------------------------------------------
+Camera synchronization
+On Saturday 04. May 2024, 10:47:06
+---------------------------------------------------------------------
+
+Project directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P01_MultiParticipants\S00_P01_T00_StaticTrialParticipant1
+Resetting synchronization...
+Synchronization reset.
+
+Synchronization took 00h00m00s.
+
+
+---------------------------------------------------------------------
+Associating persons for S00_P01_T00_StaticTrialParticipant1, for all frames.
+On Saturday 04. May 2024, 10:47:06
+---------------------------------------------------------------------
+
+Project directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P01_MultiParticipants\S00_P01_T00_StaticTrialParticipant1
+
+Single-person analysis selected.
+
+--> Mean reprojection error for Neck point on all frames is 13.6 px, which roughly corresponds to 24.8 mm. 
+--> In average, 0.0 cameras had to be excluded to reach the demanded 20 px error threshold after excluding points with likelihood below 0.3.
+
+Tracked json files are stored in C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P01_MultiParticipants\S00_P01_T00_StaticTrialParticipant1\pose-associated.
+
+Associating persons took 00h00m00s.
+
+
+---------------------------------------------------------------------
+Triangulation of 2D points for S00_P01_T00_StaticTrialParticipant1, for all frames.
+On Saturday 04. May 2024, 10:47:06
+---------------------------------------------------------------------
+
+Project directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P01_MultiParticipants\S00_P01_T00_StaticTrialParticipant1
+
+Mean reprojection error for RHip is 10.1 px (~ 0.018 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RKnee is 9.5 px (~ 0.017 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RAnkle is 9.9 px (~ 0.018 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RBigToe is 9.5 px (~ 0.017 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RSmallToe is 9.6 px (~ 0.017 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RHeel is 10.2 px (~ 0.019 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LHip is 9.9 px (~ 0.018 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LKnee is 9.5 px (~ 0.017 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LAnkle is 9.9 px (~ 0.018 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LBigToe is 9.5 px (~ 0.017 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LSmallToe is 9.6 px (~ 0.017 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LHeel is 10.2 px (~ 0.019 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for Neck is 13.6 px (~ 0.025 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for Head is 8.0 px (~ 0.015 m), reached with 1.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for Nose is 13.8 px (~ 0.025 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RShoulder is 13.4 px (~ 0.024 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RElbow is 11.7 px (~ 0.021 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RWrist is 11.0 px (~ 0.02 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LShoulder is 12.7 px (~ 0.023 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LElbow is 10.8 px (~ 0.02 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LWrist is 9.9 px (~ 0.018 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+
+--> Mean reprojection error for all points on all frames is 10.6 px, which roughly corresponds to 19.3 mm. 
+Cameras were excluded if likelihood was below 0.3 and if the reprojection error was above 15 px.
+Gaps were interpolated with cubic method if smaller than 10 frames.
+In average, 0.05 cameras had to be excluded to reach these thresholds.
+Camera cam_03 was excluded 5% of the time, 
+
+3D coordinates are stored at C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P01_MultiParticipants\S00_P01_T00_StaticTrialParticipant1\pose-3d\S00_P01_T00_StaticTrialParticipant1_0-12.trc.
+
+
+
+Limb swapping was not handled.
+Lens distortions were not taken into account.
+
+Triangulation took 00h00m00s.
+
+
+---------------------------------------------------------------------
+Filtering 3D coordinates for S00_P01_T00_StaticTrialParticipant1, for all frames.
+On Saturday 04. May 2024, 10:47:06
+---------------------------------------------------------------------
+
+Project directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P01_MultiParticipants\S00_P01_T00_StaticTrialParticipant1
+
+--> Filter type: Butterworth low-pass. Order 4, Cut-off frequency 6 Hz.
+Filtered 3D coordinates are stored at C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P01_MultiParticipants\S00_P01_T00_StaticTrialParticipant1\pose-3d\S00_P01_T00_StaticTrialParticipant1_0-12_filt_butterworth.trc.
+
+
+
+---------------------------------------------------------------------
+Augmentation process for S00_P01_T00_StaticTrialParticipant1, for all frames.
+On Saturday 04. May 2024, 10:47:06
+---------------------------------------------------------------------
+
+Project directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P01_MultiParticipants\S00_P01_T00_StaticTrialParticipant1
+
+Using Stanford augmenter model: v0.3
+5 out of the last 5 calls to <function Model.make_predict_function.<locals>.predict_function at 0x00000243672DA4C0> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has reduce_retracing=True option that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/guide/function#controlling_retracing and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+6 out of the last 6 calls to <function Model.make_predict_function.<locals>.predict_function at 0x000002436A5624C0> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has reduce_retracing=True option that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/guide/function#controlling_retracing and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+Augmented marker coordinates are stored at C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P01_MultiParticipants\S00_P01_T00_StaticTrialParticipant1\pose-3d\S00_P01_T00_StaticTrialParticipant1_0-12_filt_butterworth_LSTM.trc.
+
+
+
+Marker augmentation took 00h00m06s.
+
+
+---------------------------------------------------------------------
+Camera synchronization
+On Saturday 04. May 2024, 10:47:13
+---------------------------------------------------------------------
+
+Project directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P01_MultiParticipants\S00_P01_T01_StaticTrialParticipant2
+Resetting synchronization...
+Synchronization reset.
+
+Synchronization took 00h00m00s.
+
+
+---------------------------------------------------------------------
+Associating persons for S00_P01_T01_StaticTrialParticipant2, for all frames.
+On Saturday 04. May 2024, 10:47:13
+---------------------------------------------------------------------
+
+Project directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P01_MultiParticipants\S00_P01_T01_StaticTrialParticipant2
+
+Single-person analysis selected.
+
+--> Mean reprojection error for Neck point on all frames is 10.7 px, which roughly corresponds to 19.5 mm. 
+--> In average, 0.0 cameras had to be excluded to reach the demanded 20 px error threshold after excluding points with likelihood below 0.3.
+
+Tracked json files are stored in C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P01_MultiParticipants\S00_P01_T01_StaticTrialParticipant2\pose-associated.
+
+Associating persons took 00h00m00s.
+
+
+---------------------------------------------------------------------
+Triangulation of 2D points for S00_P01_T01_StaticTrialParticipant2, for all frames.
+On Saturday 04. May 2024, 10:47:13
+---------------------------------------------------------------------
+
+Project directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P01_MultiParticipants\S00_P01_T01_StaticTrialParticipant2
+
+Mean reprojection error for RHip is 9.4 px (~ 0.017 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RKnee is 9.5 px (~ 0.017 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RAnkle is 9.9 px (~ 0.018 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RBigToe is 9.7 px (~ 0.018 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RSmallToe is 9.7 px (~ 0.018 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RHeel is 10.1 px (~ 0.018 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LHip is 9.4 px (~ 0.017 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LKnee is 9.5 px (~ 0.017 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LAnkle is 9.9 px (~ 0.018 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LBigToe is 9.7 px (~ 0.018 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LSmallToe is 9.7 px (~ 0.018 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LHeel is 10.1 px (~ 0.018 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for Neck is 10.7 px (~ 0.019 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for Head is 11.3 px (~ 0.021 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for Nose is 10.5 px (~ 0.019 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RShoulder is 10.7 px (~ 0.019 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RElbow is 9.9 px (~ 0.018 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RWrist is 9.7 px (~ 0.018 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LShoulder is 10.4 px (~ 0.019 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LElbow is 9.5 px (~ 0.017 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LWrist is 9.3 px (~ 0.017 m), reached with 0.0 excluded cameras. 
+  No frames needed to be interpolated.
+
+--> Mean reprojection error for all points on all frames is 9.9 px, which roughly corresponds to 18.0 mm. 
+Cameras were excluded if likelihood was below 0.3 and if the reprojection error was above 15 px.
+Gaps were interpolated with cubic method if smaller than 10 frames.
+In average, 0.0 cameras had to be excluded to reach these thresholds.
+
+
+3D coordinates are stored at C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P01_MultiParticipants\S00_P01_T01_StaticTrialParticipant2\pose-3d\S00_P01_T01_StaticTrialParticipant2_0-12.trc.
+
+
+
+Limb swapping was not handled.
+Lens distortions were not taken into account.
+
+Triangulation took 00h00m00s.
+
+
+---------------------------------------------------------------------
+Filtering 3D coordinates for S00_P01_T01_StaticTrialParticipant2, for all frames.
+On Saturday 04. May 2024, 10:47:13
+---------------------------------------------------------------------
+
+Project directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P01_MultiParticipants\S00_P01_T01_StaticTrialParticipant2
+
+--> Filter type: Butterworth low-pass. Order 4, Cut-off frequency 6 Hz.
+Filtered 3D coordinates are stored at C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P01_MultiParticipants\S00_P01_T01_StaticTrialParticipant2\pose-3d\S00_P01_T01_StaticTrialParticipant2_0-12_filt_butterworth.trc.
+
+
+
+---------------------------------------------------------------------
+Augmentation process for S00_P01_T01_StaticTrialParticipant2, for all frames.
+On Saturday 04. May 2024, 10:47:13
+---------------------------------------------------------------------
+
+Project directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P01_MultiParticipants\S00_P01_T01_StaticTrialParticipant2
+
+Using Stanford augmenter model: v0.3
+Augmented marker coordinates are stored at C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P01_MultiParticipants\S00_P01_T01_StaticTrialParticipant2\pose-3d\S00_P01_T01_StaticTrialParticipant2_0-12_filt_butterworth_LSTM.trc.
+
+
+
+Marker augmentation took 00h00m05s.
+
+
+---------------------------------------------------------------------
+Camera synchronization
+On Saturday 04. May 2024, 10:47:19
+---------------------------------------------------------------------
+
+Project directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P01_MultiParticipants\S00_P01_T02_Participants1-2
+Resetting synchronization...
+Synchronization reset.
+
+Synchronization took 00h00m00s.
+
+
+---------------------------------------------------------------------
+Associating persons for S00_P01_T02_Participants1-2, for all frames.
+On Saturday 04. May 2024, 10:47:19
+---------------------------------------------------------------------
+
+Project directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P01_MultiParticipants\S00_P01_T02_Participants1-2
+
+Multi-person analysis selected.
+
+--> A person was reconstructed if the lines from cameras to their keypoints intersected within 0.1 m and if the calculated affinity stayed below 0.2 after excluding points with likelihood below 0.3.
+--> Beware that people were sorted across cameras, but not across frames. This will be done in the triangulation stage.
+
+Tracked json files are stored in C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P01_MultiParticipants\S00_P01_T02_Participants1-2\pose-associated.
+
+Associating persons took 00h00m03s.
+
+
+---------------------------------------------------------------------
+Triangulation of 2D points for S00_P01_T02_Participants1-2, for all frames.
+On Saturday 04. May 2024, 10:47:22
+---------------------------------------------------------------------
+
+Project directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P01_MultiParticipants\S00_P01_T02_Participants1-2
+
+
+
+PARTICIPANT 1
+
+Mean reprojection error for RHip is 13.5 px (~ 0.025 m), reached with 0.01 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RKnee is 13.3 px (~ 0.024 m), reached with 0.01 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RAnkle is 12.9 px (~ 0.023 m), reached with 0.01 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RBigToe is 12.4 px (~ 0.023 m), reached with 0.01 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RSmallToe is 12.5 px (~ 0.023 m), reached with 0.01 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RHeel is 12.9 px (~ 0.023 m), reached with 0.01 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LHip is 13.3 px (~ 0.024 m), reached with 0.01 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LKnee is 12.5 px (~ 0.023 m), reached with 0.01 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LAnkle is 12.7 px (~ 0.023 m), reached with 0.01 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LBigToe is 12.5 px (~ 0.023 m), reached with 0.01 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LSmallToe is 12.5 px (~ 0.023 m), reached with 0.01 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LHeel is 12.9 px (~ 0.023 m), reached with 0.01 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for Neck is 12.3 px (~ 0.022 m), reached with 0.37 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for Head is 8.1 px (~ 0.015 m), reached with 1.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for Nose is 13.6 px (~ 0.025 m), reached with 0.17 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RShoulder is 11.5 px (~ 0.021 m), reached with 0.49 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RElbow is 14.3 px (~ 0.026 m), reached with 0.01 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RWrist is 13.4 px (~ 0.024 m), reached with 0.01 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LShoulder is 14.5 px (~ 0.026 m), reached with 0.01 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LElbow is 13.6 px (~ 0.025 m), reached with 0.01 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LWrist is 13.2 px (~ 0.024 m), reached with 0.01 excluded cameras. 
+  No frames needed to be interpolated.
+
+--> Mean reprojection error for all points on all frames is 12.8 px, which roughly corresponds to 23.3 mm. 
+Cameras were excluded if likelihood was below 0.3 and if the reprojection error was above 15 px.
+Gaps were interpolated with cubic method if smaller than 10 frames.
+In average, 0.1 cameras had to be excluded to reach these thresholds.
+Camera cam_01 was excluded 10% of the time, 
+
+3D coordinates are stored at C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P01_MultiParticipants\S00_P01_T02_Participants1-2\pose-3d\S00_P01_T02_Participants1-2_P1_0-100.trc.
+
+
+PARTICIPANT 2
+
+Mean reprojection error for RHip is 8.0 px (~ 0.015 m), reached with 1.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RKnee is 9.3 px (~ 0.017 m), reached with 0.62 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RAnkle is 10.7 px (~ 0.019 m), reached with 0.11 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RBigToe is 10.8 px (~ 0.02 m), reached with 0.58 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RSmallToe is 10.4 px (~ 0.019 m), reached with 0.45 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RHeel is 11.2 px (~ 0.02 m), reached with 0.31 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LHip is 8.8 px (~ 0.016 m), reached with 0.83 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LKnee is 10.6 px (~ 0.019 m), reached with 0.8 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LAnkle is 12.4 px (~ 0.023 m), reached with 0.15 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LBigToe is 10.2 px (~ 0.019 m), reached with 0.32 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LSmallToe is 11.3 px (~ 0.021 m), reached with 0.45 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LHeel is 10.6 px (~ 0.019 m), reached with 0.38 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for Neck is 11.1 px (~ 0.02 m), reached with 0.19 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for Head is 9.9 px (~ 0.018 m), reached with 0.58 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for Nose is 2.9 px (~ 0.005 m), reached with 1.99 excluded cameras. 
+  Frames 0 to 1, 4 to 8, 15 to 15 were interpolated.
+Mean reprojection error for RShoulder is 9.4 px (~ 0.017 m), reached with 0.61 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RElbow is 9.2 px (~ 0.017 m), reached with 0.62 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RWrist is 9.8 px (~ 0.018 m), reached with 0.48 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LShoulder is 10.1 px (~ 0.018 m), reached with 0.52 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LElbow is 11.9 px (~ 0.022 m), reached with 0.4 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LWrist is 11.6 px (~ 0.021 m), reached with 0.37 excluded cameras. 
+  No frames needed to be interpolated.
+
+--> Mean reprojection error for all points on all frames is 10.0 px, which roughly corresponds to 18.2 mm. 
+Cameras were excluded if likelihood was below 0.3 and if the reprojection error was above 15 px.
+Gaps were interpolated with cubic method if smaller than 10 frames.
+In average, 0.56 cameras had to be excluded to reach these thresholds.
+Camera cam_01 was excluded 13% of the time, 
+
+3D coordinates are stored at C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P01_MultiParticipants\S00_P01_T02_Participants1-2\pose-3d\S00_P01_T02_Participants1-2_P2_0-100.trc.
+
+
+
+Limb swapping was not handled.
+Lens distortions were not taken into account.
+
+Triangulation took 00h00m05s.
+
+
+---------------------------------------------------------------------
+Filtering 3D coordinates for S00_P01_T02_Participants1-2, for all frames.
+On Saturday 04. May 2024, 10:47:28
+---------------------------------------------------------------------
+
+Project directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P01_MultiParticipants\S00_P01_T02_Participants1-2
+
+--> Filter type: Butterworth low-pass. Order 4, Cut-off frequency 6 Hz.
+Filtered 3D coordinates are stored at C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P01_MultiParticipants\S00_P01_T02_Participants1-2\pose-3d\S00_P01_T02_Participants1-2_P1_0-100_filt_butterworth.trc.
+
+--> Filter type: Butterworth low-pass. Order 4, Cut-off frequency 6 Hz.
+Filtered 3D coordinates are stored at C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P01_MultiParticipants\S00_P01_T02_Participants1-2\pose-3d\S00_P01_T02_Participants1-2_P2_0-100_filt_butterworth.trc.
+
+
+
+---------------------------------------------------------------------
+Augmentation process for S00_P01_T02_Participants1-2, for all frames.
+On Saturday 04. May 2024, 10:47:29
+---------------------------------------------------------------------
+
+Project directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P01_MultiParticipants\S00_P01_T02_Participants1-2
+
+Using Stanford augmenter model: v0.3
+Augmented marker coordinates are stored at C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P01_MultiParticipants\S00_P01_T02_Participants1-2\pose-3d\S00_P01_T02_Participants1-2_P1_0-100_filt_butterworth_LSTM.trc.
+
+
+Using Stanford augmenter model: v0.3
+Augmented marker coordinates are stored at C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_P01_MultiParticipants\S00_P01_T02_Participants1-2\pose-3d\S00_P01_T02_Participants1-2_P2_0-100_filt_butterworth_LSTM.trc.
+
+
+
+Marker augmentation took 00h00m11s.
+
+
+---------------------------------------------------------------------
+Camera calibration
+On Saturday 04. May 2024, 10:47:40
+---------------------------------------------------------------------
+
+Calibration directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S01_Demo_SingleTrial\calibration
+Converting C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S01_Demo_SingleTrial\calibration\Calib.qca.txt to .toml calibration file...
+
+--> Residual (RMS) calibration errors for each camera are respectively [0.221, 0.235, 0.171, 0.191] px, 
+which corresponds to [0.402, 0.445, 0.45, 0.505] mm.
+
+Calibration file is stored at C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S01_Demo_SingleTrial\calibration\Calib_qualisys.toml.
+
+Calibration took 0.01 s.
+
+
+---------------------------------------------------------------------
+Camera synchronization
+On Saturday 04. May 2024, 10:47:40
+---------------------------------------------------------------------
+
+Project directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S01_Demo_SingleTrial
+--> Camera 0 and 1: 0 frames offset, correlation 0.85.
+--> Camera 0 and 2: -1 frames offset, correlation 0.7.
+--> Camera 0 and 3: -1 frames offset, correlation 0.57.
+
+Synchronization took 00h00m00s.
+
+
+---------------------------------------------------------------------
+Associating persons for S01_Demo_SingleTrial, for all frames.
+On Saturday 04. May 2024, 10:47:41
+---------------------------------------------------------------------
+
+Project directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S01_Demo_SingleTrial
+
+Single-person analysis selected.
+
+--> Mean reprojection error for Neck point on all frames is 13.6 px, which roughly corresponds to 24.8 mm. 
+--> In average, 0.09 cameras had to be excluded to reach the demanded 20 px error threshold after excluding points with likelihood below 0.3.
+
+Tracked json files are stored in C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S01_Demo_SingleTrial\pose-associated.
+
+Associating persons took 00h00m01s.
+
+
+---------------------------------------------------------------------
+Triangulation of 2D points for S01_Demo_SingleTrial, for all frames.
+On Saturday 04. May 2024, 10:47:42
+---------------------------------------------------------------------
+
+Project directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S01_Demo_SingleTrial
+
+Mean reprojection error for RHip is 8.3 px (~ 0.015 m), reached with 1.05 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RKnee is 9.9 px (~ 0.018 m), reached with 0.81 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RAnkle is 10.6 px (~ 0.019 m), reached with 0.55 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RBigToe is 9.1 px (~ 0.017 m), reached with 0.76 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RSmallToe is 9.2 px (~ 0.017 m), reached with 0.8 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RHeel is 10.0 px (~ 0.018 m), reached with 0.73 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LHip is 7.7 px (~ 0.014 m), reached with 1.04 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LKnee is 9.4 px (~ 0.017 m), reached with 1.0 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LAnkle is 11.6 px (~ 0.021 m), reached with 0.35 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LBigToe is 9.2 px (~ 0.017 m), reached with 0.49 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LSmallToe is 9.8 px (~ 0.018 m), reached with 0.63 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LHeel is 10.4 px (~ 0.019 m), reached with 0.55 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for Neck is 12.0 px (~ 0.022 m), reached with 0.31 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for Head is 7.6 px (~ 0.014 m), reached with 0.94 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for Nose is 2.6 px (~ 0.005 m), reached with 1.97 excluded cameras. 
+  Frames 4 to 8, 15 to 15 were interpolated.
+Mean reprojection error for RShoulder is 7.8 px (~ 0.014 m), reached with 0.86 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RElbow is 8.4 px (~ 0.015 m), reached with 0.76 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for RWrist is 8.6 px (~ 0.016 m), reached with 0.99 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LShoulder is 9.6 px (~ 0.017 m), reached with 0.78 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LElbow is 10.4 px (~ 0.019 m), reached with 0.82 excluded cameras. 
+  No frames needed to be interpolated.
+Mean reprojection error for LWrist is 10.2 px (~ 0.019 m), reached with 0.84 excluded cameras. 
+  No frames needed to be interpolated.
+
+--> Mean reprojection error for all points on all frames is 9.2 px, which roughly corresponds to 16.8 mm. 
+Cameras were excluded if likelihood was below 0.3 and if the reprojection error was above 15 px.
+Gaps were interpolated with cubic method if smaller than 10 frames.
+In average, 0.81 cameras had to be excluded to reach these thresholds.
+Camera cam_03 was excluded 44% of the time, Camera cam_01: 17%, Camera cam_04: 14%, and Camera cam_02: 5%.
+
+3D coordinates are stored at C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S01_Demo_SingleTrial\pose-3d\S01_Demo_SingleTrial_0-100.trc.
+
+
+
+Limb swapping was not handled.
+Lens distortions were not taken into account.
+
+Triangulation took 00h00m03s.
+
+
+---------------------------------------------------------------------
+Filtering 3D coordinates for S01_Demo_SingleTrial, for all frames.
+On Saturday 04. May 2024, 10:47:46
+---------------------------------------------------------------------
+
+Project directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S01_Demo_SingleTrial
+
+--> Filter type: Butterworth low-pass. Order 4, Cut-off frequency 6 Hz.
+Filtered 3D coordinates are stored at C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S01_Demo_SingleTrial\pose-3d\S01_Demo_SingleTrial_0-100_filt_butterworth.trc.
+
+
+
+---------------------------------------------------------------------
+Augmentation process for S01_Demo_SingleTrial, for all frames.
+On Saturday 04. May 2024, 10:47:46
+---------------------------------------------------------------------
+
+Project directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S01_Demo_SingleTrial
+
+Using Stanford augmenter model: v0.3
+Augmented marker coordinates are stored at C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S01_Demo_SingleTrial\pose-3d\S01_Demo_SingleTrial_0-100_filt_butterworth_LSTM.trc.
+
+
+
+Marker augmentation took 00h00m05s.
+
+
+---------------------------------------------------------------------
+Camera calibration
+On Monday 06. May 2024, 15:45:51
+---------------------------------------------------------------------
+
+Calibration directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_Calibration
+Converting C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_Calibration\Calib.qca.txt to .toml calibration file...
+
+--> Residual (RMS) calibration errors for each camera are respectively [0.221, 0.235, 0.171, 0.191] px, 
+which corresponds to [0.402, 0.445, 0.45, 0.505] mm.
+
+Calibration file is stored at C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_Calibration\Calib_qualisys.toml.
+
+Calibration took 0.05 s.
+
+
+---------------------------------------------------------------------
+Camera calibration
+On Monday 06. May 2024, 15:46:43
+---------------------------------------------------------------------
+
+Calibration directory: C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_Calibration
+
+Preexisting calibration file found: 'C:\Users\Matthew\anaconda3\envs\thesis\Lib\site-packages\Pose2Sim\S00_Demo_BatchSession\S00_Calibration\Calib_qualisys.toml'.
+
+Retrieving intrinsic parameters from file. Set "overwrite_intrinsics" to true in Config.toml to recalculate them.
+
+Calculating extrinsic parameters...
+
+Camera ext_cam01_img:
