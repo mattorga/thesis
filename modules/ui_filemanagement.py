@@ -143,10 +143,6 @@ class FileManager(QWidget):
         self.initUI()
         self.currentPath = ''
 
-    def thread(self):
-        t1 = Thread(target=self.calibrateSelected)
-        t1.start()
-
     def initUI(self):
         self.setWindowTitle('File Management System for Markerless Gait Analysis')
         self.setGeometry(100, 100, 600, 400)
@@ -211,6 +207,7 @@ class FileManager(QWidget):
 
     def calibrateSelected(self):
         # Current path - path to target session folder
+        print(self.currentPath)
         calibrate(self.currentPath)
         
     def itemDoubleClicked(self, item):
