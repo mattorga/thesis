@@ -1,35 +1,68 @@
-import sys
-import matplotlib
-matplotlib.use('Qt5Agg')
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
 
-from PyQt5 import QtCore, QtWidgets
+import time
 
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
-from matplotlib.figure import Figure
-from database.S00_V501.pose2sim import calibrate
+class Worker(QRunnable):
+    '''
+    Worker thread
+    '''
 
-class MplCanvas(FigureCanvasQTAgg):
+    @pyqtSlot()
+    def run(self):
+        '''
+        Your code goes in this function
+        '''
+        print("Thread start")
+        time.sleep(5)
+        print("Thread complete")
 
-    def __init__(self, parent=None, width=5, height=4, dpi=100):
-        fig = Figure(figsize=(width, height), dpi=dpi)
-        self.axes = fig.add_subplot(111)
-        super(MplCanvas, self).__init__(fig)
-
-
-class MainWindow(QtWidgets.QMainWindow):
+class MainWindow(QMainWindow):
 
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
 
-        # Create the maptlotlib FigureCanvas object,
-        # which defines a single set of axes as self.axes.
-        sc = MplCanvas(self, width=5, height=4, dpi=100)
-        sc.axes.plot([0,1,2,3,4], [10,1,20,3,40])
-        self.setCentralWidget(sc)
+        self.threadpool = QThreadPool()
+        print("Multithreading with maximum %d threads" % self.threadpool.maxThreadCount())
+
+        self.counter = 0
+
+        layout = QVBoxLayout()
+
+        self.l = QLabel("Start")
+        b = QPushButton("DANGER!")
+        b.pressed.connect(self.oh_no)
+
+        c = QPushButton("?")
+        c.pressed.connect(self.change_message)
+
+        layout.addWidget(self.l)
+        layout.addWidget(b)
+
+        layout.addWidget(c)
+
+        w = QWidget()
+        w.setLayout(layout)
+
+        self.setCentralWidget(w)
 
         self.show()
 
+    def change_message(self):
+        self.message = "OH NO"
 
-app = QtWidgets.QApplication(sys.argv)
-w = MainWindow()
+    def oh_no(self):
+        worker = Worker()
+        self.threadpool.start(worker)
+        self.message = "Pressed"
+
+        for n in range(100):
+            time.sleep(0.1)
+            self.l.setText(self.message)
+            QApplication.processEvents()
+
+
+app = QApplication([])
+window = MainWindow()
 app.exec_()

@@ -221,9 +221,3 @@ class FileManager(QWidget):
         elif item.text().lower().endswith('.toml'):
             self.openSelectedTOML()
     
-# Main application code
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    ex = FileManager()
-    ex.show()
-    sys.exit(app.exec_())
