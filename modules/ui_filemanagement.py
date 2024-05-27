@@ -10,6 +10,8 @@ import sys
 import toml
 import shutil
 from threading import *
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.figure import Figure
 
 
 # Evaluate 
@@ -207,8 +209,8 @@ class FileManager(QWidget):
 
     def calibrateSelected(self):
         # Current path - path to target session folder
-        print(self.currentPath)
-        calibrate(self.currentPath)
+        window = MainWindow()
+        window.exec_()
         
     def itemDoubleClicked(self, item):
         if '[Folder]' in item.text():
@@ -220,4 +222,23 @@ class FileManager(QWidget):
                 self.listDirectoryContents(self.currentPath)
         elif item.text().lower().endswith('.toml'):
             self.openSelectedTOML()
-    
+
+# -------------------- Pose2Sim Calibration Matplotlib GUI ------------------- #
+class MyMplCanvas(FigureCanvas):
+    def __init__(self, parent=None):
+        fig = Figure()
+        self.axes = fig.add_subplot(111)
+        super(MyMplCanvas, self).__init__(fig)
+        self.setParent(parent)
+
+    def plot(self):
+        calibrate("/Users/mattheworga/Documents/Programming/thesis/database/S00_V501")
+
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super(MainWindow, self).__init__()
+        self.widget = QWidget()
+        self.setCentralWidget(self.widget)
+        self.layout = QVBoxLayout(self.widget)
+        self.canvas = MyMplCanvas(self.widget) # MplCanvas is called
+        self.layout.addWidget(self.canvas)
