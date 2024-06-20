@@ -12,8 +12,6 @@ import shutil
 from modules import ui_filemanagement
 
 if __name__ == '__main__':
-
-    # We need to somehow get the Directory of the Person's Trial exactly from filemanagement.py
     app = QApplication(sys.argv)
     ex = ui_filemanagement.FileManager()
     ex.show()

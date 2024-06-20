@@ -209,8 +209,7 @@ class FileManager(QWidget):
 
     def calibrateSelected(self):
         # Current path - path to target session folder
-        window = MainWindow()
-        window.exec_()
+        calibrate(self.currentPath)
         
     def itemDoubleClicked(self, item):
         if '[Folder]' in item.text():

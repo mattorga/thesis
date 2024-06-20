@@ -7,13 +7,13 @@ from matplotlib.figure import Figure
 class MyMplCanvas(FigureCanvas):
     def __init__(self, parent=None):
         fig = Figure()
-        self.axes = fig.add_subplot(111)
+        #self.axes = fig.add_subplot(111)
         super(MyMplCanvas, self).__init__(fig)
         self.setParent(parent)
         self.plot()
 
     def plot(self):
-        calibrate("/Users/mattheworga/Documents/Programming/thesis/database/S00_V501")
+        calibrate("/Users/mattheworga/Documents/Git/thesis/database/S00_V501")
 
 class MainWindow(QMainWindow):
     def __init__(self):
