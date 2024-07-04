@@ -1,0 +1,24 @@
+<RCC>
+  <qresource prefix="resources">
+    <file>exitwlogo.png</file>
+    <file>opensimwlogo.png</file>
+    <file>processwlogo.png</file>
+    <file>projectwlogo.png</file>
+    <file>savewlogo.png</file>
+    <file>projectwlogo.png</file>
+    <file>drop.png</file>
+    <file>walk.png</file>
+    <file>close.png</file>
+    <file>exittoapp.png</file>
+    <file>home.png</file>
+    <file>menu.png</file>
+    <file>opensim.png</file>
+    <file>process.png</file>
+    <file>save.png</file>
+  </qresource>
+  <qresource prefix="newPrefix">
+    <file>toggle_off.png</file>
+    <file>toggle_on.png</file>
+    <file>info.png</file>
+  </qresource>
+</RCC>
