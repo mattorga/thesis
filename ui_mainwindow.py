@@ -1,10 +1,11 @@
 import sys
 from database.S00_V501.pose2sim import calibrate
 from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
+
 from matplotlib.figure import Figure
 
-class MyMplCanvas(FigureCanvas):
+class MyMplCanvas(FigureCanvasQTAgg):
     def __init__(self, parent=None):
         fig = Figure()
         #self.axes = fig.add_subplot(111)
