@@ -1,0 +1,41 @@
+<RCC>
+  <qresource prefix="resources">
+    <file>last_page_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.png</file>
+    <file>first_page_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.png</file>
+    <file>pause_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.png</file>
+    <file>play_arrow_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.png</file>
+    <file>photo_camera_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24 (3).png</file>
+    <file>photo_camera_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24 (2).png</file>
+    <file>record view.png</file>
+    <file>camera settings.png</file>
+    <file>photo_camera_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24 (1).png</file>
+    <file>settings_video_camera_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.png</file>
+    <file>preview_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24 (1).png</file>
+    <file>directory viewer.png</file>
+    <file>lists_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.png</file>
+    <file>graphic_eq_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.png</file>
+    <file>res</file>
+    <file>dataview.png</file>
+    <file>camera.png</file>
+    <file>processwlogotoggled.png</file>
+    <file>projectwlogo.png</file>
+    <file>save.png</file>
+    <file>savewlogo.png</file>
+    <file>toggle_off.png</file>
+    <file>toggle_on.png</file>
+    <file>walk.png</file>
+    <file>black.png</file>
+    <file>close.png</file>
+    <file>drop.png</file>
+    <file>exittoapp.png</file>
+    <file>exitwlogo.png</file>
+    <file>home.png</file>
+    <file>info.png</file>
+    <file>menu.png</file>
+    <file>opensim.png</file>
+    <file>opensimwlogo.png</file>
+    <file>process.png</file>
+    <file>processwlogo.png</file>
+    <file>Untitled.png</file>
+  </qresource>
+</RCC>

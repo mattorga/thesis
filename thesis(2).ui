@@ -34,7 +34,7 @@
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap resource="resources/resources.qrc">:/resources/walk.png</pixmap>
+        <pixmap resource="thesis-FrontEnd/thesis-FrontEnd/resources/resources.qrc">:/resources/walk.png</pixmap>
        </property>
       </widget>
      </item>
@@ -72,8 +72,7 @@
        </property>
        <property name="icon">
         <iconset>
-         <normalon>../Downloads/home_72dp_F0F0F0_FILL0_wght400_GRAD0_opsz48.png</normalon>
-        </iconset>
+         <normaloff>thesis-FrontEnd/thesis-FrontEnd/resources/home.png</normaloff>thesis-FrontEnd/thesis-FrontEnd/resources/home.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -119,8 +118,7 @@
        </property>
        <property name="icon">
         <iconset>
-         <normalon>../Downloads/photo_camera_72dp_F0F0F0_FILL0_wght400_GRAD0_opsz48.png</normalon>
-        </iconset>
+         <normaloff>thesis-FrontEnd/thesis-FrontEnd/resources/camera settings.png</normaloff>thesis-FrontEnd/thesis-FrontEnd/resources/camera settings.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -165,9 +163,8 @@
         <string>Data Viewer</string>
        </property>
        <property name="icon">
-        <iconset>
-         <normalon>../Downloads/preview_72dp_F0F0F0_FILL0_wght400_GRAD0_opsz48.png</normalon>
-        </iconset>
+        <iconset resource="thesis-FrontEnd/thesis-FrontEnd/resources/resources(2).qrc">
+         <normaloff>:/prefix/dataview.png</normaloff>:/prefix/dataview.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -212,9 +209,8 @@
         <string>Directory Viewer</string>
        </property>
        <property name="icon">
-        <iconset>
-         <normalon>../Downloads/lists_72dp_F0F0F0_FILL0_wght400_GRAD0_opsz48.png</normalon>
-        </iconset>
+        <iconset resource="thesis-FrontEnd/thesis-FrontEnd/resources/resources(2).qrc">
+         <normaloff>:/prefix/directory viewer.png</normaloff>:/prefix/directory viewer.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -259,9 +255,8 @@
         <string>Active Recording Info</string>
        </property>
        <property name="icon">
-        <iconset>
-         <normalon>../Downloads/settings_photo_camera_72dp_F0F0F0_FILL0_wght400_GRAD0_opsz48.png</normalon>
-        </iconset>
+        <iconset resource="thesis-FrontEnd/thesis-FrontEnd/resources/resources(2).qrc">
+         <normaloff>:/prefix/record view.png</normaloff>:/prefix/record view.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -286,6 +281,39 @@
         </size>
        </property>
       </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="controlpanel_button">
+       <property name="autoFillBackground">
+        <bool>false</bool>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+        border: none;
+        background-color: transparent;
+        color: white;
+    }
+    QPushButton:hover {
+        background-color: #87CEEB; /* Optional: Light sky blue hover effect */
+    }</string>
+       </property>
+       <property name="text">
+        <string>Control Panel</string>
+       </property>
+       <property name="icon">
+        <iconset resource="thesis-FrontEnd/thesis-FrontEnd/resources/resources(2).qrc">
+         <normaloff>:/prefix/process.png</normaloff>:/prefix/process.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>40</width>
+         <height>40</height>
+        </size>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+      </widget>
      </item>
      <item>
       <spacer name="verticalSpacer">
@@ -319,9 +347,8 @@
         <string>Exit</string>
        </property>
        <property name="icon">
-        <iconset>
-         <normalon>resources/exittoapp.png</normalon>
-        </iconset>
+        <iconset resource="thesis-FrontEnd/thesis-FrontEnd/resources/resources(2).qrc">
+         <normaloff>:/prefix/exittoapp.png</normaloff>:/prefix/exittoapp.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -418,6 +445,9 @@ color: #f0f0f0;
        <height>60</height>
       </size>
      </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
     </widget>
     <widget class="QLabel" name="label_2">
      <property name="geometry">
@@ -449,11 +479,593 @@ color: white;</string>
     <property name="styleSheet">
      <string notr="true">background-color:#4682B4</string>
     </property>
+    <widget class="QStackedWidget" name="stackedWidget">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>931</width>
+       <height>731</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLineEdit {
+    border: none;
+    background-color: transparent;
+    color: black;  /* Adjust the text color as needed */
+    padding: 0;    /* Remove any padding if necessary */
+}
+</string>
+     </property>
+     <property name="currentIndex">
+      <number>4</number>
+     </property>
+     <widget class="QWidget" name="home_page">
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QFrame" name="frame_2">
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_2">
+         <property name="styleSheet">
+          <string notr="true"> QPushButton {
+        background-color: #688DA4;  /* Darker shade */
+        color: white;  /* Text color */
+     
+    }</string>
+         </property>
+         <property name="text">
+          <string>New Recording</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_3">
+         <property name="styleSheet">
+          <string notr="true"> QPushButton {
+        background-color: #688DA4;  /* Darker shade */
+        color: white;  /* Text color */
+     
+    }</string>
+         </property>
+         <property name="text">
+          <string>Load Recording</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_4">
+         <property name="styleSheet">
+          <string notr="true"> QPushButton {
+        background-color: #688DA4;  /* Darker shade */
+        color: white;  /* Text color */
+     
+    }</string>
+         </property>
+         <property name="text">
+          <string>Import Videos</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="cameras_page">
+      <widget class="QWidget" name="verticalLayoutWidget">
+       <property name="geometry">
+        <rect>
+         <x>70</x>
+         <y>40</y>
+         <width>201</width>
+         <height>181</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="QPushButton" name="pushButton_5">
+          <property name="styleSheet">
+           <string notr="true"> QPushButton {
+        background-color: #688DA4;  /* Darker shade */
+        color: white;  /* Text color */
+     
+    }</string>
+          </property>
+          <property name="text">
+           <string>Start Motion Capture Recording</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_7">
+          <property name="styleSheet">
+           <string notr="true"> QPushButton {
+        background-color: #688DA4;  /* Darker shade */
+        color: white;  /* Text color */
+     
+    }</string>
+          </property>
+          <property name="text">
+           <string>Stop Recording</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_8">
+          <property name="styleSheet">
+           <string notr="true"> QPushButton {
+        background-color: #688DA4;  /* Darker shade */
+        color: white;  /* Text color */
+     
+    }</string>
+          </property>
+          <property name="text">
+           <string>Detect Available Cameras</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_6">
+          <property name="styleSheet">
+           <string notr="true"> QPushButton {
+        background-color: #688DA4;  /* Darker shade */
+        color: white;  /* Text color */
+     
+    }</string>
+          </property>
+          <property name="text">
+           <string>Start Calibration Recording</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="verticalLayoutWidget_2">
+       <property name="geometry">
+        <rect>
+         <x>70</x>
+         <y>320</y>
+         <width>221</width>
+         <height>191</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <widget class="QCheckBox" name="checkBox">
+          <property name="styleSheet">
+           <string notr="true">color: white
+
+
+</string>
+          </property>
+          <property name="text">
+           <string>Auto Process Videos on Save</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="checkBox_4">
+          <property name="styleSheet">
+           <string notr="true">color: white
+
+
+</string>
+          </property>
+          <property name="text">
+           <string>Generate Jupyter Notebook</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="checkBox_3">
+          <property name="styleSheet">
+           <string notr="true">color: white
+
+
+</string>
+          </property>
+          <property name="text">
+           <string>Auto Open in Blender</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="checkBox_2">
+          <property name="styleSheet">
+           <string notr="true">color: white
+
+
+</string>
+          </property>
+          <property name="text">
+           <string>Display Charuco Overlay</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QSpinBox" name="CharucoSquareSize">
+       <property name="geometry">
+        <rect>
+         <x>240</x>
+         <y>530</y>
+         <width>61</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Charuco Square Size (mm)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="whatsThis">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Charuco Square Size (mm)&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: white</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_3">
+       <property name="geometry">
+        <rect>
+         <x>70</x>
+         <y>530</y>
+         <width>161</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: white
+</string>
+       </property>
+       <property name="text">
+        <string>Charuco Square Size (mm):</string>
+       </property>
+      </widget>
+      <widget class="QWidget" name="verticalLayoutWidget_3">
+       <property name="geometry">
+        <rect>
+         <x>70</x>
+         <y>570</y>
+         <width>160</width>
+         <height>80</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_5">
+        <item>
+         <widget class="QLabel" name="label_4">
+          <property name="styleSheet">
+           <string notr="true">color: white
+</string>
+          </property>
+          <property name="text">
+           <string>Recording Name:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_5">
+          <property name="styleSheet">
+           <string notr="true">color: white
+</string>
+          </property>
+          <property name="text">
+           <string>Tag (Optional):</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_6">
+          <property name="styleSheet">
+           <string notr="true">color: white
+</string>
+          </property>
+          <property name="text">
+           <string>Full Path:</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="verticalLayoutWidget_4">
+       <property name="geometry">
+        <rect>
+         <x>240</x>
+         <y>570</y>
+         <width>541</width>
+         <height>82</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_6">
+        <item>
+         <widget class="QLineEdit" name="lineEdit_2">
+          <property name="styleSheet">
+           <string notr="true">QLineEdit {
+    border: none;
+    background-color: transparent;
+    color: black;  /* Adjust the text color as needed */
+    padding: 0;    /* Remove any padding if necessary */
+}
+</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_3">
+          <property name="styleSheet">
+           <string notr="true">QLineEdit {
+    border: none;
+    background-color: transparent;
+    color: black;  /* Adjust the text color as needed */
+    padding: 0;    /* Remove any padding if necessary */
+}
+</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit">
+          <property name="styleSheet">
+           <string notr="true">QLineEdit {
+    border: none;
+    background-color: transparent;
+    color: black;  /* Adjust the text color as needed */
+    padding: 0;    /* Remove any padding if necessary */
+}
+</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="dataviewer_page">
+      <widget class="QPushButton" name="pushButton_9">
+       <property name="geometry">
+        <rect>
+         <x>420</x>
+         <y>610</y>
+         <width>71</width>
+         <height>28</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true"> QPushButton {
+        background-color: #688DA4;  /* Darker shade */
+        color: white;  /* Text color */
+     
+    }</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <selectedoff>thesis-FrontEnd/thesis-FrontEnd/resources/pause_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.png</selectedoff>
+         <selectedon>thesis-FrontEnd/thesis-FrontEnd/resources/play_arrow_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.png</selectedon>
+        </iconset>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButton_10">
+       <property name="geometry">
+        <rect>
+         <x>80</x>
+         <y>610</y>
+         <width>71</width>
+         <height>28</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true"> QPushButton {
+        background-color: #688DA4;  /* Darker shade */
+        color: white;  /* Text color */
+     
+    }</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>thesis-FrontEnd/thesis-FrontEnd/resources/first_page_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.png</normaloff>thesis-FrontEnd/thesis-FrontEnd/resources/first_page_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.png</iconset>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButton_11">
+       <property name="geometry">
+        <rect>
+         <x>740</x>
+         <y>610</y>
+         <width>71</width>
+         <height>28</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true"> QPushButton {
+        background-color: #688DA4;  /* Darker shade */
+        color: white;  /* Text color */
+     
+    }</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>thesis-FrontEnd/thesis-FrontEnd/resources/last_page_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.png</normaloff>thesis-FrontEnd/thesis-FrontEnd/resources/last_page_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.png</iconset>
+       </property>
+      </widget>
+      <widget class="QSlider" name="horizontalSlider">
+       <property name="geometry">
+        <rect>
+         <x>80</x>
+         <y>570</y>
+         <width>731</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+      <widget class="QWidget" name="graph" native="true">
+       <property name="geometry">
+        <rect>
+         <x>80</x>
+         <y>70</y>
+         <width>731</width>
+         <height>491</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_8">
+       <property name="geometry">
+        <rect>
+         <x>80</x>
+         <y>660</y>
+         <width>141</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: white
+</string>
+       </property>
+       <property name="text">
+        <string>Frame Number:</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_4">
+       <property name="geometry">
+        <rect>
+         <x>190</x>
+         <y>660</y>
+         <width>113</width>
+         <height>22</height>
+        </rect>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="directoryviewer_page">
+      <widget class="QPushButton" name="pushButton_12">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>450</y>
+         <width>199</width>
+         <height>28</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true"> QPushButton {
+        background-color: #688DA4;  /* Darker shade */
+        color: white;  /* Text color */
+     
+    }</string>
+       </property>
+       <property name="text">
+        <string>Show FreeMoCap Data Folder</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_9">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>500</y>
+         <width>141</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: white
+</string>
+       </property>
+       <property name="text">
+        <string>Session Path:</string>
+       </property>
+      </widget>
+      <widget class="QTableWidget" name="tableWidget_2">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>40</y>
+         <width>891</width>
+         <height>391</height>
+        </rect>
+       </property>
+       <column>
+        <property name="text">
+         <string>Directory</string>
+        </property>
+       </column>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_5">
+       <property name="geometry">
+        <rect>
+         <x>120</x>
+         <y>500</y>
+         <width>601</width>
+         <height>22</height>
+        </rect>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="activerecording_page">
+      <widget class="QTableWidget" name="tableWidget">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>30</y>
+         <width>881</width>
+         <height>521</height>
+        </rect>
+       </property>
+       <column>
+        <property name="text">
+         <string>Recording Name</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Status</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Type</string>
+        </property>
+       </column>
+      </widget>
+     </widget>
+    </widget>
    </widget>
   </widget>
  </widget>
  <resources>
-  <include location="resources/resources.qrc"/>
+  <include location="thesis-FrontEnd/thesis-FrontEnd/resources/resources.qrc"/>
+  <include location="thesis-FrontEnd/thesis-FrontEnd/resources/resources(2).qrc"/>
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>icon_widget</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>322</x>
+     <y>67</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>222</x>
+     <y>148</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
