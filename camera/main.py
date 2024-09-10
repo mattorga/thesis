@@ -6,12 +6,10 @@ if __name__ == '__main__':
     camManager.addCamera(1, 'output_1.mp4')
     camManager.addCamera(2, 'output_2.mp4')
 
+    # TODO: Start cameras but to not record
 
     # Start recording on all cameras
     camManager.startAll()
-
-    # Do some other processing here if needed
-    # ...
 
     # Wait for user input to stop recording
     input("Press Enter to stop recording...")

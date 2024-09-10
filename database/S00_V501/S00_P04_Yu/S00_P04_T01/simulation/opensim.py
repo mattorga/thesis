@@ -23,12 +23,12 @@ def simulate(root_path):
    '''
 
    # Load the Model
-   model = "Pose2Sim_LSTM.osim" # !! Avoid hard coding filenames !!
+   model = "Pose2Sim_LSTM.osim" # Avoid hard coding filenames
    model_path = os.path.join(root_path, model) 
    Model = opensim.Model(model_path)
 
    # Test input files: "walking.sto", "boxing.sto"
-   sim_file = "walking.sto" # !! Avoid hard coding filenames !!
+   sim_file = "walking.sto" # Avoid hard coding filenames
    sim_path = os.path.join(root_path, sim_file)
    time = opensim.TimeSeriesTable(sim_path)
 
