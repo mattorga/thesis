@@ -170,11 +170,22 @@ def calibration(config=None):
 
     level, config_dicts = read_config_files(config)
     config_dict = config_dicts[0]
+    
+    # Change 1 (September 14, 2024)
+    # Change/s: 
+    ## 1. Sets the session_dir to the provided 'project_dir' instead of using the realpath (original implementation)
+    # Reason: The original implementation assumes that you call the method in the project directory, 
+    #         while our use case requires calling the method from a different directory
     try:
-        session_dir = os.path.realpath([os.getcwd() if level==2 else os.path.join(os.getcwd(), '..')][0])
+        if level == 2:
+            session_dir = config_dict['project']['project_dir']
+        else:
+            parent_dir = os.path.join(os.getcwd(), '..')
+            session_dir = os.path.realpath(parent_dir)
         [os.path.join(session_dir, c) for c in os.listdir(session_dir) if 'calib' in c.lower() and not c.lower().endswith('.py')][0]
     except:
         session_dir = os.path.realpath(os.getcwd())
+
     config_dict.get("project").update({"project_dir":session_dir})
 
     # Set up logging
@@ -218,6 +229,7 @@ def poseEstimation(config=None):
     # Set up logging
     session_dir = os.path.realpath(os.path.join(config_dicts[0].get('project').get('project_dir'), '..'))
     setup_logging(session_dir)
+
 
     # Batch process all trials
     for config_dict in config_dicts:
@@ -353,7 +365,8 @@ def triangulation(config=None):
                              config_dict.get("project").update({"project_dir":"<YOUR_TRIAL_DIRECTORY>"})')
 
     # Set up logging
-    session_dir = os.path.realpath(os.path.join(config_dicts[0].get('project').get('project_dir'), '..'))
+    session_dir = os.path.realpath(os.path.join(config_dicts[0].get('project').get('project_dir'), '..', '..')) # Change 2 - Added one 'Up one level' operator
+    print(session_dir)
     setup_logging(session_dir)  
 
     # Batch process all trials
@@ -440,7 +453,7 @@ def markerAugmentation(config=None):
             raise ValueError('Please specify the project directory in config_dict:\n \
                              config_dict.get("project").update({"project_dir":"<YOUR_TRIAL_DIRECTORY>"})')
 
-    session_dir = os.path.realpath(os.path.join(config_dicts[0].get('project').get('project_dir'), '..'))
+    session_dir = os.path.realpath(os.path.join(config_dicts[0].get('project').get('project_dir'), '..', '..')) # Change 3 - Added one 'Up one level' operator
     setup_logging(session_dir)
 
     for config_dict in config_dicts:
