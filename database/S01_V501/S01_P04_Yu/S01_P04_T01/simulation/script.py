@@ -1,7 +1,7 @@
-def simulate(root_path):
-   from opensim import opensim
-   import os
+import opensim as osim
+import os
 
+def simulate(root_path):
    '''
    OpenSim Basic Visualizer
 
@@ -25,12 +25,16 @@ def simulate(root_path):
    # Load the Model
    model = "Pose2Sim_LSTM.osim" # Avoid hard coding filenames
    model_path = os.path.join(root_path, model) 
-   Model = opensim.Model(model_path)
+   Model = osim.Model(model_path)
+   
 
    # Test input files: "walking.sto", "boxing.sto"
    sim_file = "walking.sto" # Avoid hard coding filenames
    sim_path = os.path.join(root_path, sim_file)
-   time = opensim.TimeSeriesTable(sim_path)
+   print(f"SCRIPT PATH: {sim_path}")
+   time = osim.TimeSeriesTable(sim_path)
 
-   opensim.VisualizerUtilities.showMotion(Model,time)
-      
+   test = osim.VisualizerUtilities.showMotion(Model,time)
+
+if __name__ == "__main__":
+    simulate("/Users/mattheworga/Documents/Git/DLSU/thesis/database/S01_V501/S01_P04_Yu/S00_P04_T01/simulation")
