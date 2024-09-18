@@ -1,0 +1,26 @@
+<RCC>
+  <qresource prefix="resources">
+    <file>directions_walk_24dp_000000_FILL0_wght400_GRAD0_opsz24.png</file>
+    <file>home_24dp_000000_FILL0_wght400_GRAD0_opsz24.png</file>
+    <file>info.png</file>
+    <file>logout_24dp_000000_FILL0_wght400_GRAD0_opsz24.png</file>
+    <file>menu_24dp_000000_FILL0_wght400_GRAD0_opsz24.png</file>
+    <file>pause_24dp_000000_FILL0_wght400_GRAD0_opsz24.png</file>
+    <file>photo_camera_24dp_000000_FILL0_wght400_GRAD0_opsz24.png</file>
+    <file>play_arrow_24dp_000000_FILL0_wght400_GRAD0_opsz24.png</file>
+    <file>skip_next_24dp_000000_FILL0_wght400_GRAD0_opsz24.png</file>
+    <file>skip_previous_24dp_000000_FILL0_wght400_GRAD0_opsz24.png</file>
+    <file>storage_24dp_000000_FILL0_wght400_GRAD0_opsz24.png</file>
+    <file>fast_forward_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.png</file>
+    <file>fast_rewind_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.png</file>
+    <file>pause_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.png</file>
+    <file>play_arrow_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.png</file>
+    <file>exittoapp.png</file>
+    <file>settings_photo_camera_72dp_F0F0F0_FILL0_wght400_GRAD0_opsz48.png</file>
+    <file>lists_72dp_F0F0F0_FILL0_wght400_GRAD0_opsz48.png</file>
+    <file>preview_72dp_F0F0F0_FILL0_wght400_GRAD0_opsz48.png</file>
+    <file>photo_camera_72dp_F0F0F0_FILL0_wght400_GRAD0_opsz48.png</file>
+    <file>home_72dp_F0F0F0_FILL0_wght400_GRAD0_opsz48.png</file>
+    <file>directions_walk_72dp_F0F0F0_FILL0_wght400_GRAD0_opsz20.png</file>
+  </qresource>
+</RCC>
