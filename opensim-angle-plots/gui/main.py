@@ -11,25 +11,32 @@ from qt_material import apply_stylesheet
 import sys
 
 def read_data(file):
-  df = pd.read_csv(file)
+    df = pd.read_csv(file)
 
-  knee_angle_r = df["knee_angle_r"]
-  knee_angle_l = df["knee_angle_l"]
+    hip_flexion_r = df["hip_flexion_r"]
+    hip_flexion_l = df["hip_flexion_l"]
 
-  time = df["time"]
+    knee_angle_r = df["knee_angle_r"]
+    knee_angle_l = df["knee_angle_l"]
 
-  return time, knee_angle_r, knee_angle_l
+    ankle_angle_r = df["ankle_angle_r"]
+    ankle_angle_l = df["ankle_angle_l"]
+
+    time = df["time"]
+
+    return time, hip_flexion_r, hip_flexion_l, knee_angle_r, knee_angle_l, ankle_angle_r, ankle_angle_l
 
 if __name__ == "__main__":
-  data = read_data("/Users/mattheworga/Documents/Git/DLSU/thesis/opensim-angle-plots/test_output_filtered.csv")
-  
-  app = QApplication(sys.argv)
+    data = read_data("/Users/mattheworga/Documents/Git/DLSU/thesis/opensim-angle-plots/test_output_filtered.csv")
+    print(data)
 
-  widget = Widget(data)
-  window = MainWindow(widget)
+    app = QApplication(sys.argv)
 
-  apply_stylesheet(app, theme='dark_teal.xml')
+    widget = Widget(data)
+    window = MainWindow(widget)
 
-  window.show()
+    apply_stylesheet(app, theme='dark_teal.xml')
 
-  sys.exit(app.exec_())
+    window.show()
+
+    sys.exit(app.exec_())

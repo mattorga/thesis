@@ -2,19 +2,16 @@ from PyQt5.QtCore import Qt, QAbstractTableModel, QModelIndex
 from PyQt5.QtGui import QColor
 
 class CustomTableModel(QAbstractTableModel):
-    def __init__(self, data=None):
+    def __init__(self, time, *args):
         QAbstractTableModel.__init__(self)
-        self.load_data(data)
+        self.load_data(time, *args)
     
-    def load_data(self, data):
-        self.input_time = data[0].values
-        self.input_joint_r = data[1].values
-        self.input_joint_l = data[2].values
-
-        self.column_count = 3
+    def load_data(self, time, *args):
+        self.input_time = time
+        self.input_data = args
+        self.column_count = len(args) + 1
         self.row_count = len(self.input_time)
 
-    # What does QModelIndex do?
     def rowCount(self, parent=QModelIndex()):
         return self.row_count
     
@@ -25,7 +22,11 @@ class CustomTableModel(QAbstractTableModel):
         if role != Qt.DisplayRole:
             return None
         if orientation == Qt.Horizontal:
-            return ("Time", "Joint 1", "Joint 2")[section]
+            if section == 0:
+                return "Time"
+            else:
+                joint_names = ["Hip R", "Hip L", "Knee R", "Knee L", "Ankle R", "Ankle L"]
+                return joint_names[section - 1] if section <= len(joint_names) else f"Column {section}"
         else:
             return f"{section}"
     
@@ -35,17 +36,15 @@ class CustomTableModel(QAbstractTableModel):
 
         if role == Qt.DisplayRole:
             if column == 0:
-                time = self.input_time[row]
-                return str(time)
-            elif column == 1:
-                joint_angle_r = self.input_joint_r[row]
-                return f"{joint_angle_r:.2f}"
-            elif column == 2:
-                joint_angle_l = self.input_joint_l[row]
-                return f"{joint_angle_l:.2f}"
+                return f"{self.input_time[row]:.2f}"
+            else:
+                return f"{self.input_data[column - 1][row]:.2f}"
         elif role == Qt.BackgroundRole:
             return QColor(Qt.white)
         elif role == Qt.TextAlignmentRole:
             return Qt.AlignRight
         
         return None
+    
+    def flags(self, index):
+        return Qt.ItemIsEnabled | Qt.ItemIsSelectable

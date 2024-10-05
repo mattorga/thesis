@@ -25,4 +25,4 @@ class MainWindow(QMainWindow):
 
         # Window dimensions
         geometry = self.screen().availableGeometry()
-        self.setFixedSize(int(geometry.width() * 0.8), int(geometry.height() * 0.7))
+        self.setBaseSize(int(geometry.width() * 0.8), int(geometry.height() * 0.7))
