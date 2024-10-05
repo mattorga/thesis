@@ -34,7 +34,7 @@ def simulate(root_path):
    print(f"SCRIPT PATH: {sim_path}")
    time = osim.TimeSeriesTable(sim_path)
 
-   test = osim.VisualizerUtilities.showMotion(Model,time)
+   test = osim.VisualizerUtilities.showMotion(Model, time)
 
 if __name__ == "__main__":
     simulate("/Users/mattheworga/Documents/Git/DLSU/thesis/database/S01_V501/S01_P04_Yu/S00_P04_T01/simulation")

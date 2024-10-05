@@ -3,7 +3,7 @@ import toml
 import os
 
 from PyQt5 import QtWidgets
-from PyQt5.QtCore import pyqtSlot
+from PyQt5.QtCore import pyqtSlot, QThread, pyqtSignal
 from PyQt5.QtWidgets import QFileDialog, QMainWindow, QApplication
 from qt_material import apply_stylesheet
 
