@@ -10,23 +10,24 @@ class Widget(QWidget):
         QWidget.__init__(self)
 
         # Getting the Models
-        self.hip_model = CustomTableModel(data[0], data[1], data[2])
-        self.knee_model = CustomTableModel(data[0], data[3], data[4])
-        self.ankle_model = CustomTableModel(data[0], data[5], data[6])
+        self.hip_model = CustomTableModel(data[0], data[1], data[2], "Hip")
+        self.knee_model = CustomTableModel(data[0], data[3], data[4], "Knee")
+        self.ankle_model = CustomTableModel(data[0], data[5], data[6], "Ankle")
 
         # Create tab widget
         self.tab_widget = QTabWidget()
 
-        # Create and add tabs
+        # Create tabs
+        self.all_tab = self.create_all_tab()
         self.hip_tab = self.create_tab(self.hip_model, "Hip Flexion")
         self.knee_tab = self.create_tab(self.knee_model, "Knee Angle")
         self.ankle_tab = self.create_tab(self.ankle_model, "Ankle Angle")
-        self.all_charts_tab = self.create_all_charts_tab()
 
+        # Add tabs to the widget, with 'All' as the first tab
+        self.tab_widget.addTab(self.all_tab, "All")
         self.tab_widget.addTab(self.hip_tab, "Hip")
         self.tab_widget.addTab(self.knee_tab, "Knee")
         self.tab_widget.addTab(self.ankle_tab, "Ankle")
-        self.tab_widget.addTab(self.all_charts_tab, "All Charts")
 
         # Main layout
         self.main_layout = QVBoxLayout()
@@ -113,7 +114,7 @@ class Widget(QWidget):
 
         return tab
 
-    def create_all_charts_tab(self):
+    def create_all_tab(self):
         tab = QWidget()
         main_layout = QHBoxLayout()
 
@@ -157,20 +158,20 @@ class Widget(QWidget):
         splitter.addWidget(charts_widget)
 
         # Set initial sizes
-        splitter.setSizes([int(self.width() * 0.3), int(self.width() * 0.7)])
+        splitter.setSizes([int(self.width() * 0.2), int(self.width() * 0.8)])
 
         main_layout.addWidget(splitter)
         tab.setLayout(main_layout)
 
         # Connect signals
-        slider.valueChanged.connect(lambda value: self.update_all_charts_and_tables(value, [hip_chart, knee_chart, ankle_chart], [hip_table, knee_table, ankle_table]))
+        slider.valueChanged.connect(lambda value: self.update_all_charts_and_tables(value, [hip_chart, knee_chart, ankle_chart], [hip_table, knee_table, ankle_table], [self.hip_model, self.knee_model, self.ankle_model]))
 
         # Set initial state
         slider.setValue(0)
-        self.update_all_charts_and_tables(0, [hip_chart, knee_chart, ankle_chart], [hip_table, knee_table, ankle_table])
+        self.update_all_charts_and_tables(0, [hip_chart, knee_chart, ankle_chart], [hip_table, knee_table, ankle_table], [self.hip_model, self.knee_model, self.ankle_model])
 
         return tab
-
+    
     def create_chart(self, model, title, show_legend=True):
         chart = QChart()
         chart.setAnimationOptions(QChart.AllAnimations)
@@ -216,9 +217,9 @@ class Widget(QWidget):
 
         return table_view
 
-    def update_all_charts_and_tables(self, value, charts, tables):
-        for chart in charts:
-            self.update_chart_indicators(value, None, chart.chart().series()[-3], chart.chart().series()[-2], chart.chart().series()[-1])
+    def update_all_charts_and_tables(self, value, charts, tables, models):
+        for chart, model in zip(charts, models):
+            self.update_individual_chart(value, model, chart.chart().series()[-3], chart.chart().series()[-2], chart.chart().series()[-1])
         for table in tables:
             table.selectRow(value)
 
@@ -232,11 +233,11 @@ class Widget(QWidget):
     def add_series(self, chart, name, model):
         # Create QLineSeries for Right (y)
         series_right = QLineSeries()
-        series_right.setName("Right Joint")
+        series_right.setName(f"Right {name}")
 
         # Create QLineSeries for Left (y2)
         series_left = QLineSeries()
-        series_left.setName("Left Joint")
+        series_left.setName(f"Left {name}")
 
         # Variables to store min and max values
         min_y = float('inf')
@@ -294,6 +295,36 @@ class Widget(QWidget):
         # Add legend
         chart.legend().setVisible(True)
         chart.legend().setAlignment(Qt.AlignBottom)
+    
+    def update_individual_chart(self, row, model, vertical_line, selected_point_right, selected_point_left):
+        time = float(model.index(row, 0).data())
+        right_angle = float(model.index(row, 1).data())
+        left_angle = float(model.index(row, 2).data())
+
+        # Update the vertical line
+        vertical_line.clear()
+        chart = vertical_line.chart()
+        y_min = chart.axes(Qt.Vertical)[0].min()
+        y_max = chart.axes(Qt.Vertical)[0].max()
+        vertical_line.append(time, y_min)
+        vertical_line.append(time, y_max)
+
+        # Update the selected points
+        selected_point_right.clear()
+        selected_point_left.clear()
+        selected_point_right.append(time, right_angle)
+        selected_point_left.append(time, left_angle)
+
+        # Set the line and points color and width
+        pen = QPen(Qt.black)
+        pen.setWidth(1)
+        vertical_line.setPen(pen)
+        selected_point_right.setMarkerSize(10)
+        selected_point_left.setMarkerSize(10)
+        selected_point_right.setColor(Qt.red)
+        selected_point_left.setColor(Qt.red)
+
+        chart.update()
 
     @pyqtSlot('QItemSelection', 'QItemSelection')
     def on_row_selected(self, selected, deselected, model, vertical_line, selected_point_right, selected_point_left, slider):

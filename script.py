@@ -21,7 +21,7 @@ def simulate(root_path):
       - For now, a generic model is being used (i.e. Pose2Sim Default Models) 
    2. File paths are hard coded, need to optimize [05/06/2024]
    '''
-
+   
    # Load the Model
    model = "Pose2Sim_LSTM.osim" # Avoid hard coding filenames
    model_path = os.path.join(root_path, model) 
@@ -37,4 +37,4 @@ def simulate(root_path):
    test = osim.VisualizerUtilities.showMotion(Model, time)
 
 if __name__ == "__main__":
-    simulate("/Users/mattheworga/Documents/Git/DLSU/thesis/database/S01_V501/S01_P04_Yu/S00_P04_T01/simulation")
+    simulate("/Users/mattheworga/Documents/Git/DLSU/thesis/database/S01_V501/S01_P04/Trial_2/simulation")

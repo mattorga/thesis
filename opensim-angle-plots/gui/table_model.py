@@ -2,14 +2,16 @@ from PyQt5.QtCore import Qt, QAbstractTableModel, QModelIndex
 from PyQt5.QtGui import QColor
 
 class CustomTableModel(QAbstractTableModel):
-    def __init__(self, time, *args):
+    def __init__(self, time, data_right, data_left, joint_name):
         QAbstractTableModel.__init__(self)
-        self.load_data(time, *args)
+        self.load_data(time, data_right, data_left, joint_name)
     
-    def load_data(self, time, *args):
+    def load_data(self, time, data_right, data_left, joint_name):
         self.input_time = time
-        self.input_data = args
-        self.column_count = len(args) + 1
+        self.input_data_right = data_right
+        self.input_data_left = data_left
+        self.joint_name = joint_name
+        self.column_count = 3
         self.row_count = len(self.input_time)
 
     def rowCount(self, parent=QModelIndex()):
@@ -22,11 +24,8 @@ class CustomTableModel(QAbstractTableModel):
         if role != Qt.DisplayRole:
             return None
         if orientation == Qt.Horizontal:
-            if section == 0:
-                return "Time"
-            else:
-                joint_names = ["Hip R", "Hip L", "Knee R", "Knee L", "Ankle R", "Ankle L"]
-                return joint_names[section - 1] if section <= len(joint_names) else f"Column {section}"
+            headers = ["Time", f"{self.joint_name} R", f"{self.joint_name} L"]
+            return headers[section]
         else:
             return f"{section}"
     
@@ -37,8 +36,10 @@ class CustomTableModel(QAbstractTableModel):
         if role == Qt.DisplayRole:
             if column == 0:
                 return f"{self.input_time[row]:.2f}"
-            else:
-                return f"{self.input_data[column - 1][row]:.2f}"
+            elif column == 1:
+                return f"{self.input_data_right[row]:.2f}"
+            elif column == 2:
+                return f"{self.input_data_left[row]:.2f}"
         elif role == Qt.BackgroundRole:
             return QColor(Qt.white)
         elif role == Qt.TextAlignmentRole:

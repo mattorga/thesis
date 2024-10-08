@@ -28,6 +28,7 @@ def read_data(file):
 
 if __name__ == "__main__":
     data = read_data("/Users/mattheworga/Documents/Git/DLSU/thesis/opensim-angle-plots/test_output_filtered.csv")
+
     print(data)
 
     app = QApplication(sys.argv)

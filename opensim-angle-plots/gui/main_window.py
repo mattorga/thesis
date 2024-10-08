@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import QMainWindow, QAction
 class MainWindow(QMainWindow):
     def __init__(self, widget):
         QMainWindow.__init__(self)
-        self.setWindowTitle("Knee Flexion Angle")
+        self.setWindowTitle("Joint Angles")
         self.setCentralWidget(widget)
 
         # Menu
@@ -25,4 +25,4 @@ class MainWindow(QMainWindow):
 
         # Window dimensions
         geometry = self.screen().availableGeometry()
-        self.setBaseSize(int(geometry.width() * 0.8), int(geometry.height() * 0.7))
+        self.setFixedSize(int(geometry.width() * 0.8), int(geometry.height() * 0.7))
