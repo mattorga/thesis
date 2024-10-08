@@ -9,7 +9,7 @@ class Widget(QWidget):
     def __init__(self, data):
         QWidget.__init__(self)
 
-        # Getting the Models
+         # Getting the Models
         self.hip_model = CustomTableModel(data[0], data[1], data[2], "Hip")
         self.knee_model = CustomTableModel(data[0], data[3], data[4], "Knee")
         self.ankle_model = CustomTableModel(data[0], data[5], data[6], "Ankle")
@@ -56,6 +56,19 @@ class Widget(QWidget):
         # Creating QChart
         chart = QChart()
         chart.setAnimationOptions(QChart.AllAnimations)
+
+        # Create axes
+        axis_x = QValueAxis()
+        axis_x.setTitleText("Gait Cycle (%)")
+        axis_x.setRange(0, 100)
+        chart.addAxis(axis_x, Qt.AlignBottom)
+
+        axis_y = QValueAxis()
+        axis_y.setLabelFormat("%.2f")
+        axis_y.setTitleText(f"{title} (°)")
+        chart.addAxis(axis_y, Qt.AlignLeft)
+
+        # Add series
         self.add_series(chart, title, model)
 
         # Creating QChartView
@@ -65,18 +78,18 @@ class Widget(QWidget):
         # Create a vertical line series
         vertical_line = QLineSeries()
         chart.addSeries(vertical_line)
-        vertical_line.attachAxis(chart.axes(Qt.Horizontal)[0])
-        vertical_line.attachAxis(chart.axes(Qt.Vertical)[0])
+        vertical_line.attachAxis(axis_x)
+        vertical_line.attachAxis(axis_y)
 
         # Create scatter series for the selected points
         selected_point_right = QScatterSeries()
         selected_point_left = QScatterSeries()
         chart.addSeries(selected_point_right)
         chart.addSeries(selected_point_left)
-        selected_point_right.attachAxis(chart.axes(Qt.Horizontal)[0])
-        selected_point_right.attachAxis(chart.axes(Qt.Vertical)[0])
-        selected_point_left.attachAxis(chart.axes(Qt.Horizontal)[0])
-        selected_point_left.attachAxis(chart.axes(Qt.Vertical)[0])
+        selected_point_right.attachAxis(axis_x)
+        selected_point_right.attachAxis(axis_y)
+        selected_point_left.attachAxis(axis_x)
+        selected_point_left.attachAxis(axis_y)
 
         # Create Slider
         slider = QSlider(Qt.Horizontal)
@@ -175,31 +188,45 @@ class Widget(QWidget):
     def create_chart(self, model, title, show_legend=True):
         chart = QChart()
         chart.setAnimationOptions(QChart.AllAnimations)
-        self.add_series(chart, title, model)
 
-        chart_view = QChartView(chart)
-        chart_view.setRenderHint(QPainter.Antialiasing)
+        # Create axes
+        axis_x = QValueAxis()
+        axis_x.setTitleText("Gait Cycle (%)")
+        axis_x.setRange(0, 100)
+        chart.addAxis(axis_x, Qt.AlignBottom)
+
+        axis_y = QValueAxis()
+        axis_y.setLabelFormat("%.2f")
+        axis_y.setTitleText(f"{title} (°)")
+        chart.addAxis(axis_y, Qt.AlignLeft)
+
+        # Add series
+        self.add_series(chart, title, model)
 
         # Create a vertical line series
         vertical_line = QLineSeries()
         chart.addSeries(vertical_line)
-        vertical_line.attachAxis(chart.axes(Qt.Horizontal)[0])
-        vertical_line.attachAxis(chart.axes(Qt.Vertical)[0])
+        vertical_line.attachAxis(axis_x)
+        vertical_line.attachAxis(axis_y)
 
         # Create scatter series for the selected points
         selected_point_right = QScatterSeries()
         selected_point_left = QScatterSeries()
         chart.addSeries(selected_point_right)
         chart.addSeries(selected_point_left)
-        selected_point_right.attachAxis(chart.axes(Qt.Horizontal)[0])
-        selected_point_right.attachAxis(chart.axes(Qt.Vertical)[0])
-        selected_point_left.attachAxis(chart.axes(Qt.Horizontal)[0])
-        selected_point_left.attachAxis(chart.axes(Qt.Vertical)[0])
+        selected_point_right.attachAxis(axis_x)
+        selected_point_right.attachAxis(axis_y)
+        selected_point_left.attachAxis(axis_x)
+        selected_point_left.attachAxis(axis_y)
+
+        chart_view = QChartView(chart)
+        chart_view.setRenderHint(QPainter.Antialiasing)
 
         # Set legend visibility based on the show_legend parameter
         chart.legend().setVisible(show_legend)
 
         return chart_view
+
 
     def create_table(self, model, title):
         table_view = QTableView()
@@ -243,19 +270,22 @@ class Widget(QWidget):
         min_y = float('inf')
         max_y = float('-inf')
 
+        # Calculate total time for percentage conversion
+        total_time = model.input_time.iloc[-1] - model.input_time.iloc[0]
+
         # Filling QLineSeries
         for i in range(model.rowCount()):
             # Getting the data
-            t = model.index(i, 0).data()
-            x = float(t)
-            y_right = float(model.index(i, 1).data())
-            y_left = float(model.index(i, 2).data())
+            t = model.input_time.iloc[i]
+            x = (t - model.input_time.iloc[0]) / total_time * 100  # Convert to percentage
+            y_right = float(model.input_data_right.iloc[i])
+            y_left = float(model.input_data_left.iloc[i])
 
-            if x > 0 and y_right > 0:
+            if x >= 0 and y_right > 0:
                 series_right.append(x, y_right)
                 min_y = min(min_y, y_right)
                 max_y = max(max_y, y_right)
-            if x > 0 and y_left > 0:
+            if x >= 0 and y_left > 0:
                 series_left.append(x, y_left)
                 min_y = min(min_y, y_left)
                 max_y = max(max_y, y_left)
@@ -272,48 +302,38 @@ class Widget(QWidget):
         chart.addSeries(series_right)
         chart.addSeries(series_left)
 
-        # Setting X-axis
-        axis_x = QValueAxis()
-        axis_x.setTitleText("Time")
-        chart.addAxis(axis_x, Qt.AlignBottom)
+        # Attach series to axes
+        axis_x = chart.axes(Qt.Horizontal)[0]
+        axis_y = chart.axes(Qt.Vertical)[0]
         series_right.attachAxis(axis_x)
+        series_right.attachAxis(axis_y)
         series_left.attachAxis(axis_x)
+        series_left.attachAxis(axis_y)
 
-        # Setting Y-axis
-        axis_y = QValueAxis()
-        axis_y.setLabelFormat("%.2f")
-        axis_y.setTitleText(f"{name} (°)")
-        
         # Set the range with some padding
         padding = (max_y - min_y) * 0.1  # 10% padding
         axis_y.setRange(min_y - padding, max_y + padding)
-        
-        chart.addAxis(axis_y, Qt.AlignLeft)
-        series_right.attachAxis(axis_y)
-        series_left.attachAxis(axis_y)
-
-        # Add legend
-        chart.legend().setVisible(True)
-        chart.legend().setAlignment(Qt.AlignBottom)
     
     def update_individual_chart(self, row, model, vertical_line, selected_point_right, selected_point_left):
-        time = float(model.index(row, 0).data())
-        right_angle = float(model.index(row, 1).data())
-        left_angle = float(model.index(row, 2).data())
+        total_time = model.input_time.iloc[-1] - model.input_time.iloc[0]
+        time = model.input_time.iloc[row]
+        percentage = (time - model.input_time.iloc[0]) / total_time * 100
+        right_angle = float(model.input_data_right.iloc[row])
+        left_angle = float(model.input_data_left.iloc[row])
 
         # Update the vertical line
         vertical_line.clear()
         chart = vertical_line.chart()
         y_min = chart.axes(Qt.Vertical)[0].min()
         y_max = chart.axes(Qt.Vertical)[0].max()
-        vertical_line.append(time, y_min)
-        vertical_line.append(time, y_max)
+        vertical_line.append(percentage, y_min)
+        vertical_line.append(percentage, y_max)
 
         # Update the selected points
         selected_point_right.clear()
         selected_point_left.clear()
-        selected_point_right.append(time, right_angle)
-        selected_point_left.append(time, left_angle)
+        selected_point_right.append(percentage, right_angle)
+        selected_point_left.append(percentage, left_angle)
 
         # Set the line and points color and width
         pen = QPen(Qt.black)
@@ -357,7 +377,7 @@ class Widget(QWidget):
         vertical_line.append(time, y_min)
         vertical_line.append(time, y_max)
 
-        # Update the selected points
+        # Update the selected points immediately
         selected_point_right.clear()
         selected_point_left.clear()
         selected_point_right.append(time, right_angle)

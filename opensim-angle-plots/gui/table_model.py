@@ -13,6 +13,7 @@ class CustomTableModel(QAbstractTableModel):
         self.joint_name = joint_name
         self.column_count = 3
         self.row_count = len(self.input_time)
+        self.total_time = self.input_time.iloc[-1] - self.input_time.iloc[0]
 
     def rowCount(self, parent=QModelIndex()):
         return self.row_count
@@ -24,7 +25,7 @@ class CustomTableModel(QAbstractTableModel):
         if role != Qt.DisplayRole:
             return None
         if orientation == Qt.Horizontal:
-            headers = ["Time", f"{self.joint_name} R", f"{self.joint_name} L"]
+            headers = ["Gait Cycle (%)", f"{self.joint_name} R", f"{self.joint_name} L"]
             return headers[section]
         else:
             return f"{section}"
@@ -35,11 +36,12 @@ class CustomTableModel(QAbstractTableModel):
 
         if role == Qt.DisplayRole:
             if column == 0:
-                return f"{self.input_time[row]:.2f}"
+                percentage = (self.input_time.iloc[row] - self.input_time.iloc[0]) / self.total_time * 100
+                return f"{percentage:.2f}"
             elif column == 1:
-                return f"{self.input_data_right[row]:.2f}"
+                return f"{self.input_data_right.iloc[row]:.2f}"
             elif column == 2:
-                return f"{self.input_data_left[row]:.2f}"
+                return f"{self.input_data_left.iloc[row]:.2f}"
         elif role == Qt.BackgroundRole:
             return QColor(Qt.white)
         elif role == Qt.TextAlignmentRole:
