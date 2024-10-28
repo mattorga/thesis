@@ -10,10 +10,28 @@
     <height>867</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>2000</width>
+    <height>2000</height>
+   </size>
+  </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
    <property name="layoutDirection">
     <enum>Qt::LeftToRight</enum>
    </property>
@@ -25,6 +43,12 @@
       <width>281</width>
       <height>929</height>
      </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
     </property>
     <property name="layoutDirection">
      <enum>Qt::LeftToRight</enum>
@@ -80,17 +104,7 @@
         <bool>false</bool>
        </property>
        <property name="styleSheet">
-        <string notr="true">QPushButton {
-        border: none;
-        background-color: transparent;
-        color: black;
-text-align: left;
-    padding-left: 10px;
-    }
-    QPushButton:hover {
-        background-color: #87CEEB; /* Optional: Light sky blue hover effect */
-    }
-	font: 75 8pt &quot;Microsoft JhengHei UI&quot;;</string>
+        <string notr="true"/>
        </property>
        <property name="text">
         <string>Home</string>
@@ -129,16 +143,7 @@ text-align: left;
         <bool>false</bool>
        </property>
        <property name="styleSheet">
-        <string notr="true">QPushButton {
-        border: none;
-        background-color: transparent;
-        color: black;
-text-align: left;
-    padding-left: 10px;
-    }
-    QPushButton:hover {
-        background-color: #87CEEB; /* Optional: Light sky blue hover effect */
-    }</string>
+        <string notr="true"/>
        </property>
        <property name="text">
         <string>Cameras</string>
@@ -177,16 +182,7 @@ text-align: left;
         <bool>false</bool>
        </property>
        <property name="styleSheet">
-        <string notr="true">QPushButton {
-        border: none;
-        background-color: transparent;
-        color: black;
-text-align: left;
-    padding-left: 10px;
-    }
-    QPushButton:hover {
-        background-color: #87CEEB; /* Optional: Light sky blue hover effect */
-    }</string>
+        <string notr="true"/>
        </property>
        <property name="text">
         <string>Data Viewer</string>
@@ -220,34 +216,12 @@ text-align: left;
       </spacer>
      </item>
      <item>
-      <spacer name="verticalSpacer">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>238</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
       <widget class="QPushButton" name="exit_button">
        <property name="autoFillBackground">
         <bool>false</bool>
        </property>
        <property name="styleSheet">
-        <string notr="true">QPushButton {
-        border: none;
-        background-color: transparent;
-        color: black;
-text-align: left;
-    padding-left: 10px;
-    }
-    QPushButton:hover {
-        background-color: #87CEEB; /* Optional: Light sky blue hover effect */
-    }</string>
+        <string notr="true"/>
        </property>
        <property name="text">
         <string>Exit</string>
@@ -304,6 +278,12 @@ color: #f0f0f0;
       <height>121</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
     <property name="styleSheet">
      <string notr="true"/>
     </property>
@@ -344,23 +324,6 @@ color: #f0f0f0;
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QLabel" name="label_2">
-     <property name="geometry">
-      <rect>
-       <x>120</x>
-       <y>30</y>
-       <width>611</width>
-       <height>71</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">font: 75 26pt &quot;Microsoft JhengHei UI&quot;;
-color: black;</string>
-     </property>
-     <property name="text">
-      <string>Markerless Gait Analysis</string>
-     </property>
-    </widget>
    </widget>
    <widget class="QWidget" name="main_widget" native="true">
     <property name="geometry">
@@ -370,6 +333,12 @@ color: black;</string>
       <width>941</width>
       <height>771</height>
      </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
     </property>
     <property name="styleSheet">
      <string notr="true"/>
@@ -383,6 +352,12 @@ color: black;</string>
        <height>711</height>
       </rect>
      </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="styleSheet">
       <string notr="true">QLineEdit {
     border: none;
@@ -393,15 +368,27 @@ color: black;</string>
 </string>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="home_page">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="styleSheet">
        <string notr="true"/>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
         <widget class="QFrame" name="frame_group">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="frameShape">
           <enum>QFrame::StyledPanel</enum>
          </property>
@@ -413,12 +400,7 @@ color: black;</string>
        <item>
         <widget class="QPushButton" name="pushButton_2">
          <property name="styleSheet">
-          <string notr="true"> QPushButton {
-        background-color: #FFFFFF;  /* Darker shade */
-        color: black
-;  /* Text color */
-     
-    }</string>
+          <string notr="true"/>
          </property>
          <property name="text">
           <string>New Recording</string>
@@ -428,12 +410,7 @@ color: black;</string>
        <item>
         <widget class="QPushButton" name="pushButton_3">
          <property name="styleSheet">
-          <string notr="true"> QPushButton {
-        background-color: #FFFFFF;  /* Darker shade */
-        color: black
-;  /* Text color */
-     
-    }</string>
+          <string notr="true"/>
          </property>
          <property name="text">
           <string>Load Recording</string>
@@ -443,12 +420,7 @@ color: black;</string>
        <item>
         <widget class="QPushButton" name="pushButton_13">
          <property name="styleSheet">
-          <string notr="true"> QPushButton {
-        background-color: #FFFFFF;  /* Darker shade */
-        color: black
-;  /* Text color */
-     
-    }</string>
+          <string notr="true"/>
          </property>
          <property name="text">
           <string>Process</string>
@@ -458,12 +430,7 @@ color: black;</string>
        <item>
         <widget class="QPushButton" name="pushButton_4">
          <property name="styleSheet">
-          <string notr="true"> QPushButton {
-        background-color: #FFFFFF;  /* Darker shade */
-        color: black
-;  /* Text color */
-     
-    }</string>
+          <string notr="true"/>
          </property>
          <property name="text">
           <string>Import Videos</string>
@@ -473,6 +440,12 @@ color: black;</string>
       </layout>
      </widget>
      <widget class="QWidget" name="cameras_page">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <widget class="QWidget" name="verticalLayoutWidget">
        <property name="geometry">
         <rect>
@@ -482,16 +455,11 @@ color: black;</string>
          <height>181</height>
         </rect>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout_3">
+       <layout class="QVBoxLayout" name="verticalLayout_3" stretch="1,1,1,1">
         <item>
          <widget class="QPushButton" name="startmcrec">
           <property name="styleSheet">
-           <string notr="true"> QPushButton {
-        background-color: #FFFFFF;  /* Darker shade */
-        color: black
-;  /* Text color */
-     
-    }</string>
+           <string notr="true"/>
           </property>
           <property name="text">
            <string>Start Motion Capture Recording</string>
@@ -501,12 +469,7 @@ color: black;</string>
         <item>
          <widget class="QPushButton" name="stoprec">
           <property name="styleSheet">
-           <string notr="true"> QPushButton {
-        background-color: #FFFFFF;  /* Darker shade */
-        color: black
-;  /* Text color */
-     
-    }</string>
+           <string notr="true"/>
           </property>
           <property name="text">
            <string>Stop Recording</string>
@@ -516,12 +479,7 @@ color: black;</string>
         <item>
          <widget class="QPushButton" name="detectavailcam">
           <property name="styleSheet">
-           <string notr="true"> QPushButton {
-        background-color: #FFFFFF;  /* Darker shade */
-        color: black
-;  /* Text color */
-     
-    }</string>
+           <string notr="true"/>
           </property>
           <property name="text">
            <string>Detect Available Cameras</string>
@@ -531,12 +489,7 @@ color: black;</string>
         <item>
          <widget class="QPushButton" name="startcrec">
           <property name="styleSheet">
-           <string notr="true"> QPushButton {
-        background-color: #FFFFFF;  /* Darker shade */
-        color: black
-;  /* Text color */
-     
-    }</string>
+           <string notr="true"/>
           </property>
           <property name="text">
            <string>Start Calibration Recording</string>
@@ -554,44 +507,25 @@ color: black;</string>
          <height>191</height>
         </rect>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout_4">
+       <layout class="QVBoxLayout" name="verticalLayout_4" stretch="1,2,1">
         <item>
-         <widget class="QCheckBox" name="autoprocess">
-          <property name="styleSheet">
-           <string notr="true"/>
+         <widget class="QRadioButton" name="radioButton">
+          <property name="text">
+           <string>Record Motion Capture Video</string>
           </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="radioButton_2">
+          <property name="text">
+           <string>Record Calibration Videos</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="checkBox">
           <property name="text">
            <string>Auto Process Videos on Save</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="genntbk">
-          <property name="styleSheet">
-           <string notr="true"/>
-          </property>
-          <property name="text">
-           <string>Generate Jupyter Notebook</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="autoopenblender">
-          <property name="styleSheet">
-           <string notr="true"/>
-          </property>
-          <property name="text">
-           <string>Auto Open in Blender</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="dispcharoverlay">
-          <property name="styleSheet">
-           <string notr="true"/>
-          </property>
-          <property name="text">
-           <string>Display Charuco Overlay</string>
           </property>
          </widget>
         </item>
@@ -641,7 +575,7 @@ color: black;</string>
          <height>80</height>
         </rect>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout_5">
+       <layout class="QVBoxLayout" name="verticalLayout_5" stretch="1,2,1">
         <item>
          <widget class="QLabel" name="recname">
           <property name="styleSheet">
@@ -683,43 +617,25 @@ color: black;</string>
          <height>82</height>
         </rect>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout_6">
+       <layout class="QVBoxLayout" name="verticalLayout_6" stretch="1,2,1">
         <item>
          <widget class="QLineEdit" name="lineEdit_2">
           <property name="styleSheet">
-           <string notr="true">QLineEdit {
-    border: none;
-    background-color: transparent;
-    color: black;  /* Adjust the text color as needed */
-    padding: 0;    /* Remove any padding if necessary */
-}
-</string>
+           <string notr="true"/>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QLineEdit" name="lineEdit_3">
           <property name="styleSheet">
-           <string notr="true">QLineEdit {
-    border: none;
-    background-color: transparent;
-    color: black;  /* Adjust the text color as needed */
-    padding: 0;    /* Remove any padding if necessary */
-}
-</string>
+           <string notr="true"/>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QLineEdit" name="lineEdit">
           <property name="styleSheet">
-           <string notr="true">QLineEdit {
-    border: none;
-    background-color: transparent;
-    color: black;  /* Adjust the text color as needed */
-    padding: 0;    /* Remove any padding if necessary */
-}
-</string>
+           <string notr="true"/>
           </property>
          </widget>
         </item>
@@ -727,6 +643,12 @@ color: black;</string>
       </widget>
      </widget>
      <widget class="QWidget" name="dataviewer_page">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <widget class="QPushButton" name="pushButton_9">
        <property name="geometry">
         <rect>
@@ -737,11 +659,7 @@ color: black;</string>
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true"> QPushButton {
-        background-color: white;/* Darker shade */
-        color: white;  /* Text color */
-     
-    }</string>
+        <string notr="true"/>
        </property>
        <property name="text">
         <string/>
@@ -764,11 +682,7 @@ color: black;</string>
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true"> QPushButton {
-        background-color: white; /* Darker shade */
-        color: white;  /* Text color */
-     
-    }</string>
+        <string notr="true"/>
        </property>
        <property name="text">
         <string/>
@@ -788,11 +702,7 @@ color: black;</string>
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true"> QPushButton {
-        background-color: white;  /* Darker shade */
-        color: white;  /* Text color */
-     
-    }</string>
+        <string notr="true"/>
        </property>
        <property name="text">
         <string/>
@@ -824,6 +734,12 @@ color: black;</string>
          <height>491</height>
         </rect>
        </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
       </widget>
       <widget class="QLabel" name="label_8">
        <property name="geometry">
@@ -853,6 +769,12 @@ color: black;</string>
       </widget>
      </widget>
      <widget class="QWidget" name="directoryviewer_page">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <widget class="QPushButton" name="pushButton_12">
        <property name="geometry">
         <rect>
@@ -917,6 +839,12 @@ color: black;</string>
       </widget>
      </widget>
      <widget class="QWidget" name="activerecording_page">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <widget class="QTableWidget" name="tableWidget">
        <property name="geometry">
         <rect>
@@ -949,6 +877,7 @@ color: black;</string>
  </widget>
  <resources>
   <include location="../../[QT Designer] Thesis UI/resources/resources.qrc"/>
+  <include location="../THESIS(4)/resources.qrc"/>
  </resources>
  <connections>
   <connection>
