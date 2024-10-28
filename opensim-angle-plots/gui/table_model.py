@@ -25,7 +25,7 @@ class CustomTableModel(QAbstractTableModel):
         if role != Qt.DisplayRole:
             return None
         if orientation == Qt.Horizontal:
-            headers = ["Gait Cycle (%)", f"{self.joint_name} R", f"{self.joint_name} L"]
+            headers = ["GC(%)", f"{self.joint_name} R", f"{self.joint_name} L"]
             return headers[section]
         else:
             return f"{section}"

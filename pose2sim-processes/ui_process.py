@@ -15,44 +15,57 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(500, 750)
+
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
+
         self.label_2 = QtWidgets.QLabel(self.centralwidget)
         self.label_2.setGeometry(QtCore.QRect(140, 60, 301, 16))
         self.label_2.setText("")
         self.label_2.setObjectName("label_2")
+
         self.processButton = QtWidgets.QPushButton(self.centralwidget)
         self.processButton.setGeometry(QtCore.QRect(50, 30, 400, 50))
         self.processButton.setObjectName("processButton")
+
         self.textEdit = QtWidgets.QTextEdit(self.centralwidget)
         self.textEdit.setGeometry(QtCore.QRect(50, 650, 400, 50))
         self.textEdit.setReadOnly(True)
         self.textEdit.setObjectName("textEdit")
+
         self.sessionFolderText = QtWidgets.QLabel(self.centralwidget)
         self.sessionFolderText.setGeometry(QtCore.QRect(170, 10, 281, 20))
         self.sessionFolderText.setText("")
         self.sessionFolderText.setObjectName("sessionFolderText")
+
         self.poseEstimationButton = QtWidgets.QPushButton(self.centralwidget)
         self.poseEstimationButton.setGeometry(QtCore.QRect(50, 120, 400, 50))
         self.poseEstimationButton.setObjectName("poseEstimationButton")
+
         self.synchronizationButton = QtWidgets.QPushButton(self.centralwidget)
         self.synchronizationButton.setGeometry(QtCore.QRect(50, 180, 400, 50))
         self.synchronizationButton.setObjectName("synchronizationButton")
+
         self.personAssociationButton = QtWidgets.QPushButton(self.centralwidget)
         self.personAssociationButton.setGeometry(QtCore.QRect(50, 240, 400, 50))
         self.personAssociationButton.setObjectName("personAssociationButton")
+
         self.triangulationButton = QtWidgets.QPushButton(self.centralwidget)
         self.triangulationButton.setGeometry(QtCore.QRect(50, 300, 400, 50))
         self.triangulationButton.setObjectName("triangulationButton")
+
         self.filteringButton = QtWidgets.QPushButton(self.centralwidget)
         self.filteringButton.setGeometry(QtCore.QRect(50, 360, 400, 50))
         self.filteringButton.setObjectName("filteringButton")
+
         self.markerAugmentationButton = QtWidgets.QPushButton(self.centralwidget)
         self.markerAugmentationButton.setGeometry(QtCore.QRect(50, 420, 400, 50))
         self.markerAugmentationButton.setObjectName("markerAugmentationButton")
+        
         self.sessionFolderLabel = QtWidgets.QLabel(self.centralwidget)
         self.sessionFolderLabel.setGeometry(QtCore.QRect(60, 10, 101, 20))
         self.sessionFolderLabel.setObjectName("sessionFolderLabel")
+
         self.trialFolderLabel = QtWidgets.QLabel(self.centralwidget)
         self.trialFolderLabel.setGeometry(QtCore.QRect(60, 100, 81, 20))
         self.trialFolderLabel.setObjectName("trialFolderLabel")
@@ -60,17 +73,22 @@ class Ui_MainWindow(object):
         self.trialFolderText.setGeometry(QtCore.QRect(170, 100, 281, 20))
         self.trialFolderText.setText("")
         self.trialFolderText.setObjectName("trialFolderText")
+
         self.threadCheckButton = QtWidgets.QPushButton(self.centralwidget)
         self.threadCheckButton.setGeometry(QtCore.QRect(50, 590, 400, 50))
         self.threadCheckButton.setObjectName("threadCheckButton")
+        
         self.kinematicsButton = QtWidgets.QPushButton(self.centralwidget)
         self.kinematicsButton.setGeometry(QtCore.QRect(50, 480, 400, 50))
         self.kinematicsButton.setObjectName("kinematicsButton")
+
         MainWindow.setCentralWidget(self.centralwidget)
+        
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 500, 24))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
+        
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
