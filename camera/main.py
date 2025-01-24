@@ -2,9 +2,9 @@ from CameraManager import CameraManager
 
 if __name__ == '__main__':
     camManager = CameraManager()
-    camManager.addCamera(0, 'output_0.mp4')
-    camManager.addCamera(1, 'output_1.mp4')
-    camManager.addCamera(2, 'output_2.mp4')
+    # camManager.addCamera(0, 'output_1.mp4')
+    camManager.addCamera(1, 'output_2.mp4')
+    camManager.addCamera(2, 'output_3.mp4')
 
     # TODO: Start cameras but to not record
 

@@ -22,18 +22,18 @@ def play_videos_side_by_side(video_path1, video_path2, video_path3):
     # Get the total number of frames in each video
     total_frames1 = int(cap1.get(cv2.CAP_PROP_FRAME_COUNT))
     total_frames2 = int(cap2.get(cv2.CAP_PROP_FRAME_COUNT))
-    total_frames3 = int(cap3.get(cv2.CAP_PROP_FRAME_COUNT))
+    # total_frames3 = int(cap3.get(cv2.CAP_PROP_FRAME_COUNT))
 
 
     # Get the frame rate (frames per second) of each video
     fps1 = cap1.get(cv2.CAP_PROP_FPS)
     fps2 = cap2.get(cv2.CAP_PROP_FPS)
-    fps3 = cap3.get(cv2.CAP_PROP_FPS)
+    # fps3 = cap3.get(cv2.CAP_PROP_FPS)
 
     # Calculate the duration of each video
     duration1 = total_frames1 / fps1
     duration2 = total_frames2 / fps2
-    duration3 = total_frames3 / fps3
+    # duration3 = total_frames3 / fps3
 
 
     print(f"Video 1: {total_frames1} frames, {fps1} FPS, {duration1} seconds")
@@ -77,4 +77,4 @@ def play_videos_side_by_side(video_path1, video_path2, video_path3):
     cv2.destroyAllWindows()
 
 # Use the function
-play_videos_side_by_side('output_0.mp4', 'output_1.mp4', 'output_2.mp4')
+play_videos_side_by_side('output_0.mp4', 'output_1.mp4')
