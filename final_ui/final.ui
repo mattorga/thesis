@@ -35,6 +35,9 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
+   <property name="styleSheet">
+    <string notr="true">background-color: #FFFFFF;</string>
+   </property>
    <widget class="QWidget" name="sidebar_full" native="true">
     <property name="geometry">
      <rect>
@@ -59,6 +62,9 @@
     <property name="autoFillBackground">
      <bool>false</bool>
     </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: #FFFCF8</string>
+    </property>
     <widget class="QLabel" name="Logo">
      <property name="geometry">
       <rect>
@@ -67,6 +73,13 @@
        <width>71</width>
        <height>31</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Microsoft JhengHei UI</family>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
      </property>
      <property name="text">
       <string>GaitScape</string>
@@ -86,6 +99,18 @@
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
          <widget class="QPushButton" name="dashboardButton">
+          <property name="font">
+           <font>
+            <family>MS Shell Dlg 2</family>
+            <pointsize>8</pointsize>
+            <weight>50</weight>
+            <italic>false</italic>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">font: 8pt &quot;MS Shell Dlg 2&quot;;</string>
+          </property>
           <property name="text">
            <string>Dashboard</string>
           </property>
@@ -99,6 +124,11 @@
         </item>
         <item>
          <widget class="QPushButton" name="camerasButton">
+          <property name="font">
+           <font>
+            <family>Microsoft JhengHei</family>
+           </font>
+          </property>
           <property name="text">
            <string>Cameras</string>
           </property>
@@ -106,6 +136,11 @@
         </item>
         <item>
          <widget class="QPushButton" name="simulationButton">
+          <property name="font">
+           <font>
+            <family>Microsoft JhengHei UI</family>
+           </font>
+          </property>
           <property name="text">
            <string>3D Simulation</string>
           </property>
@@ -113,6 +148,11 @@
         </item>
         <item>
          <widget class="QPushButton" name="jointAnalyticsButton">
+          <property name="font">
+           <font>
+            <family>Microsoft JhengHei UI</family>
+           </font>
+          </property>
           <property name="text">
            <string>Joint Analytics</string>
           </property>
@@ -135,6 +175,11 @@
       </item>
       <item>
        <widget class="QPushButton" name="exitBtn">
+        <property name="font">
+         <font>
+          <family>Microsoft JhengHei UI</family>
+         </font>
+        </property>
         <property name="text">
          <string>Exit</string>
         </property>
@@ -146,11 +191,14 @@
    <widget class="QStackedWidget" name="stackedWidget">
     <property name="geometry">
      <rect>
-      <x>210</x>
-      <y>20</y>
-      <width>1051</width>
-      <height>761</height>
+      <x>190</x>
+      <y>10</y>
+      <width>1091</width>
+      <height>811</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:#FFFFFF;</string>
     </property>
     <property name="currentIndex">
      <number>1</number>
@@ -249,6 +297,11 @@
         <height>61</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <family>Microsoft JhengHei UI</family>
+       </font>
+      </property>
       <property name="text">
        <string>Detect Cameras</string>
       </property>
@@ -261,6 +314,9 @@
         <width>161</width>
         <height>61</height>
        </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">font: 8pt &quot;Microsoft JhengHei UI&quot;;</string>
       </property>
       <property name="text">
        <string>Start Recording</string>
@@ -275,6 +331,11 @@
         <height>61</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <family>Microsoft JhengHei UI</family>
+       </font>
+      </property>
       <property name="text">
        <string>Close Cameras</string>
       </property>
@@ -287,6 +348,11 @@
         <width>161</width>
         <height>61</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Microsoft JhengHei</family>
+       </font>
       </property>
       <property name="text">
        <string>Stop Recording</string>
@@ -301,6 +367,11 @@
         <height>16</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <family>Microsoft JhengHei</family>
+       </font>
+      </property>
       <property name="text">
        <string>Directory</string>
       </property>
@@ -313,6 +384,11 @@
         <width>60</width>
         <height>16</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Microsoft JhengHei</family>
+       </font>
       </property>
       <property name="text">
        <string>Cameras</string>
@@ -327,6 +403,11 @@
         <height>16</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <family>Microsoft JhengHei</family>
+       </font>
+      </property>
       <property name="text">
        <string>Resolution</string>
       </property>
@@ -339,6 +420,11 @@
         <width>71</width>
         <height>16</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Microsoft JhengHei</family>
+       </font>
       </property>
       <property name="text">
        <string>Frame Rate</string>
