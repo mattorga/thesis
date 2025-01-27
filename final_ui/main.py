@@ -33,7 +33,7 @@ class MainWindow(QMainWindow):
     if self.Worker1 is not None:
       self.Worker1.stop()
     if self.Worker2 is not None:
-      self.Worker2.stop
+      self.Worker2.stop()
 
     self.Worker1 = Worker(0)
     self.Worker1.start()
