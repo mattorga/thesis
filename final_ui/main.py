@@ -13,6 +13,8 @@ class MainWindow(QMainWindow):
     self.ui.setupUi(self)
     self.ui.stackedWidget.setCurrentIndex(0)
     self.camera_manager = CameraManager(self)
+
+    self.setup_connections()
  
   # --- Page Changing Functions --- #
   def on_dashboardButton_clicked(self):
@@ -24,14 +26,26 @@ class MainWindow(QMainWindow):
   def on_jointAnalyticsButton_clicked(self):
     self.ui.stackedWidget.setCurrentIndex(3)
   
-  # --- Cameras Page Functionality --- #
-  def on_detectCamerasButton_clicked(self):
+  def setup_connections(self):      
+    # Camera control connections
+    self.ui.detectCamerasButton.clicked.connect(self.detect_cameras)
+    self.ui.closeCamerasButton.clicked.connect(self.close_cameras)
+    self.ui.startRecordingButton.clicked.connect(self.start_recording)
+    self.ui.stopRecordingButton.clicked.connect(self.stop_recording)
+
+  # Camera control handlers
+  def detect_cameras(self):
     self.camera_manager.detect_available_cameras()
-  def on_closeCamerasButton_clicked(self):
-    self.camera_manager.stop_all_cameras()
-  def on_startRecordingButton_clicked(self):
-    self.camera_manager.start_recording_all_cameras() # Not yet implemented
-  
+      
+  def close_cameras(self):
+    self.camera_manager.close_all_cameras()
+      
+  def start_recording(self):
+    self.camera_manager.start_recording_all_cameras()
+      
+  def stop_recording(self):
+    self.camera_manager.stop_recording_all_cameras()
+
 if __name__ == "__main__":
   app = QApplication(sys.argv)
 
