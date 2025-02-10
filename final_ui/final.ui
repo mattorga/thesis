@@ -35,9 +35,6 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <property name="styleSheet">
-    <string notr="true">background-color: #FFFFFF;</string>
-   </property>
    <widget class="QWidget" name="sidebar_full" native="true">
     <property name="geometry">
      <rect>
@@ -62,54 +59,70 @@
     <property name="autoFillBackground">
      <bool>false</bool>
     </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: #FFFCF8</string>
-    </property>
-    <widget class="QLabel" name="Logo">
+    <widget class="QWidget" name="">
      <property name="geometry">
       <rect>
-       <x>70</x>
-       <y>30</y>
-       <width>71</width>
-       <height>31</height>
+       <x>10</x>
+       <y>22</y>
+       <width>181</width>
+       <height>751</height>
       </rect>
      </property>
-     <property name="font">
-      <font>
-       <family>Microsoft JhengHei UI</family>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="text">
-      <string>GaitScape</string>
-     </property>
-    </widget>
-    <widget class="QWidget" name="layoutWidget">
-     <property name="geometry">
-      <rect>
-       <x>30</x>
-       <y>90</y>
-       <width>143</width>
-       <height>661</height>
-      </rect>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
+     <layout class="QVBoxLayout" name="verticalLayout_3">
+      <item>
+       <widget class="QLabel" name="Logo">
+        <property name="font">
+         <font>
+          <family>Helvetica</family>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>GaitScape</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="verticalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Preferred</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
       <item>
        <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QLabel" name="mainMenu">
+          <property name="font">
+           <font>
+            <family>Helvetica</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Main Menu</string>
+          </property>
+         </widget>
+        </item>
         <item>
          <widget class="QPushButton" name="dashboardButton">
           <property name="font">
            <font>
-            <family>MS Shell Dlg 2</family>
-            <pointsize>8</pointsize>
-            <weight>50</weight>
-            <italic>false</italic>
-            <bold>false</bold>
+            <family>Helvetica</family>
            </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">font: 8pt &quot;MS Shell Dlg 2&quot;;</string>
           </property>
           <property name="text">
            <string>Dashboard</string>
@@ -126,7 +139,7 @@
          <widget class="QPushButton" name="camerasButton">
           <property name="font">
            <font>
-            <family>Microsoft JhengHei</family>
+            <family>Helvetica</family>
            </font>
           </property>
           <property name="text">
@@ -138,7 +151,7 @@
          <widget class="QPushButton" name="simulationButton">
           <property name="font">
            <font>
-            <family>Microsoft JhengHei UI</family>
+            <family>Helvetica</family>
            </font>
           </property>
           <property name="text">
@@ -150,11 +163,180 @@
          <widget class="QPushButton" name="jointAnalyticsButton">
           <property name="font">
            <font>
-            <family>Microsoft JhengHei UI</family>
+            <family>Helvetica</family>
            </font>
           </property>
           <property name="text">
            <string>Joint Analytics</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <spacer name="verticalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Preferred</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QLabel" name="directoryMenu">
+          <property name="font">
+           <font>
+            <family>Helvetica</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Directory</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="sessionSelectButton">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <family>Helvetica</family>
+           </font>
+          </property>
+          <property name="text">
+           <string>Session</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="sessionSelectedLabel">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="font">
+           <font>
+            <family>Helvetica</family>
+           </font>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QPushButton" name="participantSelectButton">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="font">
+             <font>
+              <family>Helvetica</family>
+             </font>
+            </property>
+            <property name="text">
+             <string>Participant</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="participantAddButton">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>+</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QLabel" name="participantSelectedLabel">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="font">
+           <font>
+            <family>Helvetica</family>
+           </font>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <widget class="QPushButton" name="trialSelectButton">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="font">
+             <font>
+              <family>Helvetica</family>
+             </font>
+            </property>
+            <property name="text">
+             <string>Trial</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="trialAddButton">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>+</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QLabel" name="trialSelectedLabel">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="font">
+           <font>
+            <family>Helvetica</family>
+           </font>
+          </property>
+          <property name="text">
+           <string/>
           </property>
          </widget>
         </item>
@@ -167,17 +349,17 @@
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>13</width>
-          <height>368</height>
+          <width>20</width>
+          <height>40</height>
          </size>
         </property>
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="exitBtn">
+       <widget class="QPushButton" name="exitButton">
         <property name="font">
          <font>
-          <family>Microsoft JhengHei UI</family>
+          <family>Helvetica</family>
          </font>
         </property>
         <property name="text">
@@ -191,14 +373,11 @@
    <widget class="QStackedWidget" name="stackedWidget">
     <property name="geometry">
      <rect>
-      <x>190</x>
-      <y>10</y>
-      <width>1091</width>
-      <height>811</height>
+      <x>210</x>
+      <y>30</y>
+      <width>1051</width>
+      <height>751</height>
      </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color:#FFFFFF;</string>
     </property>
     <property name="currentIndex">
      <number>1</number>
@@ -219,7 +398,7 @@
      </widget>
     </widget>
     <widget class="QWidget" name="camerasPage">
-     <widget class="QLabel" name="camera1Label">
+     <widget class="QLabel" name="cameraSlot1">
       <property name="geometry">
        <rect>
         <x>90</x>
@@ -227,6 +406,11 @@
         <width>391</width>
         <height>291</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Helvetica</family>
+       </font>
       </property>
       <property name="autoFillBackground">
        <bool>false</bool>
@@ -241,8 +425,11 @@
       <property name="text">
        <string>Camera 1</string>
       </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
      </widget>
-     <widget class="QLabel" name="camera2Label">
+     <widget class="QLabel" name="cameraSlot2">
       <property name="geometry">
        <rect>
         <x>500</x>
@@ -250,6 +437,11 @@
         <width>391</width>
         <height>291</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Helvetica</family>
+       </font>
       </property>
       <property name="autoFillBackground">
        <bool>false</bool>
@@ -264,8 +456,11 @@
       <property name="text">
        <string>Camera 2</string>
       </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
      </widget>
-     <widget class="QLabel" name="camera3Label">
+     <widget class="QLabel" name="cameraSlot3">
       <property name="geometry">
        <rect>
         <x>290</x>
@@ -273,6 +468,11 @@
         <width>391</width>
         <height>291</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Helvetica</family>
+       </font>
       </property>
       <property name="autoFillBackground">
        <bool>false</bool>
@@ -287,6 +487,9 @@
       <property name="text">
        <string>Camera 3</string>
       </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
      </widget>
      <widget class="QPushButton" name="detectCamerasButton">
       <property name="geometry">
@@ -299,7 +502,7 @@
       </property>
       <property name="font">
        <font>
-        <family>Microsoft JhengHei UI</family>
+        <family>Helvetica</family>
        </font>
       </property>
       <property name="text">
@@ -315,8 +518,10 @@
         <height>61</height>
        </rect>
       </property>
-      <property name="styleSheet">
-       <string notr="true">font: 8pt &quot;Microsoft JhengHei UI&quot;;</string>
+      <property name="font">
+       <font>
+        <family>Helvetica</family>
+       </font>
       </property>
       <property name="text">
        <string>Start Recording</string>
@@ -333,7 +538,7 @@
       </property>
       <property name="font">
        <font>
-        <family>Microsoft JhengHei UI</family>
+        <family>Helvetica</family>
        </font>
       </property>
       <property name="text">
@@ -351,7 +556,7 @@
       </property>
       <property name="font">
        <font>
-        <family>Microsoft JhengHei</family>
+        <family>Helvetica</family>
        </font>
       </property>
       <property name="text">
@@ -369,7 +574,7 @@
       </property>
       <property name="font">
        <font>
-        <family>Microsoft JhengHei</family>
+        <family>Helvetica</family>
        </font>
       </property>
       <property name="text">
@@ -387,7 +592,7 @@
       </property>
       <property name="font">
        <font>
-        <family>Microsoft JhengHei</family>
+        <family>Helvetica</family>
        </font>
       </property>
       <property name="text">
@@ -405,14 +610,14 @@
       </property>
       <property name="font">
        <font>
-        <family>Microsoft JhengHei</family>
+        <family>Helvetica</family>
        </font>
       </property>
       <property name="text">
        <string>Resolution</string>
       </property>
      </widget>
-     <widget class="QLabel" name="frameRateLabel">
+     <widget class="QLabel" name="framerateLabel">
       <property name="geometry">
        <rect>
         <x>470</x>
@@ -423,7 +628,7 @@
       </property>
       <property name="font">
        <font>
-        <family>Microsoft JhengHei</family>
+        <family>Helvetica</family>
        </font>
       </property>
       <property name="text">
@@ -439,8 +644,13 @@
         <height>16</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <family>Helvetica</family>
+       </font>
+      </property>
       <property name="text">
-       <string>-</string>
+       <string/>
       </property>
      </widget>
      <widget class="QLabel" name="camerasValue">
@@ -452,8 +662,13 @@
         <height>16</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <family>Helvetica</family>
+       </font>
+      </property>
       <property name="text">
-       <string>-</string>
+       <string/>
       </property>
      </widget>
      <widget class="QLabel" name="resolutionValue">
@@ -465,11 +680,16 @@
         <height>16</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <family>Helvetica</family>
+       </font>
+      </property>
       <property name="text">
-       <string>-</string>
+       <string/>
       </property>
      </widget>
-     <widget class="QLabel" name="frameRateValue">
+     <widget class="QLabel" name="framerateValue">
       <property name="geometry">
        <rect>
         <x>550</x>
@@ -478,8 +698,13 @@
         <height>16</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <family>Helvetica</family>
+       </font>
+      </property>
       <property name="text">
-       <string>-</string>
+       <string/>
       </property>
      </widget>
     </widget>

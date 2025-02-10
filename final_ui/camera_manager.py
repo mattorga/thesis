@@ -87,10 +87,10 @@ class CameraManager:
     def __init__(self, main_window):
         self.main_window = main_window
         self.camera_workers = {}
-        self.camera_labels = {
-            0: main_window.ui.camera1Label,
-            1: main_window.ui.camera2Label,
-            2: main_window.ui.camera3Label
+        self.camera_slots = {
+            0: main_window.ui.cameraSlot1,
+            1: main_window.ui.cameraSlot2,
+            2: main_window.ui.cameraSlot3
         }
         self.available_cameras = []
         self.framerates = []
@@ -107,7 +107,7 @@ class CameraManager:
             cap.release()
             
         self.main_window.ui.camerasValue.setText(str(len(self.available_cameras)))
-        self.main_window.ui.frameRateValue.setText(str(self.framerates))
+        self.main_window.ui.framerateValue.setText(str(self.framerates))
         
         for camera_index in self.available_cameras:
             worker = Camera(camera_index)
@@ -118,7 +118,7 @@ class CameraManager:
             self.camera_workers[camera_index] = worker
 
     def update_camera_feed(self, image, camera_index):
-        self.camera_labels[camera_index].setPixmap(QPixmap.fromImage(image))
+        self.camera_slots[camera_index].setPixmap(QPixmap.fromImage(image))
 
     def close_all_cameras(self):
         for worker in self.camera_workers.values():
