@@ -22,6 +22,13 @@ class MainWindow(QMainWindow):
     self.ui.stackedWidget.setCurrentIndex(0)
     
     self.camera_manager = CameraManager(self)
+    camera_slots = {
+      0: self.ui.cameraSlot1,
+      1: self.ui.cameraSlot2,
+      2: self.ui.cameraSlot3
+    }
+    self.camera_manager.camera_slots = camera_slots
+    
     self.directory_manager = DirectoryManager(self)
 
     self.setup_connections()
@@ -45,106 +52,67 @@ class MainWindow(QMainWindow):
   def setup_connections(self):      
     # User Selection
     self.ui.sessionSelectButton.clicked.connect(self.on_select_session)
-    self.ui.participantSelectButton.clicked.connect(self.select_participant)
-    self.ui.trialSelectButton.clicked.connect(self.select_trial)
+    self.ui.participantSelectButton.clicked.connect(self.on_select_participant)
+    self.ui.trialSelectButton.clicked.connect(self.on_select_trial)
 
     # User Functions
     self.ui.participantAddButton.clicked.connect(self.add_participant)
 
     # Camera Page
-    self.ui.detectCamerasButton.clicked.connect(self.detect_cameras)
-    self.ui.closeCamerasButton.clicked.connect(self.close_cameras)
-    self.ui.startRecordingButton.clicked.connect(self.start_recording)
-    self.ui.stopRecordingButton.clicked.connect(self.stop_recording)
+    self.ui.detectCamerasButton.clicked.connect(self.on_detect_cameras)
+    self.ui.closeCamerasButton.clicked.connect(self.on_close_cameras)
+    self.ui.startRecordingButton.clicked.connect(self.on_start_recording)
+    self.ui.stopRecordingButton.clicked.connect(self.on_stop_recording)
 
   # --- User Selection Functions --- #
   def on_select_session(self):
     self.directory_manager.set_session()
-    session_name = self.directory_manager.get_session()
+    session_name = self.directory_manager.session_dir
     
-    # Update UI
-    self.ui.sessionSelectedLabel.setText(session_name)
-    self.ui.participantSelectButton.setEnabled(True)
-    self.ui.participantAddButton.setEnabled(True)
+    if session_name:
+      # Update UI
+      self.ui.sessionSelectedLabel.setText(session_name)
 
-    self.ui.sessionSelectedLabel.setText(session_name)
-    self.ui.participantSelectButton.setEnabled(True)
-    self.ui.participantAddButton.setEnabled(True)
+      self.ui.participantSelectedLabel.setText("")
+      self.ui.participantSelectButton.setEnabled(True)
+      self.ui.participantAddButton.setEnabled(True)
 
-
-  def select_participant(self):
-    if not self.sessionDirectory:
-        return
-        
-    dialog = QFileDialog(self)
-    dialog.setFileMode(QFileDialog.Directory)
-    dialog.setOption(QFileDialog.ShowDirsOnly, True)
-    dialog.setDirectory(self.sessionDirectory)
+      self.ui.trialSelectedLabel.setText("")
+      self.ui.trialSelectButton.setEnabled(False)
+      self.ui.trialAddButton.setEnabled(False)
+  def on_select_participant(self):
+    self.directory_manager.set_participant()
+    participant_name = self.directory_manager.participant_dir
     
-    if dialog.exec_():
-        selected_path = dialog.selectedFiles()[0]
-        # Verify selected folder is directly under session folder
-        if os.path.dirname(selected_path) == self.sessionDirectory:
-            self.participantDirectory = selected_path
-            participant_name = os.path.basename(selected_path)
-            
-            # Update UI
-            self.ui.participantSelectedLabel.setText(participant_name)
-            self.ui.trialSelectButton.setEnabled(True)
-            self.ui.trialAddButton.setEnabled(True)
+    if participant_name: 
+      self.ui.participantSelectedLabel.setText(participant_name)
+      self.ui.trialSelectButton.setEnabled(True)
+      self.ui.trialAddButton.setEnabled(True)
+  def on_select_trial(self):
+    self.directory_manager.set_trial()
+    trial_name = self.directory_manager.trial_dir
 
-            print(self.participantDirectory)
-            
-            # Reset trial selection
-            self.trialDirectory = None
-            self.ui.trialSelectedLabel.setText("")
-        else:
-            QMessageBox.warning(self, "Invalid Selection", 
-                              "Please select a participant folder directly under the session folder.")
-  def select_trial(self):
-    if not self.participantDirectory:
-        return
-        
-    dialog = QFileDialog(self)
-    dialog.setFileMode(QFileDialog.Directory)
-    dialog.setOption(QFileDialog.ShowDirsOnly, True)
-    dialog.setDirectory(self.participantDirectory)
-    
-    if dialog.exec_():
-        selected_path = dialog.selectedFiles()[0]
-        # Verify selected folder is directly under participant folder
-        if os.path.dirname(selected_path) == self.participantDirectory:
-            self.trialDirectory = selected_path
-            trial_name = os.path.basename(selected_path)
-            
-            # Update UI
-            self.ui.trialSelectedLabel.setText(trial_name)
-            
-            print(self.trialDirectory)
-
-        else:
-            QMessageBox.warning(self, "Invalid Selection", 
-                              "Please select a trial folder directly under the participant folder.")
+    if trial_name:
+      self.ui.trialSelectedLabel.setText(trial_name)
   def add_participant(self):
-    dialog = QDialog(self)  # Create dialog with main window as parent
-    form = Ui_patient_form()  # Create the form
-    form.setupUi(dialog)  # Setup the form UI on the dialog
+    self.directory_manager.add_participant()
     
-    # Show the dialog modally and get result
-    if dialog.exec_() == QDialog.Accepted:
-        first_name = form.firstNameField.text()
-        last_name = form.lastNameField.text()
-        height = form.heightField.text()
-        weight = form.weightField.text()
-        
+
   # --- Cameras Page functions --- #
-  def detect_cameras(self):
+  def on_detect_cameras(self):
     self.camera_manager.detect_available_cameras()
-  def close_cameras(self):
+    
+    # Update UI elements
+    self.ui.camerasValue.setText(str(self.camera_manager.camera_count))
+    self.ui.framerateValue.setText(str(self.camera_manager.framerates))
+
+  def on_close_cameras(self):
     self.camera_manager.close_all_cameras()
-  def start_recording(self):
+    self.ui.camerasValue.setText(str(self.camera_manager.camera_count))
+
+  def on_start_recording(self):
     self.camera_manager.start_recording_all_cameras() 
-  def stop_recording(self):
+  def on_stop_recording(self):
     self.camera_manager.stop_recording_all_cameras()
 
 if __name__ == "__main__":
