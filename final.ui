@@ -1,0 +1,1137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="windowModality">
+   <enum>Qt::NonModal</enum>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1280</width>
+    <height>800</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1280</width>
+    <height>800</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1280</width>
+    <height>800</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <property name="styleSheet">
+    <string notr="true">background-color: #FFFCF8</string>
+   </property>
+   <widget class="QWidget" name="sidebar_full" native="true">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>-20</x>
+      <y>0</y>
+      <width>230</width>
+      <height>800</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>200</width>
+      <height>800</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>250</width>
+      <height>800</height>
+     </size>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QWidget{
+	background-color: white;
+	border-radius: 30px; /* Rounded corners */
+	border: 0.4px solid gray; /* Light gray border */
+
+    /* Shadow effect */
+	box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+
+}</string>
+    </property>
+    <widget class="QWidget" name="layoutWidget">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>30</y>
+       <width>211</width>
+       <height>741</height>
+      </rect>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_3">
+      <property name="leftMargin">
+       <number>21</number>
+      </property>
+      <property name="rightMargin">
+       <number>21</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="Logo">
+        <property name="font">
+         <font>
+          <family>Helvetica</family>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/Logo Text.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="verticalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Preferred</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item alignment="Qt::AlignLeft">
+         <widget class="QLabel" name="mainMenu">
+          <property name="font">
+           <font>
+            <family>Microsoft YaHei UI</family>
+            <pointsize>6</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">color: #B0B0B0;</string>
+          </property>
+          <property name="text">
+           <string>MAIN MENU</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="dashboardButton">
+          <property name="font">
+           <font>
+            <family>Microsoft JhengHei UI</family>
+            <pointsize>8</pointsize>
+            <weight>50</weight>
+            <italic>false</italic>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+    border: none;
+    outline: none; /* Removes any focus border */
+    font: 8pt &quot;Microsoft JhengHei UI&quot;;
+    text-align: left;
+	border-radius: 6px;
+    background-color: transparent; /* Default background */
+    color: black; /* Default text color */
+    padding: 5px; /* Optional: Add padding for better spacing */
+}
+
+QPushButton:hover {
+    background-color: #EAEAEA; /* Soft gray background on hover */
+    color: black; /* Keep text black for readability */
+}
+</string>
+          </property>
+          <property name="text">
+           <string>Dashboard</string>
+          </property>
+          <property name="icon">
+           <iconset resource="resourcesnew/resources.qrc">
+            <normaloff>:/Dashboard.png</normaloff>:/Dashboard.png</iconset>
+          </property>
+          <property name="default">
+           <bool>false</bool>
+          </property>
+          <property name="flat">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="camerasButton">
+          <property name="font">
+           <font>
+            <family>Microsoft JhengHei UI</family>
+            <pointsize>8</pointsize>
+            <weight>50</weight>
+            <italic>false</italic>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+    border: none;
+    outline: none; /* Removes any focus border */
+    font: 8pt &quot;Microsoft JhengHei UI&quot;;
+    text-align: left;
+	border-radius: 6px;
+    background-color: transparent; /* Default background */
+    color: black; /* Default text color */
+    padding: 5px; /* Optional: Add padding for better spacing */
+}
+
+QPushButton:hover {
+    background-color: #EAEAEA; /* Soft gray background on hover */
+    color: black; /* Keep text black for readability */
+}
+</string>
+          </property>
+          <property name="text">
+           <string>Cameras</string>
+          </property>
+          <property name="icon">
+           <iconset resource="resourcesnew/resources.qrc">
+            <normaloff>:/Cameras.png</normaloff>:/Cameras.png</iconset>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="simulationButton">
+          <property name="font">
+           <font>
+            <family>Microsoft JhengHei UI</family>
+            <pointsize>8</pointsize>
+            <weight>50</weight>
+            <italic>false</italic>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+    border: none;
+    outline: none; /* Removes any focus border */
+    font: 8pt &quot;Microsoft JhengHei UI&quot;;
+    text-align: left;
+	border-radius: 6px;
+    background-color: transparent; /* Default background */
+    color: black; /* Default text color */
+    padding: 5px; /* Optional: Add padding for better spacing */
+}
+
+QPushButton:hover {
+    background-color: #EAEAEA; /* Soft gray background on hover */
+    color: black; /* Keep text black for readability */
+}
+</string>
+          </property>
+          <property name="text">
+           <string>3D Simulation</string>
+          </property>
+          <property name="icon">
+           <iconset resource="resourcesnew/resources.qrc">
+            <normaloff>:/3D Simulation.png</normaloff>:/3D Simulation.png</iconset>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="jointAnalyticsButton">
+          <property name="font">
+           <font>
+            <family>Microsoft JhengHei UI</family>
+            <pointsize>8</pointsize>
+            <weight>50</weight>
+            <italic>false</italic>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+    border: none;
+    outline: none; /* Removes any focus border */
+    font: 8pt &quot;Microsoft JhengHei UI&quot;;
+    text-align: left;
+	border-radius: 6px;
+    background-color: transparent; /* Default background */
+    color: black; /* Default text color */
+    padding: 5px; /* Optional: Add padding for better spacing */
+}
+
+QPushButton:hover {
+    background-color: #EAEAEA; /* Soft gray background on hover */
+    color: black; /* Keep text black for readability */
+}
+</string>
+          </property>
+          <property name="text">
+           <string>Joint Analytics</string>
+          </property>
+          <property name="icon">
+           <iconset resource="resourcesnew/resources.qrc">
+            <normaloff>:/Joint Analytics.png</normaloff>:/Joint Analytics.png</iconset>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <spacer name="verticalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Preferred</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item alignment="Qt::AlignLeft">
+         <widget class="QLabel" name="directoryMenu">
+          <property name="font">
+           <font>
+            <family>Microsoft YaHei</family>
+            <pointsize>6</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QLabel {
+	color: #B0B0B0;
+}</string>
+          </property>
+          <property name="text">
+           <string>DIRECTORY</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="sessionSelectButton">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <family>Microsoft JhengHei UI</family>
+            <pointsize>8</pointsize>
+            <weight>50</weight>
+            <italic>false</italic>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+    border: none;
+border-radius: 6px;
+    outline: none; /* Removes any focus border */
+    font: 8pt &quot;Microsoft JhengHei UI&quot;;
+    text-align: left;
+    background-color: transparent; /* Default background */
+    color: black; /* Default text color */
+    padding: 5px; /* Optional: Add padding for better spacing */
+}
+
+QPushButton:hover {
+    background-color: #EAEAEA; /* Soft gray background on hover */
+    color: black; /* Keep text black for readability */
+}
+</string>
+          </property>
+          <property name="text">
+           <string>Session</string>
+          </property>
+          <property name="icon">
+           <iconset resource="resourcesnew/resources.qrc">
+            <normaloff>:/Stacks.png</normaloff>:/Stacks.png</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>22</width>
+            <height>22</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label">
+          <property name="font">
+           <font>
+            <family>Microsoft JhengHei UI Light</family>
+            <pointsize>6</pointsize>
+            <weight>50</weight>
+            <italic>false</italic>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QLabel {
+	color: #B0B0B0;
+	font: 6pt &quot;Microsoft JhengHei UI Light&quot;;
+}</string>
+          </property>
+          <property name="text">
+           <string>          Session Name</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="participantSelectButton">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Microsoft JhengHei UI</family>
+            <pointsize>8</pointsize>
+            <weight>50</weight>
+            <italic>false</italic>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+    border: none;
+    outline: none; /* Removes any focus border */
+    font: 8pt &quot;Microsoft JhengHei UI&quot;;
+    text-align: left;
+    background-color: transparent; /* Default background */
+    color: black; /* Default text color */
+	border-radius: 6px;
+    padding: 5px; /* Optional: Add padding for better spacing */
+}
+
+QPushButton:hover {
+    background-color: #EAEAEA; /* Soft gray background on hover */
+    color: black; /* Keep text black for readability */
+}
+</string>
+          </property>
+          <property name="text">
+           <string>Participant</string>
+          </property>
+          <property name="icon">
+           <iconset resource="resourcesnew/resources.qrc">
+            <normaloff>:/Group.png</normaloff>:/Group.png</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>22</width>
+            <height>22</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_2">
+          <property name="styleSheet">
+           <string notr="true">QLabel {
+	color: #B0B0B0;
+	font: 6pt &quot;Microsoft JhengHei UI Light&quot;;
+}</string>
+          </property>
+          <property name="text">
+           <string>          Participant Name</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="trialSelectButton">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Microsoft JhengHei UI</family>
+            <pointsize>8</pointsize>
+            <weight>50</weight>
+            <italic>false</italic>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+    border: none;
+    outline: none; /* Removes any focus border */
+    font: 8pt &quot;Microsoft JhengHei UI&quot;;
+    text-align: left;
+	border-radius: 6px;
+    background-color: transparent; /* Default background */
+    color: black; /* Default text color */
+    padding: 5px; /* Optional: Add padding for better spacing */
+}
+
+QPushButton:hover {
+    background-color: #EAEAEA; /* Soft gray background on hover */
+    color: black; /* Keep text black for readability */
+}
+</string>
+          </property>
+          <property name="text">
+           <string>Trial</string>
+          </property>
+          <property name="icon">
+           <iconset resource="resourcesnew/resources.qrc">
+            <normaloff>:/Joint Analytics.png</normaloff>:/Joint Analytics.png</iconset>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_3">
+          <property name="styleSheet">
+           <string notr="true">QLabel {
+	color: #B0B0B0;
+	font: 6pt &quot;Microsoft JhengHei UI Light&quot;;
+}</string>
+          </property>
+          <property name="text">
+           <string>           Trial Name</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <spacer name="verticalSpacer">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item alignment="Qt::AlignHCenter">
+       <widget class="QPushButton" name="exitButton">
+        <property name="minimumSize">
+         <size>
+          <width>164</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Microsoft JhengHei UI</family>
+          <pointsize>8</pointsize>
+          <weight>50</weight>
+          <italic>false</italic>
+          <bold>false</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+   
+    outline: none; /* Removes any focus border */
+    font: 8pt &quot;Microsoft JhengHei UI&quot;;
+    text-align: center;
+    background-color: #FFFCF8; 
+    color: black; /* Default text color */
+    padding: 5px; /* Optional: Add padding for better spacing */
+	border-radius: 6px; /* Rounded corners */
+	border: 0.5px solid #c8c8c8; /* Light gray border */
+	
+
+    /* Shadow effect */
+	box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+QPushButton:hover {
+    background-color: #EAEAEA; /* Soft gray background on hover */
+    color: black; /* Keep text black for readability */
+}
+</string>
+        </property>
+        <property name="text">
+         <string>Exit</string>
+        </property>
+        <property name="icon">
+         <iconset resource="resourcesnew/resources.qrc">
+          <normaloff>:/Exit.png</normaloff>:/Exit.png</iconset>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </widget>
+   <widget class="QStackedWidget" name="stackedWidget">
+    <property name="geometry">
+     <rect>
+      <x>195</x>
+      <y>0</y>
+      <width>1081</width>
+      <height>811</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: #FFFCF8</string>
+    </property>
+    <property name="currentIndex">
+     <number>1</number>
+    </property>
+    <widget class="QWidget" name="dashboardPage">
+     <widget class="QLabel" name="dashboardLabel">
+      <property name="geometry">
+       <rect>
+        <x>490</x>
+        <y>300</y>
+        <width>131</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>dashboard</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="camerasPage">
+     <widget class="QLabel" name="cameraSlot1">
+      <property name="geometry">
+       <rect>
+        <x>90</x>
+        <y>10</y>
+        <width>391</width>
+        <height>291</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Helvetica</family>
+       </font>
+      </property>
+      <property name="autoFillBackground">
+       <bool>false</bool>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border: 3px solid black
+rgb(152, 152, 152)</string>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/Videocam Off.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="cameraSlot2">
+      <property name="geometry">
+       <rect>
+        <x>500</x>
+        <y>10</y>
+        <width>391</width>
+        <height>291</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Helvetica</family>
+       </font>
+      </property>
+      <property name="autoFillBackground">
+       <bool>false</bool>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border: 3px solid black
+</string>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/Videocam Off.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="cameraSlot3">
+      <property name="geometry">
+       <rect>
+        <x>290</x>
+        <y>320</y>
+        <width>391</width>
+        <height>291</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Helvetica</family>
+       </font>
+      </property>
+      <property name="autoFillBackground">
+       <bool>false</bool>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border: 3px solid black
+</string>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/Videocam Off.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="detectCamerasButton">
+      <property name="geometry">
+       <rect>
+        <x>90</x>
+        <y>630</y>
+        <width>161</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>MS Reference Sans Serif</family>
+        <pointsize>-1</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+	font: 8pt &quot;MS Reference Sans Serif&quot;;
+    background-color: #231A16; /* Dark brown background */
+    color: white; /* White text */
+    font-size: 14px;
+    border-radius: 15px; /* Rounded corners */
+    padding: 10px 20px; /* Adjust padding for proper button size */
+    border: none; /* No border */
+}
+
+QPushButton:hover {
+    background-color: #3A2C26; /* Lighter brown on hover */
+}
+
+QPushButton:pressed {
+    background-color: #18120E; /* Even darker shade on press */
+}
+</string>
+      </property>
+      <property name="text">
+       <string>Detect Cameras</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="startRecordingButton">
+      <property name="geometry">
+       <rect>
+        <x>260</x>
+        <y>630</y>
+        <width>161</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>MS Reference Sans Serif</family>
+        <pointsize>-1</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+	font: 8pt &quot;MS Reference Sans Serif&quot;;
+    background-color: #231A16; /* Dark brown background */
+    color: white; /* White text */
+    font-size: 14px;
+    border-radius: 15px; /* Rounded corners */
+    padding: 10px 20px; /* Adjust padding for proper button size */
+    border: none; /* No border */
+}
+
+QPushButton:hover {
+    background-color: #3A2C26; /* Lighter brown on hover */
+}
+
+QPushButton:pressed {
+    background-color: #18120E; /* Even darker shade on press */
+}
+</string>
+      </property>
+      <property name="text">
+       <string>Start Recording</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="closeCamerasButton">
+      <property name="geometry">
+       <rect>
+        <x>90</x>
+        <y>700</y>
+        <width>161</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>MS Reference Sans Serif</family>
+        <pointsize>-1</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+	font: 8pt &quot;MS Reference Sans Serif&quot;;
+    background-color: #231A16; /* Dark brown background */
+    color: white; /* White text */
+    font-size: 14px;
+    border-radius: 15px; /* Rounded corners */
+    padding: 10px 20px; /* Adjust padding for proper button size */
+    border: none; /* No border */
+}
+
+QPushButton:hover {
+    background-color: #3A2C26; /* Lighter brown on hover */
+}
+
+QPushButton:pressed {
+    background-color: #18120E; /* Even darker shade on press */
+}
+</string>
+      </property>
+      <property name="text">
+       <string>Close Cameras</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="stopRecordingButton">
+      <property name="geometry">
+       <rect>
+        <x>260</x>
+        <y>700</y>
+        <width>161</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>MS Reference Sans Serif</family>
+        <pointsize>-1</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+	font: 8pt &quot;MS Reference Sans Serif&quot;;
+    background-color: #231A16; /* Dark brown background */
+    color: white; /* White text */
+    font-size: 14px;
+    border-radius: 15px; /* Rounded corners */
+    padding: 10px 20px; /* Adjust padding for proper button size */
+    border: none; /* No border */
+}
+
+QPushButton:hover {
+    background-color: #3A2C26; /* Lighter brown on hover */
+}
+
+QPushButton:pressed {
+    background-color: #18120E; /* Even darker shade on press */
+}
+</string>
+      </property>
+      <property name="text">
+       <string>Stop Recording</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="directoryLabel">
+      <property name="geometry">
+       <rect>
+        <x>570</x>
+        <y>650</y>
+        <width>60</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Microsoft JhengHei UI</family>
+        <pointsize>8</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">font: 8pt &quot;Microsoft JhengHei UI&quot;;</string>
+      </property>
+      <property name="text">
+       <string>Directory</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="camerasLabel">
+      <property name="geometry">
+       <rect>
+        <x>570</x>
+        <y>670</y>
+        <width>60</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Microsoft JhengHei UI</family>
+        <pointsize>8</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">font: 8pt &quot;Microsoft JhengHei UI&quot;;</string>
+      </property>
+      <property name="text">
+       <string>Cameras</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="resolutionLabel_2">
+      <property name="geometry">
+       <rect>
+        <x>570</x>
+        <y>690</y>
+        <width>71</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Microsoft JhengHei UI</family>
+        <pointsize>8</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">font: 8pt &quot;Microsoft JhengHei UI&quot;;</string>
+      </property>
+      <property name="text">
+       <string>Resolution</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="framerateLabel">
+      <property name="geometry">
+       <rect>
+        <x>570</x>
+        <y>710</y>
+        <width>71</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Microsoft JhengHei UI</family>
+        <pointsize>8</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">font: 8pt &quot;Microsoft JhengHei UI&quot;;</string>
+      </property>
+      <property name="text">
+       <string>Frame Rate</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="directoryValue">
+      <property name="geometry">
+       <rect>
+        <x>650</x>
+        <y>650</y>
+        <width>60</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Helvetica</family>
+       </font>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QLabel" name="camerasValue">
+      <property name="geometry">
+       <rect>
+        <x>650</x>
+        <y>670</y>
+        <width>60</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Helvetica</family>
+       </font>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QLabel" name="resolutionValue">
+      <property name="geometry">
+       <rect>
+        <x>650</x>
+        <y>690</y>
+        <width>60</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Helvetica</family>
+       </font>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QLabel" name="framerateValue">
+      <property name="geometry">
+       <rect>
+        <x>650</x>
+        <y>710</y>
+        <width>60</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Helvetica</family>
+       </font>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="simulationPage">
+     <widget class="QLabel" name="simulationLabel">
+      <property name="geometry">
+       <rect>
+        <x>440</x>
+        <y>350</y>
+        <width>131</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>simulation</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="analyticsPage">
+     <widget class="QTableWidget" name="tableWidget">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>70</y>
+        <width>256</width>
+        <height>192</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QTableWidget" name="tableWidget_2">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>270</y>
+        <width>256</width>
+        <height>192</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QTableWidget" name="tableWidget_3">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>470</y>
+        <width>256</width>
+        <height>192</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+   <zorder>stackedWidget</zorder>
+   <zorder>sidebar_full</zorder>
+  </widget>
+ </widget>
+ <resources>
+  <include location="resourcesnew/resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>
