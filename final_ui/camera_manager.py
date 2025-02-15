@@ -82,56 +82,144 @@ class Camera(QThread):
             if not os.path.exists(filename):
                 return filename
             counter += 1
-        
+
 class CameraManager:
     def __init__(self, main_window):
         self.main_window = main_window
-        self.camera_workers = {}
-        self.camera_labels = {
-            0: main_window.ui.camera1Label,
-            1: main_window.ui.camera2Label,
-            2: main_window.ui.camera3Label
-        }
-        self.available_cameras = []
-        self.framerates = []
+        self._available_cameras = []
+        self._framerates = []
+        self._resolution = []
+        self._camera_workers = {}
+
+    # --- Available Cameras Property --- #
+    @property
+    def available_cameras(self):
+        """List of indices for currently available cameras."""
+        return self._available_cameras.copy()
+
+    @available_cameras.setter
+    def available_cameras(self, cameras):
+        if not isinstance(cameras, list):
+            raise ValueError("Available cameras must be a list")
+        if not all(isinstance(x, int) for x in cameras):
+            raise ValueError("Camera indices must be integers")
+        self._available_cameras = cameras.copy()
+
+    # --- Framerates Property --- #
+    @property
+    def framerates(self):
+        """List of framerates for detected cameras."""
+        return self._framerates.copy()
+
+    @framerates.setter 
+    def framerates(self, rates):
+        """Set framerates for cameras.
+        
+        Args:
+            rates (list): List of framerates (integers or floats)
+        """
+        if not isinstance(rates, list):
+            raise ValueError("Framerates must be a list")
+        if not all(isinstance(x, (int, float)) for x in rates):
+            raise ValueError("Framerates must be numbers")
+        self._framerates = rates.copy()
+
+    # --- Resolution Property --- #
+    @property
+    def resolution(self):
+        """List of resolutions for detected cameras."""
+        return self._resolution.copy()
+
+    @resolution.setter
+    def resolution(self, resolutions):
+        """Set resolutions for cameras.
+        
+        Args:
+            resolutions (list): List of (width, height) tuples
+        """
+        if not isinstance(resolutions, list):
+            raise ValueError("Resolutions must be a list")
+        if not all(isinstance(x, tuple) and len(x) == 2 for x in resolutions):
+            raise ValueError("Each resolution must be a (width, height) tuple")
+        self._resolution = resolutions.copy()
+
+    # --- Camera Slots Property --- #
+    @property
+    def camera_slots(self):
+        """Dictionary mapping camera indices to UI slots."""
+        return self._camera_slots.copy()
+
+    @camera_slots.setter
+    def camera_slots(self, slots):
+        """Set camera slot mappings.
+        
+        Args:
+            slots (dict): Dictionary mapping camera indices to UI slots
+        """
+        if not isinstance(slots, dict):
+            raise ValueError("Camera slots must be a dictionary")
+        self._camera_slots = slots.copy()
+
+    # --- Camera Count Property --- #
+    @property
+    def camera_count(self):
+        """Number of currently available cameras."""
+        return len(self._available_cameras)
 
     def detect_available_cameras(self, max_cameras=3):
+        """Detect and initialize available cameras."""
+        temp_cameras = []
+        temp_framerates = []
+        temp_resolutions = []
+
         for i in range(max_cameras):
             cap = cv2.VideoCapture(i)
-            fps = int(cap.get(cv2.CAP_PROP_FPS))
             if cap.isOpened():
                 ret, _ = cap.read()
                 if ret:
-                    self.available_cameras.append(i)
-                    self.framerates.append(fps)
+                    temp_cameras.append(i)
+                    temp_framerates.append(int(cap.get(cv2.CAP_PROP_FPS)))
+                    temp_resolutions.append((
+                        int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)),
+                        int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+                    ))
             cap.release()
-            
-        self.main_window.ui.camerasValue.setText(str(len(self.available_cameras)))
-        self.main_window.ui.frameRateValue.setText(str(self.framerates))
         
-        for camera_index in self.available_cameras:
+        # Update all properties at once to maintain consistency
+        self.available_cameras = temp_cameras
+        self.framerates = temp_framerates
+        self.resolution = temp_resolutions
+        
+        # Initialize camera workers
+        for camera_index in self._available_cameras:
             worker = Camera(camera_index)
             worker.ImageUpdate.connect(
                 lambda image, idx=camera_index: self.update_camera_feed(image, idx)
             )
             worker.start()
-            self.camera_workers[camera_index] = worker
+            self._camera_workers[camera_index] = worker
 
     def update_camera_feed(self, image, camera_index):
-        self.camera_labels[camera_index].setPixmap(QPixmap.fromImage(image))
+        """Update camera feed in UI slot."""
+        if camera_index in self._camera_slots:
+            self._camera_slots[camera_index].setPixmap(QPixmap.fromImage(image))
 
     def close_all_cameras(self):
-        for worker in self.camera_workers.values():
+        """Close all active camera workers."""
+        for worker in self._camera_workers.values():
             worker.stop()
             worker.wait() 
-        self.camera_workers.clear()
-        self.available_cameras.clear()
-        self.main_window.ui.camerasValue.setText(str(len(self.available_cameras)))
+        self._camera_workers.clear()
+        self.available_cameras = []
+        self.framerates = []
+        self.resolution = []
 
     def start_recording_all_cameras(self):
-        for worker in self.camera_workers.values():
+        """Start recording on all active cameras."""
+        for worker in self._camera_workers.values():
             worker.start_recording()
 
     def stop_recording_all_cameras(self):
-        for worker in self.camera_workers.values():
+        """Stop recording on all active cameras."""
+        for worker in self._camera_workers.values():
             worker.stop_recording()
