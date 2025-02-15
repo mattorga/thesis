@@ -2,6 +2,8 @@ import sys
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
+from PyQt5.QtWidgets import QGraphicsDropShadowEffect
+from PyQt5.QtGui import QColor
 
 import os
 #change line below
@@ -18,6 +20,13 @@ class MainWindow(QMainWindow):
     
     self.ui = Ui_MainWindow()
     self.ui.setupUi(self)
+    shadow = QGraphicsDropShadowEffect()
+    shadow.setBlurRadius(10)  # Soften the shadow
+    shadow.setXOffset(2)  # Move shadow right
+    shadow.setYOffset(2)  # Move shadow down
+    shadow.setColor(QColor(0, 0, 0, 100))  # Black shadow with transparency
+
+    self.ui.sidebar_full.setGraphicsEffect(shadow)
 
     self.ui.stackedWidget.setCurrentIndex(0)
     
