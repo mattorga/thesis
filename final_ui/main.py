@@ -57,6 +57,7 @@ class MainWindow(QMainWindow):
 
     # User Functions
     self.ui.participantAddButton.clicked.connect(self.add_participant)
+    self.ui.trialAddButton.clicked.connect(self.add_trial)
 
     # Camera Page
     self.ui.detectCamerasButton.clicked.connect(self.on_detect_cameras)
@@ -96,7 +97,8 @@ class MainWindow(QMainWindow):
       self.ui.trialSelectedLabel.setText(trial_name)
   def add_participant(self):
     self.directory_manager.add_participant()
-    
+  def add_trial(self):
+    self.directory_manager.add_trial()
 
   # --- Cameras Page functions --- #
   def on_detect_cameras(self):
