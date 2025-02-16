@@ -109,7 +109,7 @@ class MainWindow(QMainWindow):
   def add_trial(self):
     self.directory_manager.add_trial()
 
-  # --- Cameras Page functions --- #
+  # --- Cameras Page Functions --- #
   def on_detect_cameras(self):
     self.camera_manager.detect_available_cameras()
     
@@ -123,6 +123,9 @@ class MainWindow(QMainWindow):
     self.camera_manager.start_recording_all_cameras() 
   def on_stop_recording(self):
     self.camera_manager.stop_recording_all_cameras()
+
+  # --- Cameras Page Functions --- #
+  
 
   def on_process(self):
     print(f"Process {self.directory_manager.trial_path}")

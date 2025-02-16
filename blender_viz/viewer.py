@@ -34,7 +34,7 @@ class FBXViewer(QMainWindow):
         self.browser.setPage(self.page)
 
         # Load the HTML file
-        self.browser.load(QUrl("file:///D:/Miro Hernandez/Documents/openpose-1.7.0-binaries-win64-gpu-python3.7-flir-3d_recommended/davidpagnon Pose2Sim_Blender main Examples/viewer.html"))
+        self.browser.load(QUrl("file:///Users/mattheworga/Documents/Git/DLSU/thesis/blender_viz/viewer.html"))
 
         # Set up the layout
         central_widget = QWidget()
