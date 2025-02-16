@@ -59,7 +59,7 @@
     <property name="autoFillBackground">
      <bool>false</bool>
     </property>
-    <widget class="QWidget" name="">
+    <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -343,6 +343,32 @@
        </layout>
       </item>
       <item>
+       <spacer name="verticalSpacer_4">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Preferred</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="processButton">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>Process</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <spacer name="verticalSpacer">
         <property name="orientation">
          <enum>Qt::Vertical</enum>
@@ -382,8 +408,8 @@
     <property name="currentIndex">
      <number>1</number>
     </property>
-    <widget class="QWidget" name="dashboardPage">
-     <widget class="QLabel" name="dashboardLabel">
+    <widget class="QWidget" name="processPage">
+     <widget class="QLabel" name="processLabel">
       <property name="geometry">
        <rect>
         <x>490</x>
