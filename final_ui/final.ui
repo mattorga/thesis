@@ -148,14 +148,14 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="simulationButton">
+         <widget class="QPushButton" name="analyticsButton">
           <property name="font">
            <font>
             <family>Helvetica</family>
            </font>
           </property>
           <property name="text">
-           <string>3D Simulation</string>
+           <string>Analytics</string>
           </property>
          </widget>
         </item>
@@ -167,7 +167,7 @@
            </font>
           </property>
           <property name="text">
-           <string>Joint Analytics</string>
+           <string>Compare</string>
           </property>
          </widget>
         </item>
@@ -750,6 +750,19 @@
       <property name="styleSheet">
        <string notr="true"/>
       </property>
+      <widget class="QLabel" name="label">
+       <property name="geometry">
+        <rect>
+         <x>220</x>
+         <y>140</y>
+         <width>91</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>QtWebEngine</string>
+       </property>
+      </widget>
      </widget>
      <widget class="QWidget" name="horizontalLayoutWidget">
       <property name="geometry">
@@ -810,6 +823,19 @@
         <height>251</height>
        </rect>
       </property>
+      <widget class="QLabel" name="label_2">
+       <property name="geometry">
+        <rect>
+         <x>480</x>
+         <y>120</y>
+         <width>71</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>PyQtChart</string>
+       </property>
+      </widget>
      </widget>
      <widget class="QSlider" name="slider">
       <property name="geometry">
