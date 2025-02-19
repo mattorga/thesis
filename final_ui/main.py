@@ -12,6 +12,7 @@ from final import Ui_MainWindow
 
 from camera_manager import Camera, CameraManager
 from directory_manager import DirectoryManager
+from table_manager import TableManager
 
 from patient_form import Ui_patient_form
 
@@ -34,6 +35,8 @@ class MainWindow(QMainWindow):
     
     self.directory_manager = DirectoryManager(self)
 
+    self.table_manager = TableManager(self)
+
     self.setup_connections()
  
   # --- Page Changing Functions --- #
@@ -42,7 +45,7 @@ class MainWindow(QMainWindow):
     self.ui.stackedWidget.setCurrentIndex(0)
   def on_camerasButton_clicked(self):
     self.ui.stackedWidget.setCurrentIndex(1)
-  def on_simulationButton_clicked(self):
+  def on_analyticsButton_clicked(self):
     self.ui.stackedWidget.setCurrentIndex(2)
   def on_jointAnalyticsButton_clicked(self):
     self.ui.stackedWidget.setCurrentIndex(3) 
@@ -98,12 +101,36 @@ class MainWindow(QMainWindow):
       self.ui.trialSelectButton.setEnabled(True)
       self.ui.trialAddButton.setEnabled(True)
   def on_select_trial(self):
-    self.directory_manager.set_trial()
-    trial_name = self.directory_manager.trial_dir
+      self.directory_manager.set_trial()
+      trial_name = self.directory_manager.trial_dir
+      trial_path = self.directory_manager.trial_path
 
-    if trial_name:
-      self.ui.trialSelectedLabel.setText(trial_name)
-      self.ui.processButton.setEnabled(True)
+      if trial_name:
+        self.ui.trialSelectedLabel.setText(trial_name)
+        self.ui.processButton.setEnabled(True)
+        
+        try:
+            mot_file = "/Users/mattheworga/Documents/GaitScape/S00_Demo/P00_David/T00/kinematics/T00_David_0-98_filt_butterworth_LSTM.mot"
+                    
+            if mot_file:
+                if self.table_manager.read_mot_file(mot_file):
+                    self.table_manager.display_data_in_table(self.ui.jointsTable)
+                else:
+                    QMessageBox.warning(
+                        self,
+                        "Data Loading Error",
+                        "Failed to load motion data file."
+                    )
+            else:
+                QMessageBox.information(
+                    self,
+                    "No Data File",
+                    "No motion data file found in trial directory."
+                )
+                
+        finally:
+            # Restore cursor
+            QApplication.restoreOverrideCursor()
   def add_participant(self):
     self.directory_manager.add_participant()
   def add_trial(self):
@@ -124,8 +151,9 @@ class MainWindow(QMainWindow):
   def on_stop_recording(self):
     self.camera_manager.stop_recording_all_cameras()
 
-  # --- Cameras Page Functions --- #
-  
+  # --- Analytics Page Functions --- #
+  def on_display_data(self):
+     pass
 
   def on_process(self):
     print(f"Process {self.directory_manager.trial_path}")
@@ -143,18 +171,18 @@ class MainWindow(QMainWindow):
 
     Pose2Sim.poseEstimation(trial_config_dict) # Working
     print("WORKING: Pose Estimation")
-    Pose2Sim.synchronization(trial_config_dict)
-    print("WORKING: Pose Synchronization")
-    Pose2Sim.personAssociation(trial_config_dict)
-    print("WORKING: Person Association")
-    Pose2Sim.triangulation(trial_config_dict)
-    print("WORKING: Triangulation")
-    Pose2Sim.filtering(trial_config_dict)
-    print("WORKING: Filtering")
-    Pose2Sim.markerAugmentation(trial_config_dict)
-    print("WORKING: Marker Augmentation")
-    Pose2Sim.kinematics(trial_config_dict)
-    print("WORKING: Kinematics")
+    # Pose2Sim.synchronization(trial_config_dict)
+    # print("WORKING: Pose Synchronization")
+    # Pose2Sim.personAssociation(trial_config_dict)
+    # print("WORKING: Person Association")
+    # Pose2Sim.triangulation(trial_config_dict)
+    # print("WORKING: Triangulation")
+    # Pose2Sim.filtering(trial_config_dict)
+    # print("WORKING: Filtering")
+    # Pose2Sim.markerAugmentation(trial_config_dict)
+    # print("WORKING: Marker Augmentation")
+    # Pose2Sim.kinematics(trial_config_dict)
+    # print("WORKING: Kinematics")
 
 if __name__ == "__main__":
   app = QApplication(sys.argv)
