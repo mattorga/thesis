@@ -1,0 +1,40 @@
+<RCC>
+  <qresource>
+    <file>resourcesnew/analytics.png</file>
+    <file>resourcesnew/compare.png</file>
+    <file>resourcesnew/session.png</file>
+    <file>resourcesnew/processing.png</file>
+    <file>resourcesnew/Stacks.png</file>
+    <file>resourcesnew/Group.png</file>
+    <file>resourcesnew/Videocam Off.png</file>
+    <file>resourcesnew/Exit.png</file>
+    <file>resourcesnew/Joint Analytics.png</file>
+    <file>resourcesnew/3D Simulation.png</file>
+    <file>resourcesnew/Cameras.png</file>
+    <file>resourcesnew/Dashboard.png</file>
+    <file>resourcesnew/Pause.png</file>
+    <file>resourcesnew/Play.png</file>
+    <file>resourcesnew/Icon (4).png</file>
+    <file>resourcesnew/Icon (3).png</file>
+    <file>resourcesnew/Icon (2).png</file>
+    <file>resourcesnew/exit_text.png</file>
+    <file>resourcesnew/joint_analytics_text.png</file>
+    <file>resourcesnew/3dsimulationtext.png</file>
+    <file>resourcesnew/camerastext.png</file>
+    <file>resourcesnew/dashboardtext.png</file>
+    <file>resourcesnew/Polygon 1.png</file>
+    <file>resourcesnew/Logo Text.png</file>
+    <file>resourcesnew/Logo 1.png</file>
+    <file>resourcesnew/profile.png</file>
+    <file>resourcesnew/right.png</file>
+    <file>resourcesnew/left.png</file>
+    <file>resourcesnew/comment.png</file>
+    <file>resourcesnew/record.png</file>
+    <file>resourcesnew/files2.png</file>
+    <file>resourcesnew/files1.png</file>
+    <file>resourcesnew/settings.png</file>
+    <file>resourcesnew/home.png</file>
+    <file>resourcesnew/joint_analytics.png</file>
+    <file>resourcesnew/notification.png</file>
+  </qresource>
+</RCC>
