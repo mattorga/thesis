@@ -6,10 +6,12 @@ import os
 class Camera(QThread):
     ImageUpdate = pyqtSignal(QImage)
 
-    def __init__(self, camera_number=0):
+    def __init__(self, camera_number=0, save_directory=None, file_name=None):
         super().__init__()
         self.camera_number = camera_number
         self.threadActive = True
+        self.save_directory = save_directory
+        self.file_name = file_name
 
     def run(self):
         self.isRecording = False
@@ -28,24 +30,27 @@ class Camera(QThread):
         while self.threadActive:
             ret, frame = cap.read()
             if ret:
-                image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                # Rotate the original frame
+                rotated_frame = cv2.rotate(frame, cv2.ROTATE_90_COUNTERCLOCKWISE)
+                # Convert to RGB for display
+                image = cv2.cvtColor(rotated_frame, cv2.COLOR_BGR2RGB)
 
                 if self.isRecording:
                     if self.videoWriter is None:
                         filename = self.get_unique_filename(self.camera_number)
+                        # Note the swapped width and height for rotated dimensions
                         self.videoWriter = cv2.VideoWriter(
                             filename, 
                             fourcc, 
                             30.0, 
-                            (frame_width, frame_height)
+                            (frame_height, frame_width)  # Swap dimensions for rotation
                         )
-                    self.videoWriter.write(frame)
+                    self.videoWriter.write(rotated_frame)
 
-                flippedImage = cv2.flip(image, 1)
                 ConvertToQtFormat = QImage(
-                    flippedImage.data,            
-                    flippedImage.shape[1], 
-                    flippedImage.shape[0],
+                    image.data,            
+                    image.shape[1], 
+                    image.shape[0],
                     QImage.Format_RGB888
                 )
                 Pic = ConvertToQtFormat.scaled(640, 480, Qt.KeepAspectRatio)
@@ -71,16 +76,19 @@ class Camera(QThread):
             self.videoWriter.release()
             self.videoWriter = None
 
-    def get_unique_filename(self, base_number):
+    def get_unique_filename(self, camera_number):
         counter = 0
         while True:
-            if counter == 0:
-                filename = f'output_{base_number}.avi'
-            else:
-                filename = f'output_{base_number}_{counter}.avi'
+            filename = f'{self.file_name}_cam{camera_number+1}.avi'
                 
-            if not os.path.exists(filename):
-                return filename
+           # Use save_directory if provided
+            if self.save_directory:
+                filepath = os.path.join(self.save_directory, filename)
+            else:
+                filepath = filename
+                
+            if not os.path.exists(filepath):
+                return filepath
             counter += 1
 
 class CameraManager:
@@ -90,6 +98,33 @@ class CameraManager:
         self._framerates = []
         self._resolution = []
         self._camera_workers = {}
+        self._save_directory = None
+        self._file_name = None
+
+    @property
+    def file_name(self):
+        return self._file_name
+    
+    @file_name.setter
+    def file_name(self, file_name):
+        self._file_name = file_name
+        for worker in self._camera_workers.values():
+            worker.file_name = file_name
+
+    @property
+    def save_directory(self):
+        """Directory where camera recordings will be saved."""
+        return self._save_directory
+
+    @save_directory.setter 
+    def save_directory(self, directory):
+        """Set the directory for saving camera recordings."""
+        if directory and not os.path.exists(directory):
+            raise ValueError("Save directory must exist")
+        self._save_directory = directory
+
+        for worker in self._camera_workers.values():
+            worker.save_directory = directory
 
     # --- Available Cameras Property --- #
     @property
@@ -166,7 +201,7 @@ class CameraManager:
         """Number of currently available cameras."""
         return len(self._available_cameras)
 
-    def detect_available_cameras(self, max_cameras=3):
+    def detect_available_cameras(self, max_cameras=2):
         """Detect and initialize available cameras."""
         temp_cameras = []
         temp_framerates = []
@@ -192,7 +227,7 @@ class CameraManager:
         
         # Initialize camera workers
         for camera_index in self._available_cameras:
-            worker = Camera(camera_index)
+            worker = Camera(camera_index, self._save_directory, self.file_name)
             worker.ImageUpdate.connect(
                 lambda image, idx=camera_index: self.update_camera_feed(image, idx)
             )

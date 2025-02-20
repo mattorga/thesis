@@ -13,6 +13,7 @@ from final import Ui_MainWindow
 from camera_manager import Camera, CameraManager
 from directory_manager import DirectoryManager
 from table_manager import TableManager
+from data_manager import DataManager
 
 from patient_form import Ui_patient_form
 
@@ -25,7 +26,11 @@ class MainWindow(QMainWindow):
 
     self.ui.stackedWidget.setCurrentIndex(0)
     
+    self.directory_manager = DirectoryManager(self)
+    self.table_manager = TableManager(self)
+    self.data_manager = DataManager()
     self.camera_manager = CameraManager(self)
+    
     camera_slots = {
       0: self.ui.cameraSlot1,
       1: self.ui.cameraSlot2,
@@ -33,10 +38,6 @@ class MainWindow(QMainWindow):
     }
     self.camera_manager.camera_slots = camera_slots
     
-    self.directory_manager = DirectoryManager(self)
-
-    self.table_manager = TableManager(self)
-
     self.setup_connections()
  
   # --- Page Changing Functions --- #
@@ -103,7 +104,11 @@ class MainWindow(QMainWindow):
   def on_select_trial(self):
       self.directory_manager.set_trial()
       trial_name = self.directory_manager.trial_dir
-      trial_path = self.directory_manager.trial_path
+
+      self.ui.directoryValue.setText(self.directory_manager.trial_dir)
+
+      self.camera_manager.save_directory = self.directory_manager.trial_path
+      self.camera_manager.file_name = self.directory_manager.trial_name
 
       if trial_name:
         self.ui.trialSelectedLabel.setText(trial_name)
@@ -113,8 +118,9 @@ class MainWindow(QMainWindow):
             mot_file = "/Users/mattheworga/Documents/GaitScape/S00_Demo/P00_David/T00/kinematics/T00_David_0-98_filt_butterworth_LSTM.mot"
                     
             if mot_file:
-                if self.table_manager.read_mot_file(mot_file):
-                    self.table_manager.display_data_in_table(self.ui.jointsTable)
+                motion_data = self.data_manager.read_mot_file(mot_file)
+                if motion_data:
+                    self.table_manager.display_data_in_table(self.ui.jointsTable, motion_data)
                 else:
                     QMessageBox.warning(
                         self,
@@ -143,6 +149,8 @@ class MainWindow(QMainWindow):
     # Update UI elements
     self.ui.camerasValue.setText(str(self.camera_manager.camera_count))
     self.ui.framerateValue.setText(str(self.camera_manager.framerates))
+    self.ui.resolutionValue.setText(str(self.camera_manager.resolution))
+
   def on_close_cameras(self):
     self.camera_manager.close_all_cameras()
     self.ui.camerasValue.setText(str(self.camera_manager.camera_count))
@@ -171,18 +179,18 @@ class MainWindow(QMainWindow):
 
     Pose2Sim.poseEstimation(trial_config_dict) # Working
     print("WORKING: Pose Estimation")
-    # Pose2Sim.synchronization(trial_config_dict)
-    # print("WORKING: Pose Synchronization")
-    # Pose2Sim.personAssociation(trial_config_dict)
-    # print("WORKING: Person Association")
-    # Pose2Sim.triangulation(trial_config_dict)
-    # print("WORKING: Triangulation")
-    # Pose2Sim.filtering(trial_config_dict)
-    # print("WORKING: Filtering")
-    # Pose2Sim.markerAugmentation(trial_config_dict)
-    # print("WORKING: Marker Augmentation")
-    # Pose2Sim.kinematics(trial_config_dict)
-    # print("WORKING: Kinematics")
+    Pose2Sim.synchronization(trial_config_dict)
+    print("WORKING: Pose Synchronization")
+    Pose2Sim.personAssociation(trial_config_dict)
+    print("WORKING: Person Association")
+    Pose2Sim.triangulation(trial_config_dict)
+    print("WORKING: Triangulation")
+    Pose2Sim.filtering(trial_config_dict)
+    print("WORKING: Filtering")
+    Pose2Sim.markerAugmentation(trial_config_dict)
+    print("WORKING: Marker Augmentation")
+    Pose2Sim.kinematics(trial_config_dict)
+    print("WORKING: Kinematics")
 
 if __name__ == "__main__":
   app = QApplication(sys.argv)
