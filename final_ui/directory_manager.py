@@ -74,6 +74,16 @@ class DirectoryManager:
     self._participant_path = None
     self._trial_path = None
 
+    self._trial_name = None
+
+  @property
+  def trial_name(self):
+     return self._trial_name
+  
+  @trial_name.setter
+  def trial_name(self, trial_name):
+     self._trial_name = trial_name
+
   # --- Path Properties --- #
   @property
   def session_path(self):
@@ -163,6 +173,9 @@ class DirectoryManager:
       selected_path = dialog.selectedFiles()[0]
       if os.path.dirname(selected_path) == self._participant_path:
         self.trial_path = selected_path
+        
+        self.trial_name = self.trial_dir.split("_",1)[1]
+
       else:
          QMessageBox.warning(self.main_window, "Invalid Selection", 
                               f"Please select a trial folder directly under {os.path.basename(self._participant_path)} folder.")
@@ -240,7 +253,6 @@ class DirectoryManager:
                     pass                  
   def add_trial(self):
       dialog = TrialForm(self.main_window)
-      
 
       if dialog.exec_() == QDialog.Accepted:
         trial_name = dialog.ui.trialNameField.text()

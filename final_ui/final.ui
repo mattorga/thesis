@@ -406,7 +406,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="processPage">
      <widget class="QLabel" name="processLabel">
@@ -666,7 +666,7 @@
        <rect>
         <x>550</x>
         <y>650</y>
-        <width>60</width>
+        <width>351</width>
         <height>16</height>
        </rect>
       </property>
@@ -684,7 +684,7 @@
        <rect>
         <x>550</x>
         <y>670</y>
-        <width>60</width>
+        <width>391</width>
         <height>16</height>
        </rect>
       </property>
@@ -702,7 +702,7 @@
        <rect>
         <x>550</x>
         <y>690</y>
-        <width>60</width>
+        <width>371</width>
         <height>16</height>
        </rect>
       </property>
@@ -720,7 +720,7 @@
        <rect>
         <x>550</x>
         <y>710</y>
-        <width>60</width>
+        <width>371</width>
         <height>16</height>
        </rect>
       </property>
@@ -785,6 +785,12 @@
         <widget class="QPushButton" name="hipTabButton">
          <property name="text">
           <string>Hip</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
          </property>
         </widget>
        </item>
