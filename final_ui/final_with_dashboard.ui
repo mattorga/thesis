@@ -118,6 +118,24 @@
          </widget>
         </item>
         <item>
+         <widget class="QPushButton" name="dashboardButton">
+          <property name="font">
+           <font>
+            <family>Helvetica</family>
+           </font>
+          </property>
+          <property name="text">
+           <string>Dashboard</string>
+          </property>
+          <property name="default">
+           <bool>false</bool>
+          </property>
+          <property name="flat">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QPushButton" name="camerasButton">
           <property name="font">
            <font>
@@ -388,10 +406,10 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>2</number>
     </property>
-    <widget class="QWidget" name="dashboardPage">
-     <widget class="QLabel" name="dashboardLabel">
+    <widget class="QWidget" name="processPage">
+     <widget class="QLabel" name="processLabel">
       <property name="geometry">
        <rect>
         <x>490</x>

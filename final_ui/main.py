@@ -14,6 +14,7 @@ from camera_manager import Camera, CameraManager
 from directory_manager import DirectoryManager
 from table_manager import TableManager
 from data_manager import DataManager
+from process_manager import ProcessManager
 
 from patient_form import Ui_patient_form
 
@@ -24,12 +25,13 @@ class MainWindow(QMainWindow):
     self.ui = Ui_MainWindow()
     self.ui.setupUi(self)
 
-    self.ui.stackedWidget.setCurrentIndex(0)
+    self.ui.stackedWidget.setCurrentIndex(1)
     
     self.directory_manager = DirectoryManager(self)
     self.table_manager = TableManager(self)
     self.data_manager = DataManager()
     self.camera_manager = CameraManager(self)
+    self.process_manager = ProcessManager(self)
     
     camera_slots = {
       0: self.ui.cameraSlot1,
@@ -122,11 +124,12 @@ class MainWindow(QMainWindow):
                 if motion_data:
                     self.table_manager.display_data_in_table(self.ui.jointsTable, motion_data)
                 else:
-                    QMessageBox.warning(
-                        self,
-                        "Data Loading Error",
-                        "Failed to load motion data file."
-                    )
+                    # QMessageBox.warning(
+                    #     self,
+                    #     "Data Loading Error",
+                    #     "Failed to load motion data file."
+                    # )
+                    pass
             else:
                 QMessageBox.information(
                     self,
@@ -174,24 +177,26 @@ class MainWindow(QMainWindow):
     trial_config_dict = toml.load(trial_config_path)
     trial_config_dict.get("project").update({"project_dir":self.directory_manager.trial_path})
 
+    # self.process_manager.start_processing(session_config_dict, trial_config_dict)
+
     # Pose2Sim.calibration(session_config_dict) # Working
     # print("WORKING: Calibration")
 
     Pose2Sim.poseEstimation(trial_config_dict) # Working
-    print("WORKING: Pose Estimation")
     Pose2Sim.synchronization(trial_config_dict)
-    print("WORKING: Pose Synchronization")
-    Pose2Sim.personAssociation(trial_config_dict)
-    print("WORKING: Person Association")
     Pose2Sim.triangulation(trial_config_dict)
-    print("WORKING: Triangulation")
     Pose2Sim.filtering(trial_config_dict)
-    print("WORKING: Filtering")
-    Pose2Sim.markerAugmentation(trial_config_dict)
-    print("WORKING: Marker Augmentation")
     Pose2Sim.kinematics(trial_config_dict)
-    print("WORKING: Kinematics")
 
+  def closeEvent(self, event):
+    """Handle application closing"""
+    self.process_manager.cleanup()
+    
+    # Also cleanup camera resources if they're still running
+    self.camera_manager.close_all_cameras()
+    
+    super().closeEvent(event)
+    
 if __name__ == "__main__":
   app = QApplication(sys.argv)
 
