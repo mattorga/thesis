@@ -15,6 +15,7 @@ from directory_manager import DirectoryManager
 from table_manager import TableManager
 from data_manager import DataManager
 from process_manager import ProcessManager
+from chart_manager import ChartManager
 
 from patient_form import Ui_patient_form
 
@@ -32,6 +33,7 @@ class MainWindow(QMainWindow):
     self.data_manager = DataManager()
     self.camera_manager = CameraManager(self)
     self.process_manager = ProcessManager(self)
+    self.chart_manager = ChartManager(self)
     
     camera_slots = {
       0: self.ui.cameraSlot1,
@@ -117,12 +119,22 @@ class MainWindow(QMainWindow):
         self.ui.processButton.setEnabled(True)
         
         try:
-            mot_file = "/Users/mattheworga/Documents/GaitScape/S00_Demo/P00_David/T00/kinematics/T00_David_0-98_filt_butterworth_LSTM.mot"
-                    
+            mot_file = "/Users/mattheworga/Documents/Git/DLSU/thesis/final_ui/data/T00_antalgic.mot"
+            versus_file = "/Users/mattheworga/Documents/Git/DLSU/thesis/final_ui/data/T03_normal.mot"
+
             if mot_file:
                 motion_data = self.data_manager.read_mot_file(mot_file)
+                versus_data = self.data_manager.read_mot_file(versus_file)
                 if motion_data:
-                    self.table_manager.display_data_in_table(self.ui.jointsTable, motion_data)
+                    self.table_manager.display_data_in_table(self.ui.jointsTable, motion_data, False)
+                    self.chart_manager.display_data_in_chart(self.ui.trialChart, motion_data, False)
+
+                    self.table_manager.display_data_in_table(self.ui.baseTrialTable, motion_data, True)
+                    self.chart_manager.display_data_in_chart(self.ui.baseTrialChart, motion_data, True)
+
+                    self.table_manager.display_data_in_table(self.ui.versusTrialTable, versus_data, True)
+                    self.chart_manager.display_data_in_chart(self.ui.versusTrialChart, versus_data, True)
+
                 else:
                     # QMessageBox.warning(
                     #     self,

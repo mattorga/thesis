@@ -388,7 +388,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="dashboardPage">
      <widget class="QLabel" name="dashboardLabel">
@@ -717,35 +717,6 @@
      </widget>
     </widget>
     <widget class="QWidget" name="simulationPage">
-     <widget class="QWidget" name="SimWidget" native="true">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>50</y>
-        <width>500</width>
-        <height>291</height>
-       </rect>
-      </property>
-      <property name="autoFillBackground">
-       <bool>false</bool>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
-      <widget class="QLabel" name="label">
-       <property name="geometry">
-        <rect>
-         <x>220</x>
-         <y>140</y>
-         <width>91</width>
-         <height>16</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>QtWebEngine</string>
-       </property>
-      </widget>
-     </widget>
      <widget class="QWidget" name="horizontalLayoutWidget">
       <property name="geometry">
        <rect>
@@ -760,6 +731,12 @@
         <widget class="QPushButton" name="analyticsAllButton">
          <property name="text">
           <string>All</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -781,12 +758,18 @@
          <property name="text">
           <string>Knee</string>
          </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
         </widget>
        </item>
        <item>
         <widget class="QPushButton" name="analyticsAnkleButton">
          <property name="text">
           <string>Ankle</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -795,9 +778,9 @@
      <widget class="QTableWidget" name="jointsTable">
       <property name="geometry">
        <rect>
-        <x>530</x>
+        <x>9</x>
         <y>50</y>
-        <width>500</width>
+        <width>1021</width>
         <height>291</height>
        </rect>
       </property>
@@ -932,20 +915,6 @@
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_6">
        <item>
-        <widget class="QLabel" name="timeLabel">
-         <property name="text">
-          <string>Time:</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="timeValue">
-         <property name="text">
-          <string>00:00:00</string>
-         </property>
-        </widget>
-       </item>
-       <item>
         <spacer name="horizontalSpacer_3">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -968,7 +937,7 @@
        <item>
         <widget class="QLabel" name="gaitStageValue">
          <property name="text">
-          <string>TextLabel</string>
+          <string>Toe Off</string>
          </property>
         </widget>
        </item>
@@ -984,20 +953,6 @@
           </size>
          </property>
         </spacer>
-       </item>
-       <item>
-        <widget class="QLabel" name="frameLabel">
-         <property name="text">
-          <string>Frame:</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="frameValue">
-         <property name="text">
-          <string>1/n</string>
-         </property>
-        </widget>
        </item>
       </layout>
      </widget>
@@ -1072,7 +1027,7 @@
      <widget class="QSlider" name="comparativeSlider">
       <property name="geometry">
        <rect>
-        <x>10</x>
+        <x>30</x>
         <y>670</y>
         <width>1021</width>
         <height>22</height>
@@ -1118,7 +1073,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>T01_lurch</string>
+       <string>T00_antalgic</string>
       </property>
      </widget>
      <widget class="QLabel" name="versusTrialValue">
@@ -1131,33 +1086,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>T00_Normal</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="baseGPLabel">
-      <property name="geometry">
-       <rect>
-        <x>540</x>
-        <y>300</y>
-        <width>111</width>
-        <height>39</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Gait Parameters:</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="versusGPLabel">
-      <property name="geometry">
-       <rect>
-        <x>540</x>
-        <y>590</y>
-        <width>111</width>
-        <height>39</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Gait Parameters:</string>
+       <string>T03_normal</string>
       </property>
      </widget>
      <widget class="QLabel" name="baseTrialLabel">
@@ -1205,7 +1134,7 @@
        <string>Choose a New Trial</string>
       </property>
      </widget>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
         <x>3</x>
@@ -1219,6 +1148,12 @@
         <widget class="QPushButton" name="comparativeAllButton">
          <property name="text">
           <string>All</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -1250,6 +1185,32 @@
         </widget>
        </item>
       </layout>
+     </widget>
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>380</x>
+        <y>310</y>
+        <width>60</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Toe Off</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_5">
+      <property name="geometry">
+       <rect>
+        <x>380</x>
+        <y>600</y>
+        <width>60</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Toe Off</string>
+      </property>
      </widget>
     </widget>
    </widget>
