@@ -34,10 +34,10 @@ class ProcessWorker(QThread):
             # Define processing steps
             steps = [
                 # (ProcessState.POSE_ESTIMATION, self._run_pose_estimation, "Running pose estimation"),
-                (ProcessState.SYNCHRONIZATION, self._run_synchronization, "Running synchronization"),
-                (ProcessState.TRIANGULATION, self._run_triangulation, "Running triangulation"),
+                # (ProcessState.SYNCHRONIZATION, self._run_synchronization, "Running synchronization"),
+                # (ProcessState.TRIANGULATION, self._run_triangulation, "Running triangulation"),
                 (ProcessState.FILTERING, self._run_filtering, "Running filtering"),
-                (ProcessState.KINEMATICS, self._run_kinematics, "Running kinematics")
+                # (ProcessState.KINEMATICS, self._run_kinematics, "Running kinematics")
             ]
             
             # Execute steps sequentially
