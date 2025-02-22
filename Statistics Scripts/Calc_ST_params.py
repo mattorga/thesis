@@ -256,7 +256,7 @@ def analyze_gait(file_path):
 if __name__ == "__main__":
     # Specify the input TRC file path and output directory
     trc_path = r'D:\Miro Hernandez\Documents\openpose-1.7.0-binaries-win64-gpu-python3.7-flir-3d_recommended\Statistics test\BatchSession_Ronnel\T05_normal_1.7\pose-3d\T05_normal_1_filt_butterworth_on_speed.trc'
-    output_path = r'D:\Miro Hernandez\Documents\openpose-1.7.0-binaries-win64-gpu-python3.7-flir-3d_recommended\Statistics test\Spatio temporal Kinematics\Ronnel'
+    # output_path = r'D:\Miro Hernandez\Documents\openpose-1.7.0-binaries-win64-gpu-python3.7-flir-3d_recommended\Statistics test\Spatio temporal Kinematics\Ronnel'
     
     print(f"Processing TRC file at {trc_path}")
     results = analyze_gait(trc_path)
@@ -270,20 +270,20 @@ if __name__ == "__main__":
         print(f"Right heel strikes at frames: {results['right_heel_strikes']}")
         print(f"Left heel strikes at frames: {results['left_heel_strikes']}")
         
-        # Create the output CSV file name based on the input file name
-        base = os.path.basename(trc_path)
-        filename_no_ext, _ = os.path.splitext(base)
-        output_filename = f"{filename_no_ext}.csv"
-        full_output_path = os.path.join(output_path, output_filename)
+        # # Create the output CSV file name based on the input file name
+        # base = os.path.basename(trc_path)
+        # filename_no_ext, _ = os.path.splitext(base)
+        # output_filename = f"{filename_no_ext}.csv"
+        # full_output_path = os.path.join(output_path, output_filename)
         
-        # Prepare a DataFrame with the desired results and headers
-        df_out = pd.DataFrame({
-            "Dynamic stride length (cm)": [results['stride_length_cm']],
-            "Stride time (s)": [results['stride_time_s']],
-            "Gait speed (m/s)": [results['gait_speed_ms']],
-            "Stride width (cm)": [results['stride_width_cm']]
-        })
-        df_out.to_csv(full_output_path, index=False)
-        print(f"Results saved to {full_output_path}")
+        # # Prepare a DataFrame with the desired results and headers
+        # df_out = pd.DataFrame({
+        #     "Dynamic stride length (cm)": [results['stride_length_cm']],
+        #     "Stride time (s)": [results['stride_time_s']],
+        #     "Gait speed (m/s)": [results['gait_speed_ms']],
+        #     "Stride width (cm)": [results['stride_width_cm']]
+        # })
+        # df_out.to_csv(full_output_path, index=False)
+        # print(f"Results saved to {full_output_path}")
     else:
         print("Gait analysis failed:", results['message'])
