@@ -58,7 +58,7 @@ def detect_heel_strikes(data, side='R', window_size=5):
     if heel_strikes:
         filtered = [heel_strikes[0]]
         for hs in heel_strikes[1:]:
-            if hs - filtered[-1] > 8:
+            if hs - filtered[-1] > 20: # Minimum frame between heel strikes
                 filtered.append(hs)
         heel_strikes = filtered
 
