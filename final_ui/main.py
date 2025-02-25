@@ -17,7 +17,7 @@ from data_manager import DataManager
 from process_manager import ProcessManager
 from chart_manager import ChartManager
 
-from patient_form import Ui_patient_form
+import final_resources
 
 class MainWindow(QMainWindow):
   def __init__(self):
@@ -105,6 +105,7 @@ class MainWindow(QMainWindow):
       self.ui.participantSelectedLabel.setText(participant_name)
       self.ui.trialSelectButton.setEnabled(True)
       self.ui.trialAddButton.setEnabled(True)
+      self.ui.processButton.setEnabled(True)
   def on_select_trial(self):
       self.directory_manager.set_trial()
       trial_name = self.directory_manager.trial_dir
@@ -184,7 +185,7 @@ class MainWindow(QMainWindow):
     session_config_path = os.path.join(self.directory_manager.session_path, "Config.toml")
     session_config_dict = toml.load(session_config_path)
     session_config_dict.get("project").update({"project_dir":os.path.join(self.directory_manager.session_path)})
-    
+
     trial_config_path = os.path.join(self.directory_manager.trial_path, "Config.toml")
     trial_config_dict = toml.load(trial_config_path)
     trial_config_dict.get("project").update({"project_dir":self.directory_manager.trial_path})
@@ -194,7 +195,7 @@ class MainWindow(QMainWindow):
     # Pose2Sim.calibration(session_config_dict) # Working
     # print("WORKING: Calibration")
 
-    Pose2Sim.poseEstimation(trial_config_dict) # Working
+    Pose2Sim.poseEstimation(trial_config_dict)
     Pose2Sim.synchronization(trial_config_dict)
     Pose2Sim.triangulation(trial_config_dict)
     Pose2Sim.filtering(trial_config_dict)
