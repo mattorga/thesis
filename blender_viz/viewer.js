@@ -49,7 +49,7 @@ const seekBar = document.getElementById("seekBar");
 // Load FBX file
 const loader = new THREE.FBXLoader();
 loader.load(
-	"http://localhost:8000/Users/mattheworga/Documents/Git/DLSU/thesis/blender_viz/untitled.fbx",
+	"http://localhost:8000/Users/mattheworga/Documents/Git/DLSU/thesis/blender_viz/working.fbx",
 	(object) => {
 		object.scale.set(0.01, 0.01, 0.01);
 
