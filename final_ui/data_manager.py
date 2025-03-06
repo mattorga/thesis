@@ -1,4 +1,5 @@
 import numpy as np
+import csv
 
 class DataManager:
     def __init__(self):
@@ -77,6 +78,67 @@ class DataManager:
             
         except Exception as e:
             print(f"Error reading .mot file: {str(e)}")
+            return None
+
+    def read_csv_file(self, file_path):
+        """
+        Read a CSV file containing motion capture data
+        
+        Args:
+            file_path (str): Path to the CSV file
+            
+        Returns:
+            dict: Dictionary containing time, joint_data, and gait_phase information
+        """
+        try:
+            import pandas as pd
+            
+            # Read the CSV file
+            df = pd.read_csv(file_path)
+            
+            # Extract time values
+            time_values = df['time'].values.tolist()
+            
+            # Create a dictionary for joint data
+            joint_data = {
+                'hip_flexion_r': df['right_hip'].values.tolist() if 'right_hip' in df else [],
+                'hip_flexion_l': df['left_hip'].values.tolist() if 'left_hip' in df else [],
+                'knee_angle_r': df['right_knee'].values.tolist() if 'right_knee' in df else [],
+                'knee_angle_l': df['left_knee'].values.tolist() if 'left_knee' in df else [],
+                'ankle_angle_r': df['right_ankle'].values.tolist() if 'right_ankle' in df else [],
+                'ankle_angle_l': df['left_ankle'].values.tolist() if 'left_ankle' in df else []
+            }
+            
+            # Extract gait phase data if available
+            gait_phase_data = None
+            if 'gait_phase' in df:
+                gait_phase_data = df['gait_phase'].values.tolist()
+                
+            # Extract cycle data if available
+            cycle_data = {}
+            if 'cycle_number' in df:
+                cycle_data['cycle_number'] = df['cycle_number'].values.tolist()
+            if 'cycle_boundary' in df:
+                cycle_data['cycle_boundary'] = df['cycle_boundary'].values.tolist()
+            
+            # Return the data as a dictionary
+            result = {
+                'time': time_values,
+                'joint_data': joint_data
+            }
+            
+            # Add gait phase data if available
+            if gait_phase_data is not None:
+                result['gait_phase'] = gait_phase_data
+                
+            # Add cycle data if available
+            if cycle_data:
+                result['cycle_data'] = cycle_data
+                
+            return result
+        
+        except Exception as e:
+            print(f"Error reading CSV file: {str(e)}")
             return None
 
     def get_data(self):
