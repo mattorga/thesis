@@ -182,7 +182,7 @@ def calculate_gait_speed_from_dynamic(stride_length_cm, stride_time):
 
 def calculate_stride_width(data, r_heel_strikes, l_heel_strikes):
     """
-    Calculate stride width based on lateral (Y-axis) differences at heel strikes.
+    Calculate stride width based on lateral (Z-axis) differences at heel strikes.
     """
     if len(r_heel_strikes) == 0 or len(l_heel_strikes) == 0:
         return np.nan
@@ -190,8 +190,8 @@ def calculate_stride_width(data, r_heel_strikes, l_heel_strikes):
     for rhs in r_heel_strikes:
         try:
             lhs = l_heel_strikes[np.argmin(np.abs(l_heel_strikes - rhs))]
-            y_r = data['RAnkle_Y'].iloc[rhs]
-            y_l = data['LAnkle_Y'].iloc[lhs]
+            y_r = data['RAnkle_Z'].iloc[rhs]
+            y_l = data['LAnkle_Z'].iloc[lhs]
             widths.append(np.abs(y_r - y_l))
         except Exception:
             continue
