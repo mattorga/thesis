@@ -99,35 +99,7 @@ def analyze_gait_patterns(before_data, after_data):
         'p_values': p_values
     }
 
-# def print_analysis_results(results):
-#     """
-#     Print analysis results in a formatted way
-#     """
-#     print("\nGait Analysis Results:")
-#     print("-" * 100)
-#     print(f"{'Column':^8} {'DTW Dist':^12} {'Cross-Corr':^12} {'Time Lag':^10} {'Pearson r':^12} {'P-value':^12}")
-#     print("-" * 100)
-    
-#     for col in range(len(results['dtw_distances'])):
-#         if col in skip_cols:
-#             continue
-            
-#         dtw_dist = results['dtw_distances'][col]
-#         cross_corr = results['cross_corr_max'][col]
-#         time_lag = results['cross_corr_lags'][col]
-#         pearson = results['pearson_corr'][col]
-#         p_val = results['p_values'][col]
-        
-        
-        
-#         print(f"{col:^8d} {dtw_dist:^12.4f} {cross_corr:^12.4f} {time_lag:^10.0f} "
-#               f"{pearson:^12.4f} {p_val:^12.4f}")
-    
-#     # Print summary statistics
-#     print("\nSummary Statistics:")
-#     print(f"Average DTW distance: {np.nanmean(results['dtw_distances'][1:]):.4f}")
-#     print(f"Average cross-correlation: {np.nanmean(results['cross_corr_max'][1:]):.4f}")
-#     print(f"Average Pearson correlation: {np.nanmean(results['pearson_corr'][1:]):.4f}")
+
 def print_analysis_results_to_file(results, filename="gait_analysis_results.txt"):
     # Define columns to skip: time column (0) plus extra columns
     skip_cols = [0, 44, 45, 53, 54, 55, 60, 61, 62]
