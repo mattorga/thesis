@@ -59,7 +59,8 @@ def analyze_gait_parameters_multiple(abnormal_csvs, normal_csvs):
         results['means_normal'][metric] = np.mean(normal_values)
         results['std_abnormal'][metric] = np.std(abnormal_values)
         results['std_normal'][metric] = np.std(normal_values)
-    
+        print("Difference array:", abnormal_values - normal_values)
+        print("Standard deviation of differences:", np.std(abnormal_values - normal_values))
     # Prepare formatted output
     output_lines = []
     output_lines.append("\nStatistical Analysis Results:")
@@ -75,7 +76,7 @@ def analyze_gait_parameters_multiple(abnormal_csvs, normal_csvs):
                             f"{results['std_abnormal'][param]:>12.4f} {results['std_normal'][param]:>12.4f}")
     
     # Calculate overall statistics
-    avg_p_value = np.mean(list(results['p_values'].values()))
+    avg_p_value = np.nanmean(list(results['p_values'].values()))
     significant_params = sum(p <= 0.05 for p in results['p_values'].values())
     total_params = len(results['p_values'])
     
@@ -83,7 +84,7 @@ def analyze_gait_parameters_multiple(abnormal_csvs, normal_csvs):
     output_lines.append(f"Average p-value across all parameters: {avg_p_value:.4f}")
     output_lines.append(f"Number of significantly different parameters: {significant_params} out of {total_params}")
     output_lines.append(f"Percentage of significant differences: {(significant_params/total_params)*100:.2f}%")
-    
+
     # Join all lines into a single string
     output_str = "\n".join(output_lines)
     
@@ -106,8 +107,10 @@ if __name__ == "__main__":
         "D:\Miro Hernandez\Documents\openpose-1.7.0-binaries-win64-gpu-python3.7-flir-3d_recommended\Statistics test\Spatio temporal Kinematics\Ronnel\T04_normal_1_filt_butterworth_on_speed.csv",
         "D:\Miro Hernandez\Documents\openpose-1.7.0-binaries-win64-gpu-python3.7-flir-3d_recommended\Statistics test\Spatio temporal Kinematics\Ronnel\T05_normal_1_filt_butterworth_on_speed.csv"
     ]
+
+   
     # Specify the output path for writing the table to a text file
-    output_path = "D:\Miro Hernandez\Documents\openpose-1.7.0-binaries-win64-gpu-python3.7-flir-3d_recommended\Statistics test\Spatio temporal Kinematics\Ronnel\Ronnel_paired_t_test_abnormal_vs_normal.txt"
+    output_path = "D:\Miro Hernandez\Documents\openpose-1.7.0-binaries-win64-gpu-python3.7-flir-3d_recommended\FINAL_ACCURATE_OPENPOSE_DATASET\Ronnel\paired_t_test_results"
     
     # Perform the analysis and capture the output string
     results, output_str = analyze_gait_parameters_multiple(abnormal_csvs, normal_csvs)

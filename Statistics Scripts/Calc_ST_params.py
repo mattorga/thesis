@@ -46,6 +46,7 @@ def detect_heel_strikes(data, side='R', window_size=5):
     # If vertical is actually Z, use: data[f'{side}Ankle_Z'].values
 
     def moving_average(x, w):
+        
         return np.convolve(x, np.ones(w), 'valid') / w
 
     smooth_signal = moving_average(ankle_vert, window_size)
