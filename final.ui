@@ -59,7 +59,7 @@
     <property name="autoFillBackground">
      <bool>false</bool>
     </property>
-    <widget class="QWidget" name="">
+    <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -127,6 +127,12 @@
           <property name="text">
            <string>Cameras</string>
           </property>
+          <property name="checkable">
+           <bool>false</bool>
+          </property>
+          <property name="checked">
+           <bool>false</bool>
+          </property>
          </widget>
         </item>
         <item>
@@ -137,7 +143,13 @@
            </font>
           </property>
           <property name="text">
-           <string>Simulation</string>
+           <string>Analytics</string>
+          </property>
+          <property name="checkable">
+           <bool>false</bool>
+          </property>
+          <property name="checked">
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -150,6 +162,12 @@
           </property>
           <property name="text">
            <string>Comparative</string>
+          </property>
+          <property name="checkable">
+           <bool>false</bool>
+          </property>
+          <property name="checked">
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -205,6 +223,12 @@
           <property name="text">
            <string>Session</string>
           </property>
+          <property name="checkable">
+           <bool>false</bool>
+          </property>
+          <property name="checked">
+           <bool>false</bool>
+          </property>
          </widget>
         </item>
         <item>
@@ -237,6 +261,12 @@
             <property name="text">
              <string>Participant</string>
             </property>
+            <property name="checkable">
+             <bool>false</bool>
+            </property>
+            <property name="checked">
+             <bool>false</bool>
+            </property>
            </widget>
           </item>
           <item>
@@ -252,6 +282,12 @@
             </property>
             <property name="text">
              <string>+</string>
+            </property>
+            <property name="checkable">
+             <bool>false</bool>
+            </property>
+            <property name="checked">
+             <bool>false</bool>
             </property>
            </widget>
           </item>
@@ -287,6 +323,12 @@
             <property name="text">
              <string>Trial</string>
             </property>
+            <property name="checkable">
+             <bool>false</bool>
+            </property>
+            <property name="checked">
+             <bool>false</bool>
+            </property>
            </widget>
           </item>
           <item>
@@ -302,6 +344,12 @@
             </property>
             <property name="text">
              <string>+</string>
+            </property>
+            <property name="checkable">
+             <bool>false</bool>
+            </property>
+            <property name="checked">
+             <bool>false</bool>
             </property>
            </widget>
           </item>
@@ -352,6 +400,12 @@
             <property name="text">
              <string>Process</string>
             </property>
+            <property name="checkable">
+             <bool>false</bool>
+            </property>
+            <property name="checked">
+             <bool>false</bool>
+            </property>
            </widget>
           </item>
           <item>
@@ -367,6 +421,12 @@
             </property>
             <property name="text">
              <string>...</string>
+            </property>
+            <property name="checkable">
+             <bool>false</bool>
+            </property>
+            <property name="checked">
+             <bool>false</bool>
             </property>
            </widget>
           </item>
@@ -397,6 +457,12 @@
         <property name="text">
          <string>Exit</string>
         </property>
+        <property name="checkable">
+         <bool>false</bool>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
        </widget>
       </item>
      </layout>
@@ -412,7 +478,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>3</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="dashboardPage">
      <widget class="QLabel" name="dashboardLabel">
@@ -818,9 +884,9 @@
       <property name="geometry">
        <rect>
         <x>530</x>
-        <y>50</y>
+        <y>80</y>
         <width>501</width>
-        <height>291</height>
+        <height>261</height>
        </rect>
       </property>
      </widget>
@@ -874,6 +940,12 @@
          <property name="text">
           <string>Speed Down</string>
          </property>
+         <property name="checkable">
+          <bool>false</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
         </widget>
        </item>
        <item>
@@ -883,6 +955,12 @@
          </property>
          <property name="text">
           <string>Speed Up</string>
+         </property>
+         <property name="checkable">
+          <bool>false</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
          </property>
         </widget>
        </item>
@@ -935,6 +1013,12 @@
          <property name="text">
           <string>Pause</string>
          </property>
+         <property name="checkable">
+          <bool>false</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
         </widget>
        </item>
        <item>
@@ -944,6 +1028,12 @@
          </property>
          <property name="text">
           <string>Play</string>
+         </property>
+         <property name="checkable">
+          <bool>false</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
          </property>
         </widget>
        </item>
@@ -968,6 +1058,12 @@
          <property name="text">
           <string>Back</string>
          </property>
+         <property name="checkable">
+          <bool>false</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
         </widget>
        </item>
        <item>
@@ -977,6 +1073,12 @@
          </property>
          <property name="text">
           <string>Skip</string>
+         </property>
+         <property name="checkable">
+          <bool>false</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
          </property>
         </widget>
        </item>
@@ -1089,32 +1191,15 @@
         </spacer>
        </item>
        <item>
-        <widget class="QRadioButton" name="bothButton">
-         <property name="enabled">
+        <widget class="QPushButton" name="paramsButton">
+         <property name="text">
+          <string>More Gait Information</string>
+         </property>
+         <property name="checkable">
           <bool>true</bool>
          </property>
-         <property name="text">
-          <string>Both</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QRadioButton" name="rightOnlyButton">
-         <property name="enabled">
+         <property name="checked">
           <bool>true</bool>
-         </property>
-         <property name="text">
-          <string>Right</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QRadioButton" name="leftOnlyButton">
-         <property name="enabled">
-          <bool>true</bool>
-         </property>
-         <property name="text">
-          <string>Left</string>
          </property>
         </widget>
        </item>
@@ -1131,6 +1216,54 @@
         <width>501</width>
         <height>551</height>
        </rect>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="leftOnlyButton">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>810</x>
+        <y>50</y>
+        <width>49</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Left</string>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="bothButton">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>679</x>
+        <y>50</y>
+        <width>54</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Both</string>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="rightOnlyButton">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>743</x>
+        <y>50</y>
+        <width>57</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Right</string>
       </property>
      </widget>
     </widget>

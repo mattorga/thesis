@@ -12,6 +12,9 @@ import pathlib
 import subprocess
 from final import Ui_MainWindow
 from utils.gait_classification import gait_classification
+from utils.statistics import Calc_ST_params
+from params_manager import ParamsManager
+
 
 from camera_manager import Camera, CameraManager
 from directory_manager import DirectoryManager
@@ -24,7 +27,7 @@ from viewer_manager import ViewerManager
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
-        
+    
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
@@ -42,6 +45,7 @@ class MainWindow(QMainWindow):
         self.camera_manager = CameraManager(self)
         self.process_manager = ProcessManager(self)
         self.chart_manager = ChartManager(self)
+        self.params_manager = ParamsManager(self)  # Add this line
 
         self.motion_data_file = None
         self.versus_data_file = None
@@ -134,6 +138,7 @@ class MainWindow(QMainWindow):
         self.ui.axisButton.clicked.connect(self.on_axis_toggled)
 
         self.ui.processConfiguration.clicked.connect(self.on_process_configuration)
+        self.params_manager.setup_connections()
 
     # --- User Selection Functions --- #
     def on_select_session(self):
@@ -220,6 +225,9 @@ class MainWindow(QMainWindow):
             # Reset versus UI elements
             if hasattr(self.ui, 'versusTrialValue'):
                 self.ui.versusTrialValue.setText("-")  # Reset to default value
+
+            if hasattr(self, 'params_manager'):
+                self.params_manager.refresh_dialog()
             
             # After resetting verse data, try to find a reference file
             self.versus_data_file = self.directory_manager.find_reference_data_file()
@@ -790,16 +798,21 @@ class MainWindow(QMainWindow):
             index (int): The index of the newly selected tab
         """
         # Check if we're switching to the analytics/simulation page (tab index 2)
-        if index == 2:  # Analytics tab
-            # Make sure the slider value matches the current highlighted row
-            self.ui.slider.setValue(self.current_highlighted_row)
-            
-            # Use a short timer to ensure UI is fully updated before highlighting
-            self.reapply_table_highlighting()
-            self.reapply_chart_vertical_line()
-            
-            # Update the gait stage value
-            self.update_gait_stage_value(self.current_highlighted_row)
+        if index == 2:  # Analytics tab        
+            # If params button is checked, ensure dialog is shown
+            if hasattr(self.ui, 'paramsButton') and self.ui.paramsButton.isChecked():
+                if hasattr(self, 'params_manager'):
+                    self.params_manager.on_params_button_toggled(True)
+        
+        # If switching away from analytics tab, hide the params dialog
+        elif hasattr(self, 'params_manager') and hasattr(self.params_manager, 'dialog') and self.params_manager.dialog:
+            # Only hide if we're leaving the analytics tab
+            if self.ui.stackedWidget.currentIndex() == 2:  # Coming from analytics tab
+                self.params_manager.dialog.hide()
+                # Uncheck the button to maintain consistency
+                if hasattr(self.ui, 'paramsButton'):
+                    self.ui.paramsButton.setChecked(False)
+
         
         # Check if we're switching to the comparative page (tab index 3)
         elif index == 3:  # Comparative tab
@@ -952,7 +965,7 @@ class MainWindow(QMainWindow):
             trial_config_dict.get("project").update({"project_dir": self.directory_manager.trial_path})
 
             # Create progress dialog
-            progress_dialog = QProgressDialog("Processing trial...", "Cancel", 0, 7, self)
+            progress_dialog = QProgressDialog("Processing trial...", "Cancel", 0, 10, self)
             progress_dialog.setWindowTitle("Processing")
             progress_dialog.setWindowModality(Qt.WindowModal)
             progress_dialog.setValue(0)
@@ -1145,44 +1158,44 @@ class MainWindow(QMainWindow):
             progress_dialog.setValue(1)
             
             # --- Step 2: Synchronization --- #
-            progress_dialog.setLabelText("Step 2/7: Synchronization...")
+            progress_dialog.setLabelText("Step 2/10: Synchronization...")
             QApplication.processEvents()
             Pose2Sim.synchronization(trial_config_dict)
             progress_dialog.setValue(2)
             
             # --- Step 3: Triangulation --- #
-            progress_dialog.setLabelText("Step 3/7: Triangulation...")
+            progress_dialog.setLabelText("Step 3/10: Triangulation...")
             QApplication.processEvents()
             Pose2Sim.triangulation(trial_config_dict)
             progress_dialog.setValue(3)
             
             # --- Step 4: Filtering --- #
-            progress_dialog.setLabelText("Step 4/7: Filtering...")
+            progress_dialog.setLabelText("Step 4/10: Filtering...")
             QApplication.processEvents()
             Pose2Sim.filtering(trial_config_dict)
             progress_dialog.setValue(4)
             
             # --- Step 5: Marker Augmentation --- #
-            progress_dialog.setLabelText("Step 5/7: Marker Augmentation...")
+            progress_dialog.setLabelText("Step 5/10: Marker Augmentation...")
             QApplication.processEvents()
             Pose2Sim.markerAugmentation(trial_config_dict)
             progress_dialog.setValue(5)
             
             # --- Step 6: Kinematics --- #
-            progress_dialog.setLabelText("Step 6/7: Kinematics...")
+            progress_dialog.setLabelText("Step 6/10: Kinematics...")
             QApplication.processEvents()
             Pose2Sim.kinematics(trial_config_dict)
             progress_dialog.setValue(6)
             
             # --- Step 7: Gait Classification --- #
-            progress_dialog.setLabelText("Step 7/7: Gait Classification...")
+            progress_dialog.setLabelText("Step 7/10: Gait Classification...")
             QApplication.processEvents()
             gait_classification(self.directory_manager.trial_path)
             progress_dialog.setValue(7)
             
 
             # --- Step 8: Convert .mot to CSV ---
-            progress_dialog.setLabelText("Step 8/9: Converting .mot to CSV...")
+            progress_dialog.setLabelText("Step 8/10: Converting .mot to CSV...")
             QApplication.processEvents()
 
             # Define the kinematics directory dynamically
@@ -1208,7 +1221,7 @@ class MainWindow(QMainWindow):
 
             # --- Step 9: Generate FBX file using Blender ---
             if os.name == 'nt':
-                progress_dialog.setLabelText("Step 9/9: Generating FBX file using Blender...")
+                progress_dialog.setLabelText("Step 9/10: Generating FBX file using Blender...")
                 QApplication.processEvents()
 
                 pose_3d_dir  =  os.path.join(self.directory_manager.trial_path, "pose-3d")
@@ -1277,7 +1290,20 @@ class MainWindow(QMainWindow):
                                 self.ui.slider.value(), self.ui.slider.maximum()))
             else:
                 pass
-                        
+
+            # --- Step 10: Calculate ST Parameters --- #
+            progress_dialog.setLabelText("Step 10/10: Calculating ST Parameters")
+            QApplication.processEvents()
+            pose_3d_dir  =  os.path.join(self.directory_manager.trial_path, "pose-3d")
+            trc_file_path  = glob.glob(os.path.join(pose_3d_dir, "*_LSTM.trc"))
+            trc_file = trc_file_path[0]
+            Calc_ST_params.analyze_gait(self.directory_manager.trial_path, trc_file)
+            if hasattr(self, 'params_manager'):
+                self.params_manager.refresh_dialog()
+            progress_dialog.setValue(10)
+
+            self.motion_data_file = self.directory_manager.find_motion_data_file()
+
             # Update the display if we found a data file
             if self.motion_data_file:
                 # Enable analytics and comparative buttons since a motion file now exists
@@ -1296,7 +1322,8 @@ class MainWindow(QMainWindow):
                     "Processing Warning",
                     "Processing completed, but no motion data file was found. Check logs for issues."
                 )
-        
+            
+
         except Exception as e:
             # Close the progress dialog if it's open
             if 'progress_dialog' in locals():
@@ -1607,6 +1634,10 @@ class MainWindow(QMainWindow):
             if hasattr(self.viewer_manager, 'server_thread') and self.viewer_manager.server_thread:
                 # We can't really stop a thread directly, but we can let it die when the app closes
                 print("Viewer server thread will terminate with application")
+        
+        # Clean up params manager resources
+        if hasattr(self, 'params_manager'):
+            self.params_manager.cleanup()
         
         super().closeEvent(event)
     
