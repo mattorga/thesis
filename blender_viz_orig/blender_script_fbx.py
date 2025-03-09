@@ -1,7 +1,8 @@
 import bpy
 import os
 import zipfile
-
+import sys
+import argparse
 # Path to the Pose2Sim ZIP file
 POSE2SIM_ZIP = "/path/to/Pose2Sim_Blender.zip"
 
@@ -13,13 +14,38 @@ bpy.ops.object.select_all(action='SELECT')
 bpy.ops.object.delete()
 
 # Set file paths (CHANGE THESE TO YOUR PATHS)
-base_path = r"D:\Miro Hernandez\Documents\openpose-1.7.0-binaries-win64-gpu-python3.7-flir-3d_recommended\davidpagnon Pose2Sim_Blender main Examples"
-toml_file = os.path.join(base_path, "Pose2Sim_cameras.toml")
-trc_file = os.path.join(base_path, "Pose2Sim_markers.trc")
-osim_file = os.path.join(base_path, "Pose2Sim_model.osim")
-csv_file = os.path.join(base_path, "Pose2Sim_motion.csv")
-fbx_output = os.path.join(base_path, "exported_pose2sim.fbx")  # Output path
-framerate = 30  # Set the desired framerate
+# base_path = r"D:\Miro Hernandez\Documents\openpose-1.7.0-binaries-win64-gpu-python3.7-flir-3d_recommended\davidpagnon Pose2Sim_Blender main Examples"
+# toml_file = os.path.join(base_path, "Pose2Sim_cameras.toml")
+# trc_file = os.path.join(base_path, "Pose2Sim_markers.trc")
+# osim_file = os.path.join(base_path, "Pose2Sim_model.osim")
+# csv_file = os.path.join(base_path, "Pose2Sim_motion.csv")
+# fbx_output = os.path.join(base_path, "exported_pose2sim.fbx")  # Output path
+#framerate = 30  # Set the desired framerate
+
+
+def parse_args():
+    # Locate the marker '--' in sys.argv and only take the following arguments.
+    try:
+        idx = sys.argv.index("--") + 1
+    except ValueError:
+        idx = len(sys.argv)
+    parser = argparse.ArgumentParser(description='Blender Pose2Sim FBX Export')
+    parser.add_argument('--base', type=str, required=True, help="Path to the trc file base path")
+    parser.add_argument('--trc', type=str, required=True, help="Path to the Pose2Sim_markers.trc file")
+    parser.add_argument('--osim', type=str, required=True, help="Path to the Pose2Sim_model.osim file")
+    parser.add_argument('--csv', type=str, required=True, help="Path to the Pose2Sim_motion.csv file")
+    parser.add_argument('--fbx', type=str, required=True, help="Output path for the exported FBX file")
+    parser.add_argument('--fps', type=str, required=True, help="Framerate value")
+    return parser.parse_args(sys.argv[idx:])
+
+# Parse the extra arguments
+args = parse_args()
+base_path = args.base
+trc_file  = args.trc
+osim_file = args.osim
+csv_file  = args.csv
+fbx_output = args.fbx
+framerate = int(args.fps)
 
 ### -------------------- Install Pose2Sim -------------------- ###
 def install_pose2sim(zip_path, extract_to):
@@ -69,16 +95,17 @@ def get_trc_num_frames(trc_path):
 enable_pose2sim()
 
 # Import TOML (camera calibration)
-bpy.ops.mesh.add_cam_cal(filepath=toml_file)
+# bpy.ops.mesh.add_cam_cal(filepath=toml_file)
 
 # Get frame count from TRC before importing
 max_frame = get_trc_num_frames(trc_file)
 
+dynamic_name = os.path.basename(trc_file)
 # Import TRC (marker data)
 bpy.ops.mesh.add_osim_markers(
     filepath=trc_file,
     target_framerate=framerate,
-    files=[{"name": "Pose2Sim_markers.trc", "name": "Pose2Sim_markers.trc"}],
+    files=[{"name": dynamic_name, "name": dynamic_name}],
     directory=base_path
 )
 
