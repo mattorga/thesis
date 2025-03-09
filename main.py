@@ -9,7 +9,7 @@ import toml
 import os
 import pathlib
 
-from final import Ui_MainWindow
+from final_ui import Ui_MainWindow
 from utils.gait_classification import gait_classification
 
 from camera_manager import Camera, CameraManager
@@ -63,10 +63,22 @@ class MainWindow(QMainWindow):
         self.ui.slider.valueChanged.connect(self.on_slider_value_changed)
         self.ui.centerAnimationButton.setChecked(True)  # Default to centered
         self.ui.axisButton.setChecked(False)  # Default to axes hidden
+        self.apply_shadow_effect(self.ui.sidebar_full)
+
 
         self.setup_connections()
         self.on_display_data()
  
+    def apply_shadow_effect(self, widget):
+    
+        shadow = QGraphicsDropShadowEffect(self)
+        shadow.setBlurRadius(20)  # Smoothness of the shadow
+        shadow.setXOffset(2)  # Horizontal shadow offset
+        shadow.setYOffset(2)  # Vertical shadow offset
+        shadow.setColor(QColor(0, 0, 0, 100))  # Shadow color (Black with transparency)
+
+        widget.setGraphicsEffect(shadow)
+
   # --- Page Changing Functions --- #
   # Note: Simple enough to not need signal/slot implementation
     def on_dashboardButton_clicked(self):
