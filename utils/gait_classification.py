@@ -97,16 +97,14 @@ def read_mot_file(filename: str) -> pd.DataFrame:
             
     return data
 
-class ImprovedGaitClassifier:
+class GaitClassifier:
     def __init__(self, convergence_threshold: float = 1e-6, max_iterations: int = 100):
         self.convergence_threshold = convergence_threshold
         self.max_iterations = max_iterations
         
     def calculate_deviation_distances(self, angles: List[JointAngles]) -> np.ndarray:
-        """Calculate deviation distances between consecutive poses"""
         angles_array = np.array([angle.as_array() for angle in angles])
         diff = np.diff(angles_array, axis=0)
-        # Add difference between last and first pose for cyclic nature
         diff = np.vstack([diff, angles_array[0] - angles_array[-1]])
         distances = np.sqrt(np.sum(diff**2, axis=1))
         return distances
@@ -514,7 +512,7 @@ def print_report(report: Dict):
 
 def gait_classification(trial_path):
     # Initialize classifier and metrics
-    classifier = ImprovedGaitClassifier()
+    classifier = GaitClassifier()
     metrics = GaitPhaseMetrics(classifier)
 
     # Find the .mot file in the kinematics folder

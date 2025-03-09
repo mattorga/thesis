@@ -65,53 +65,6 @@ def detect_heel_strikes(data, side='R', window_size=5):
 
     return np.array(heel_strikes)
 
-# def calculate_stride_length_dynamic(data, r_heel_strikes, l_heel_strikes):
-#     """
-#     Dynamically calculate stride length based on X-axis differences at heel strikes.
-    
-#     The algorithm:
-#     - Combine heel strikes from both feet in chronological order.
-#     - Determine which foot struck first and assume alternating events.
-#     - For a full cycle (e.g., R -> L -> R), compute:
-#          step1 = X(R_first) to X(L_middle)
-#          step2 = X(L_middle) to X(R_next)
-#          Stride length = step1 + step2
-#     - Do the analogous calculation if L strikes first.
-    
-#     Returns the average stride length in centimeters.
-#     """
-#     # Build a list of events: each tuple is (frame index, side)
-#     events = [(hs, 'R') for hs in r_heel_strikes] + [(hs, 'L') for hs in l_heel_strikes]
-#     events.sort(key=lambda x: x[0])
-    
-#     stride_lengths = []
-#     i = 0
-#     while i < len(events) - 2:
-#         e1, e2, e3 = events[i], events[i+1], events[i+2]
-#         # Check that the first and third events are from the same foot and the middle is from the opposite foot.
-#         if e1[1] == e3[1] and e1[1] != e2[1]:
-#             if e1[1] == 'R':
-#                 x1 = data['RAnkle_X'].iloc[e1[0]]
-#                 x2 = data['LAnkle_X'].iloc[e2[0]]
-#                 x3 = data['RAnkle_X'].iloc[e3[0]]
-#             else:
-#                 x1 = data['LAnkle_X'].iloc[e1[0]]
-#                 x2 = data['RAnkle_X'].iloc[e2[0]]
-#                 x3 = data['LAnkle_X'].iloc[e3[0]]
-#             # Compute step lengths (assuming increasing X is forward)
-#             step1 = np.abs(x2 - x1)
-#             step2 = np.abs(x3 - x2)
-#             stride_length = step1 + step2
-#             stride_lengths.append(stride_length)
-#             i += 2  # Skip ahead to the next cycle
-#         else:
-#             i += 1
-
-#     if stride_lengths:
-#         return np.mean(stride_lengths) * 100  # convert from meters to centimeters
-#     else:
-#         return np.nan
-
 def calculate_stride_length_dynamic(data, r_heel_strikes, l_heel_strikes):
     """
     Dynamically calculate stride length using heel and big toe markers.
@@ -198,7 +151,7 @@ def calculate_stride_width(data, r_heel_strikes, l_heel_strikes):
             continue
     return np.mean(widths) * 100 if widths else np.nan
 
-def analyze_gait(file_path):
+def analyze_gait(trial_path):
     """
     Main function to analyze gait parameters from a .trc file using a dynamic
     stride length calculation based on alternating heel strikes.
@@ -207,7 +160,7 @@ def analyze_gait(file_path):
     of the detected heel strikes for both the left and right feet.
     """
     try:
-        data = load_trc_file(file_path)
+        data = load_trc_file(trial_path)
         print("Loaded Data")
         print("Available columns:", data.columns.tolist())
         
@@ -254,37 +207,37 @@ def analyze_gait(file_path):
             'status': 'error',
             'message': str(e)
         }
-if __name__ == "__main__":
-    # Specify the input TRC file path and output directory
-    trc_path = r'D:\Miro Hernandez\Documents\openpose-1.7.0-binaries-win64-gpu-python3.7-flir-3d_recommended\Statistics test\BatchSession_Ronnel\T05_normal_1.7\pose-3d\T05_normal_1_filt_butterworth_on_speed.trc'
-    # output_path = r'D:\Miro Hernandez\Documents\openpose-1.7.0-binaries-win64-gpu-python3.7-flir-3d_recommended\Statistics test\Spatio temporal Kinematics\Ronnel'
+# if __name__ == "__main__":
+#     # Specify the input TRC file path and output directory
+#     trc_path = '/Users/mattheworga/Documents/GaitScape/S02_IvyHill_2/P03_Orga_Matthew/T03_normal_2.0/pose-3d/T03_normal_2_filt_butterworth_on_speed.trc'
+#     # output_path = r'D:\Miro Hernandez\Documents\openpose-1.7.0-binaries-win64-gpu-python3.7-flir-3d_recommended\Statistics test\Spatio temporal Kinematics\Ronnel'
     
-    print(f"Processing TRC file at {trc_path}")
-    results = analyze_gait(trc_path)
+#     print(f"Processing TRC file at {trc_path}")
+#     results = analyze_gait(trc_path)
     
-    if results['status'] == 'success':
-        # Print out the metrics
-        print(f"Dynamic stride length: {results['stride_length_cm']:.2f} cm")
-        print(f"Stride time: {results['stride_time_s']:.2f} s")
-        print(f"Gait speed: {results['gait_speed_ms']:.2f} m/s")
-        print(f"Stride width: {results['stride_width_cm']:.2f} cm")
-        print(f"Right heel strikes at frames: {results['right_heel_strikes']}")
-        print(f"Left heel strikes at frames: {results['left_heel_strikes']}")
+#     if results['status'] == 'success':
+#         # Print out the metrics
+#         print(f"Dynamic stride length: {results['stride_length_cm']:.2f} cm")
+#         print(f"Stride time: {results['stride_time_s']:.2f} s")
+#         print(f"Gait speed: {results['gait_speed_ms']:.2f} m/s")
+#         print(f"Stride width: {results['stride_width_cm']:.2f} cm")
+#         print(f"Right heel strikes at frames: {results['right_heel_strikes']}")
+#         print(f"Left heel strikes at frames: {results['left_heel_strikes']}")
         
-        # # Create the output CSV file name based on the input file name
-        # base = os.path.basename(trc_path)
-        # filename_no_ext, _ = os.path.splitext(base)
-        # output_filename = f"{filename_no_ext}.csv"
-        # full_output_path = os.path.join(output_path, output_filename)
+#         # # Create the output CSV file name based on the input file name
+#         # base = os.path.basename(trc_path)
+#         # filename_no_ext, _ = os.path.splitext(base)
+#         # output_filename = f"{filename_no_ext}.csv"
+#         # full_output_path = os.path.join(output_path, output_filename)
         
-        # # Prepare a DataFrame with the desired results and headers
-        # df_out = pd.DataFrame({
-        #     "Dynamic stride length (cm)": [results['stride_length_cm']],
-        #     "Stride time (s)": [results['stride_time_s']],
-        #     "Gait speed (m/s)": [results['gait_speed_ms']],
-        #     "Stride width (cm)": [results['stride_width_cm']]
-        # })
-        # df_out.to_csv(full_output_path, index=False)
-        # print(f"Results saved to {full_output_path}")
-    else:
-        print("Gait analysis failed:", results['message'])
+#         # # Prepare a DataFrame with the desired results and headers
+#         # df_out = pd.DataFrame({
+#         #     "Dynamic stride length (cm)": [results['stride_length_cm']],
+#         #     "Stride time (s)": [results['stride_time_s']],
+#         #     "Gait speed (m/s)": [results['gait_speed_ms']],
+#         #     "Stride width (cm)": [results['stride_width_cm']]
+#         # })
+#         # df_out.to_csv(full_output_path, index=False)
+#         # print(f"Results saved to {full_output_path}")
+#     else:
+#         print("Gait analysis failed:", results['message'])

@@ -8,9 +8,12 @@ import toml
 
 import os
 import pathlib
+from qt_material import apply_stylesheet
+
 
 from final import Ui_MainWindow
 from utils.gait_classification import gait_classification
+from utils.statistics import Calc_ST_params
 
 from camera_manager import Camera, CameraManager
 from directory_manager import DirectoryManager
@@ -1283,7 +1286,11 @@ class MainWindow(QMainWindow):
 if __name__ == "__main__":
   app = QApplication(sys.argv)
 
+  apply_stylesheet(app, theme='dark_lightgreen.xml')
+
   window = MainWindow()
   window.show()
+
+
 
   sys.exit(app.exec()) 
