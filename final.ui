@@ -34,6 +34,9 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: #FFFCF8;</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QWidget" name="sidebar_full" native="true">
     <property name="geometry">
@@ -59,7 +62,7 @@
     <property name="autoFillBackground">
      <bool>false</bool>
     </property>
-    <widget class="QWidget" name="layoutWidget">
+    <widget class="QWidget" name="">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -79,7 +82,7 @@
          </font>
         </property>
         <property name="text">
-         <string>GaitScape</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/final_resources/Logo Text.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -104,16 +107,29 @@
       </item>
       <item>
        <layout class="QVBoxLayout" name="verticalLayout">
+        <property name="leftMargin">
+         <number>6</number>
+        </property>
+        <property name="rightMargin">
+         <number>6</number>
+        </property>
         <item>
          <widget class="QLabel" name="mainMenu">
           <property name="font">
            <font>
-            <family>Helvetica</family>
-            <pointsize>10</pointsize>
+            <family>MS Shell Dlg 2</family>
+            <pointsize>6</pointsize>
+            <weight>50</weight>
+            <italic>false</italic>
+            <bold>false</bold>
            </font>
           </property>
+          <property name="styleSheet">
+           <string notr="true">color: #B0B0B0;
+font: 6pt &quot;MS Shell Dlg 2&quot;;</string>
+          </property>
           <property name="text">
-           <string>Main Menu</string>
+           <string>MAIN MENU</string>
           </property>
          </widget>
         </item>
@@ -121,53 +137,107 @@
          <widget class="QPushButton" name="camerasButton">
           <property name="font">
            <font>
-            <family>Helvetica</family>
+            <family>Microsoft JhengHei UI</family>
+            <pointsize>8</pointsize>
+            <weight>50</weight>
+            <italic>false</italic>
+            <bold>false</bold>
            </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+    border: none;
+    outline: none; /* Removes any focus border */
+    font: 8pt &quot;Microsoft JhengHei UI&quot;;
+    text-align: left;
+	border-radius: 6px;
+    background-color: transparent; /* Default background */
+    color: black; /* Default text color */
+    padding: 5px; /* Optional: Add padding for better spacing */
+}
+
+QPushButton:hover {
+    background-color: #EAEAEA; /* Soft gray background on hover */
+    color: black; /* Keep text black for readability */
+}
+</string>
           </property>
           <property name="text">
            <string>Cameras</string>
-          </property>
-          <property name="checkable">
-           <bool>false</bool>
-          </property>
-          <property name="checked">
-           <bool>false</bool>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QPushButton" name="analyticsButton">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="font">
            <font>
-            <family>Helvetica</family>
+            <family>Microsoft JhengHei UI</family>
+            <pointsize>8</pointsize>
+            <weight>50</weight>
+            <italic>false</italic>
+            <bold>false</bold>
            </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+    border: none;
+    outline: none; /* Removes any focus border */
+    font: 8pt &quot;Microsoft JhengHei UI&quot;;
+    text-align: left;
+	border-radius: 6px;
+    background-color: transparent; /* Default background */
+    color: black; /* Default text color */
+    padding: 5px; /* Optional: Add padding for better spacing */
+}
+
+QPushButton:hover {
+    background-color: #EAEAEA; /* Soft gray background on hover */
+    color: black; /* Keep text black for readability */
+}
+</string>
           </property>
           <property name="text">
            <string>Simulation</string>
-          </property>
-          <property name="checkable">
-           <bool>false</bool>
-          </property>
-          <property name="checked">
-           <bool>false</bool>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QPushButton" name="jointAnalyticsButton">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="font">
            <font>
-            <family>Helvetica</family>
+            <family>Microsoft JhengHei UI</family>
+            <pointsize>8</pointsize>
+            <weight>50</weight>
+            <italic>false</italic>
+            <bold>false</bold>
            </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+    border: none;
+    outline: none; /* Removes any focus border */
+    font: 8pt &quot;Microsoft JhengHei UI&quot;;
+    text-align: left;
+	border-radius: 6px;
+    background-color: transparent; /* Default background */
+    color: black; /* Default text color */
+    padding: 5px; /* Optional: Add padding for better spacing */
+}
+
+QPushButton:hover {
+    background-color: #EAEAEA; /* Soft gray background on hover */
+    color: black; /* Keep text black for readability */
+}
+</string>
           </property>
           <property name="text">
            <string>Comparative</string>
-          </property>
-          <property name="checkable">
-           <bool>false</bool>
-          </property>
-          <property name="checked">
-           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -191,16 +261,29 @@
       </item>
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_2">
+        <property name="leftMargin">
+         <number>6</number>
+        </property>
+        <property name="rightMargin">
+         <number>6</number>
+        </property>
         <item>
          <widget class="QLabel" name="directoryMenu">
           <property name="font">
            <font>
-            <family>Helvetica</family>
-            <pointsize>10</pointsize>
+            <family>MS Shell Dlg 2</family>
+            <pointsize>6</pointsize>
+            <weight>50</weight>
+            <italic>false</italic>
+            <bold>false</bold>
            </font>
           </property>
+          <property name="styleSheet">
+           <string notr="true">color: #B0B0B0;
+font: 6pt &quot;MS Shell Dlg 2&quot;;</string>
+          </property>
           <property name="text">
-           <string>Directory</string>
+           <string>DIRECTORY</string>
           </property>
          </widget>
         </item>
@@ -215,19 +298,41 @@
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="baseSize">
+           <size>
+            <width>-1</width>
+            <height>0</height>
+           </size>
+          </property>
           <property name="font">
            <font>
-            <family>Helvetica</family>
+            <family>Microsoft JhengHei UI</family>
+            <pointsize>8</pointsize>
+            <weight>50</weight>
+            <italic>false</italic>
+            <bold>false</bold>
            </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+    border: none;
+    outline: none; /* Removes any focus border */
+    font: 8pt &quot;Microsoft JhengHei UI&quot;;
+    text-align: left;
+	border-radius: 6px;
+    background-color: transparent; /* Default background */
+    color: black; /* Default text color */
+    padding: 5px; /* Optional: Add padding for better spacing */
+}
+
+QPushButton:hover {
+    background-color: #EAEAEA; /* Soft gray background on hover */
+    color: black; /* Keep text black for readability */
+}
+</string>
           </property>
           <property name="text">
            <string>Session</string>
-          </property>
-          <property name="checkable">
-           <bool>false</bool>
-          </property>
-          <property name="checked">
-           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -238,8 +343,18 @@
           </property>
           <property name="font">
            <font>
-            <family>Helvetica</family>
+            <family>Microsoft JhengHei UI Light</family>
+            <pointsize>6</pointsize>
+            <weight>50</weight>
+            <italic>false</italic>
+            <bold>false</bold>
            </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QLabel {
+	color: #B0B0B0;
+	font: 6pt &quot;Microsoft JhengHei UI Light&quot;;
+}</string>
           </property>
           <property name="text">
            <string/>
@@ -253,21 +368,58 @@
             <property name="enabled">
              <bool>false</bool>
             </property>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+              <horstretch>2</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="font">
              <font>
-              <family>Helvetica</family>
+              <family>Microsoft JhengHei UI</family>
+              <pointsize>8</pointsize>
+              <weight>50</weight>
+              <italic>false</italic>
+              <bold>false</bold>
              </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QPushButton {
+    border: none;
+    outline: none; /* Removes any focus border */
+    font: 8pt &quot;Microsoft JhengHei UI&quot;;
+    text-align: left;
+	border-radius: 6px;
+    background-color: transparent; /* Default background */
+    color: black; /* Default text color */
+    padding: 5px; /* Optional: Add padding for better spacing */
+}
+
+QPushButton:hover {
+    background-color: #EAEAEA; /* Soft gray background on hover */
+    color: black; /* Keep text black for readability */
+}</string>
             </property>
             <property name="text">
              <string>Participant</string>
             </property>
-            <property name="checkable">
-             <bool>false</bool>
-            </property>
-            <property name="checked">
-             <bool>false</bool>
-            </property>
            </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_9">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>18</width>
+              <height>27</height>
+             </size>
+            </property>
+           </spacer>
           </item>
           <item>
            <widget class="QPushButton" name="participantAddButton">
@@ -300,8 +452,18 @@
           </property>
           <property name="font">
            <font>
-            <family>Helvetica</family>
+            <family>Microsoft JhengHei UI Light</family>
+            <pointsize>6</pointsize>
+            <weight>50</weight>
+            <italic>false</italic>
+            <bold>false</bold>
            </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QLabel {
+	color: #B0B0B0;
+	font: 6pt &quot;Microsoft JhengHei UI Light&quot;;
+}</string>
           </property>
           <property name="text">
            <string/>
@@ -317,19 +479,50 @@
             </property>
             <property name="font">
              <font>
-              <family>Helvetica</family>
+              <family>Microsoft JhengHei UI</family>
+              <pointsize>8</pointsize>
+              <weight>50</weight>
+              <italic>false</italic>
+              <bold>false</bold>
              </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QPushButton {
+    border: none;
+    outline: none; /* Removes any focus border */
+    font: 8pt &quot;Microsoft JhengHei UI&quot;;
+    text-align: left;
+	border-radius: 6px;
+    background-color: transparent; /* Default background */
+    color: black; /* Default text color */
+    padding: 5px; /* Optional: Add padding for better spacing */
+}
+
+QPushButton:hover {
+    background-color: #EAEAEA; /* Soft gray background on hover */
+    color: black; /* Keep text black for readability */
+}</string>
             </property>
             <property name="text">
              <string>Trial</string>
             </property>
-            <property name="checkable">
-             <bool>false</bool>
-            </property>
-            <property name="checked">
-             <bool>false</bool>
-            </property>
            </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_10">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>18</width>
+              <height>27</height>
+             </size>
+            </property>
+           </spacer>
           </item>
           <item>
            <widget class="QPushButton" name="trialAddButton">
@@ -362,8 +555,18 @@
           </property>
           <property name="font">
            <font>
-            <family>Helvetica</family>
+            <family>Microsoft JhengHei UI Light</family>
+            <pointsize>6</pointsize>
+            <weight>50</weight>
+            <italic>false</italic>
+            <bold>false</bold>
            </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QLabel {
+	color: #B0B0B0;
+	font: 6pt &quot;Microsoft JhengHei UI Light&quot;;
+}</string>
           </property>
           <property name="text">
            <string/>
@@ -390,6 +593,12 @@
       </item>
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_3">
+        <property name="leftMargin">
+         <number>6</number>
+        </property>
+        <property name="rightMargin">
+         <number>6</number>
+        </property>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_7">
           <item>
@@ -397,14 +606,26 @@
             <property name="enabled">
              <bool>false</bool>
             </property>
+            <property name="styleSheet">
+             <string notr="true">QPushButton {
+    border: none;
+    outline: none; /* Removes any focus border */
+    font: 8pt &quot;Microsoft JhengHei UI&quot;;
+    text-align: left;
+	border-radius: 6px;
+    background-color: transparent; /* Default background */
+    color: black; /* Default text color */
+    padding: 5px; /* Optional: Add padding for better spacing */
+}
+
+QPushButton:hover {
+    background-color: #EAEAEA; /* Soft gray background on hover */
+    color: black; /* Keep text black for readability */
+}
+</string>
+            </property>
             <property name="text">
              <string>Process</string>
-            </property>
-            <property name="checkable">
-             <bool>false</bool>
-            </property>
-            <property name="checked">
-             <bool>false</bool>
             </property>
            </widget>
           </item>
@@ -442,26 +663,59 @@
         <property name="sizeHint" stdset="0">
          <size>
           <width>20</width>
-          <height>40</height>
+          <height>30</height>
          </size>
         </property>
        </spacer>
       </item>
-      <item>
+      <item alignment="Qt::AlignHCenter">
        <widget class="QPushButton" name="exitButton">
+        <property name="minimumSize">
+         <size>
+          <width>164</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>164</width>
+          <height>40</height>
+         </size>
+        </property>
         <property name="font">
          <font>
-          <family>Helvetica</family>
+          <family>Microsoft JhengHei UI</family>
+          <pointsize>8</pointsize>
+          <weight>50</weight>
+          <italic>false</italic>
+          <bold>false</bold>
          </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+   
+    outline: none; /* Removes any focus border */
+    font: 8pt &quot;Microsoft JhengHei UI&quot;;
+    text-align: center;
+    background-color: #FFFCF8; 
+    color: black; /* Default text color */
+    padding: 5px; /* Optional: Add padding for better spacing */
+	border-radius: 6px; /* Rounded corners */
+	border: 0.5px solid #c8c8c8; /* Light gray border */
+	
+
+    /* Shadow effect */
+	box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+QPushButton:hover {
+    background-color: #EAEAEA; /* Soft gray background on hover */
+    color: black; /* Keep text black for readability */
+}
+</string>
         </property>
         <property name="text">
          <string>Exit</string>
-        </property>
-        <property name="checkable">
-         <bool>false</bool>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
         </property>
        </widget>
       </item>
@@ -478,7 +732,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="dashboardPage">
      <widget class="QLabel" name="dashboardLabel">
@@ -521,7 +775,7 @@
        <enum>QFrame::Raised</enum>
       </property>
       <property name="text">
-       <string>Camera 1</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/final_resources/Videocam Off.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -552,7 +806,7 @@
        <enum>QFrame::Raised</enum>
       </property>
       <property name="text">
-       <string>Camera 2</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/final_resources/Videocam Off.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -583,82 +837,10 @@
        <enum>QFrame::Raised</enum>
       </property>
       <property name="text">
-       <string>Camera 3</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/final_resources/Videocam Off.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="detectCamerasButton">
-      <property name="geometry">
-       <rect>
-        <x>90</x>
-        <y>630</y>
-        <width>161</width>
-        <height>61</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>Helvetica</family>
-       </font>
-      </property>
-      <property name="text">
-       <string>Detect Cameras</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="startRecordingButton">
-      <property name="geometry">
-       <rect>
-        <x>250</x>
-        <y>630</y>
-        <width>161</width>
-        <height>61</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>Helvetica</family>
-       </font>
-      </property>
-      <property name="text">
-       <string>Start Recording</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="closeCamerasButton">
-      <property name="geometry">
-       <rect>
-        <x>90</x>
-        <y>690</y>
-        <width>161</width>
-        <height>61</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>Helvetica</family>
-       </font>
-      </property>
-      <property name="text">
-       <string>Close Cameras</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="stopRecordingButton">
-      <property name="geometry">
-       <rect>
-        <x>250</x>
-        <y>690</y>
-        <width>161</width>
-        <height>61</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>Helvetica</family>
-       </font>
-      </property>
-      <property name="text">
-       <string>Stop Recording</string>
       </property>
      </widget>
      <widget class="QLabel" name="directoryLabel">
@@ -805,6 +987,186 @@
        <string/>
       </property>
      </widget>
+     <widget class="QPushButton" name="detectCamerasButton">
+      <property name="geometry">
+       <rect>
+        <x>110</x>
+        <y>630</y>
+        <width>161</width>
+        <height>50</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>MS Reference Sans Serif</family>
+        <pointsize>-1</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+	font: 8pt &quot;MS Reference Sans Serif&quot;;
+    background-color: #231A16; /* Dark brown background */
+    color: white; /* White text */
+    font-size: 14px;
+    border-radius: 15px; /* Rounded corners */
+    padding: 10px 20px; /* Adjust padding for proper button size */
+    border: none; /* No border */
+}
+
+QPushButton:hover {
+    background-color: #3A2C26; /* Lighter brown on hover */
+}
+
+QPushButton:pressed {
+    background-color: #18120E; /* Even darker shade on press */
+}
+</string>
+      </property>
+      <property name="text">
+       <string>Detect Cameras</string>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>20</width>
+        <height>15</height>
+       </size>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="closeCamerasButton">
+      <property name="geometry">
+       <rect>
+        <x>110</x>
+        <y>690</y>
+        <width>161</width>
+        <height>50</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>MS Reference Sans Serif</family>
+        <pointsize>-1</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+	font: 8pt &quot;MS Reference Sans Serif&quot;;
+    background-color: #231A16; /* Dark brown background */
+    color: white; /* White text */
+    font-size: 14px;
+    border-radius: 15px; /* Rounded corners */
+    padding: 10px 20px; /* Adjust padding for proper button size */
+    border: none; /* No border */
+}
+
+QPushButton:hover {
+    background-color: #3A2C26; /* Lighter brown on hover */
+}
+
+QPushButton:pressed {
+    background-color: #18120E; /* Even darker shade on press */
+}
+</string>
+      </property>
+      <property name="text">
+       <string>Close Cameras</string>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>20</width>
+        <height>15</height>
+       </size>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="startRecordingButton">
+      <property name="geometry">
+       <rect>
+        <x>280</x>
+        <y>630</y>
+        <width>161</width>
+        <height>50</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>MS Reference Sans Serif</family>
+        <pointsize>-1</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+	font: 8pt &quot;MS Reference Sans Serif&quot;;
+    background-color: #231A16; /* Dark brown background */
+    color: white; /* White text */
+    font-size: 14px;
+    border-radius: 15px; /* Rounded corners */
+    padding: 10px 20px; /* Adjust padding for proper button size */
+    border: none; /* No border */
+}
+
+QPushButton:hover {
+    background-color: #3A2C26; /* Lighter brown on hover */
+}
+
+QPushButton:pressed {
+    background-color: #18120E; /* Even darker shade on press */
+}
+</string>
+      </property>
+      <property name="text">
+       <string>Start Recording</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="stopRecordingButton">
+      <property name="geometry">
+       <rect>
+        <x>280</x>
+        <y>690</y>
+        <width>161</width>
+        <height>50</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>MS Reference Sans Serif</family>
+        <pointsize>-1</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+	font: 8pt &quot;MS Reference Sans Serif&quot;;
+    background-color: #231A16; /* Dark brown background */
+    color: white; /* White text */
+    font-size: 14px;
+    border-radius: 15px; /* Rounded corners */
+    padding: 10px 20px; /* Adjust padding for proper button size */
+    border: none; /* No border */
+}
+
+QPushButton:hover {
+    background-color: #3A2C26; /* Lighter brown on hover */
+}
+
+QPushButton:pressed {
+    background-color: #18120E; /* Even darker shade on press */
+}
+</string>
+      </property>
+      <property name="text">
+       <string>Stop Recording</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="simulationPage">
      <widget class="QWidget" name="horizontalLayoutWidget">
@@ -822,6 +1184,20 @@
          <property name="enabled">
           <bool>true</bool>
          </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+    border: 2px solid black; /* Black border */
+    border-radius: 5px; /* Optional: Rounded corners */
+    padding: 5px;
+    color: white; /* Text color */
+    background-color: #2c3e50; /* Button background color */
+}
+
+QPushButton:hover {
+    background-color: #34495e; /* Slightly darker on hover */
+}
+</string>
+         </property>
          <property name="text">
           <string>All</string>
          </property>
@@ -837,6 +1213,20 @@
         <widget class="QPushButton" name="analyticsHipButton">
          <property name="enabled">
           <bool>true</bool>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+    border: 2px solid black; /* Black border */
+    border-radius: 5px; /* Optional: Rounded corners */
+    padding: 5px;
+    color: white; /* Text color */
+    background-color: #2c3e50; /* Button background color */
+}
+
+QPushButton:hover {
+    background-color: #34495e; /* Slightly darker on hover */
+}
+</string>
          </property>
          <property name="text">
           <string>Hip</string>
@@ -854,6 +1244,20 @@
          <property name="enabled">
           <bool>true</bool>
          </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+    border: 2px solid black; /* Black border */
+    border-radius: 5px; /* Optional: Rounded corners */
+    padding: 5px;
+    color: white; /* Text color */
+    background-color: #2c3e50; /* Button background color */
+}
+
+QPushButton:hover {
+    background-color: #34495e; /* Slightly darker on hover */
+}
+</string>
+         </property>
          <property name="text">
           <string>Knee</string>
          </property>
@@ -866,6 +1270,20 @@
         <widget class="QPushButton" name="analyticsAnkleButton">
          <property name="enabled">
           <bool>true</bool>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+    border: 2px solid black; /* Black border */
+    border-radius: 5px; /* Optional: Rounded corners */
+    padding: 5px;
+    color: white; /* Text color */
+    background-color: #2c3e50; /* Button background color */
+}
+
+QPushButton:hover {
+    background-color: #34495e; /* Slightly darker on hover */
+}
+</string>
          </property>
          <property name="text">
           <string>Ankle</string>
@@ -912,6 +1330,44 @@
         <height>22</height>
        </rect>
       </property>
+      <property name="styleSheet">
+       <string notr="true">QSlider::groove:horizontal {
+    border: none;
+    height: 8px;
+    background: #E0E0E0;  /* Light gray background */
+    border-radius: 4px;   /* Rounded groove */
+}
+
+QSlider::sub-page:horizontal {
+    background: #8B4513;  /* Brown progress bar */
+    border-radius: 4px;
+}
+
+QSlider::add-page:horizontal {
+    background: #E0E0E0;  /* Gray remaining bar */
+    border-radius: 4px;
+}
+
+QSlider::handle:horizontal {
+    background: white;
+    border: 2px solid #8B4513;  /* Brown border */
+    width: 14px;
+    height: 14px;
+    border-radius: 7px;   /* Circular handle */
+    margin: -3px 0;       /* Center handle */
+}
+
+QSlider::handle:horizontal:hover {
+    background: #8B4513;  /* Brown on hover */
+    border: 2px solid #5C3317;
+}
+
+QSlider::handle:horizontal:pressed {
+    background: #5C3317;
+    border: 2px solid #3D2309;
+}
+</string>
+      </property>
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
@@ -933,12 +1389,25 @@
          </property>
          <property name="minimumSize">
           <size>
-           <width>80</width>
+           <width>20</width>
            <height>0</height>
           </size>
          </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+    border: none;
+    outline: none; /* Removes any focus border */
+   
+}
+
+</string>
+         </property>
          <property name="text">
-          <string>Speed Down</string>
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="final_resources.qrc">
+           <normaloff>:/final_resources/left.png</normaloff>:/final_resources/left.png</iconset>
          </property>
          <property name="checkable">
           <bool>false</bool>
@@ -953,8 +1422,25 @@
          <property name="enabled">
           <bool>true</bool>
          </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>20</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+    border: none;
+    outline: none; /* Removes any focus border */
+   
+}</string>
+         </property>
          <property name="text">
-          <string>Speed Up</string>
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="final_resources.qrc">
+           <normaloff>:/final_resources/right.png</normaloff>:/final_resources/right.png</iconset>
          </property>
          <property name="checkable">
           <bool>false</bool>
@@ -995,7 +1481,7 @@
           <enum>Qt::Horizontal</enum>
          </property>
          <property name="sizeType">
-          <enum>QSizePolicy::Preferred</enum>
+          <enum>QSizePolicy::Expanding</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
@@ -1010,8 +1496,25 @@
          <property name="enabled">
           <bool>true</bool>
          </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>20</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+    border: none;
+    outline: none; /* Removes any focus border */
+   
+}</string>
+         </property>
          <property name="text">
-          <string>Pause</string>
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="final_resources.qrc">
+           <normaloff>:/final_resources/Play.png</normaloff>:/final_resources/Play.png</iconset>
          </property>
          <property name="checkable">
           <bool>false</bool>
@@ -1026,8 +1529,25 @@
          <property name="enabled">
           <bool>true</bool>
          </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>20</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+    border: none;
+    outline: none; /* Removes any focus border */
+   
+}</string>
+         </property>
          <property name="text">
-          <string>Play</string>
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="final_resources.qrc">
+           <normaloff>:/final_resources/Pause.png</normaloff>:/final_resources/Pause.png</iconset>
          </property>
          <property name="checkable">
           <bool>false</bool>
@@ -1055,8 +1575,31 @@
          <property name="enabled">
           <bool>true</bool>
          </property>
+         <property name="minimumSize">
+          <size>
+           <width>30</width>
+           <height>15</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>10</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+    border: none;
+    outline: none; /* Removes any focus border */
+   
+}</string>
+         </property>
          <property name="text">
-          <string>Back</string>
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="final_resources.qrc">
+           <normaloff>:/final_resources/Icon (4).png</normaloff>:/final_resources/Icon (4).png</iconset>
          </property>
          <property name="checkable">
           <bool>false</bool>
@@ -1071,8 +1614,25 @@
          <property name="enabled">
           <bool>true</bool>
          </property>
+         <property name="minimumSize">
+          <size>
+           <width>30</width>
+           <height>35</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+    border: none;
+    outline: none; /* Removes any focus border */
+   
+}</string>
+         </property>
          <property name="text">
-          <string>Skip</string>
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="final_resources.qrc">
+           <normaloff>:/final_resources/skip.png</normaloff>:/final_resources/skip.png</iconset>
          </property>
          <property name="checkable">
           <bool>false</bool>
@@ -1099,6 +1659,20 @@
          <property name="enabled">
           <bool>true</bool>
          </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+    border: 2px solid black; /* Black border */
+    border-radius: 5px; /* Optional: Rounded corners */
+    padding: 5px;
+    color: white; /* Text color */
+    background-color: #2c3e50; /* Button background color */
+}
+
+QPushButton:hover {
+    background-color: #34495e; /* Slightly darker on hover */
+}
+</string>
+         </property>
          <property name="text">
           <string>Center</string>
          </property>
@@ -1111,6 +1685,32 @@
         <widget class="QPushButton" name="axisButton">
          <property name="enabled">
           <bool>true</bool>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>20</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+    border: 2px solid black; /* Black border */
+    border-radius: 5px; /* Optional: Rounded corners */
+    padding: 5px;
+    color: white; /* Text color */
+    background-color: #2c3e50; /* Button background color */
+}
+
+QPushButton:hover {
+    background-color: #34495e; /* Slightly darker on hover */
+}
+</string>
          </property>
          <property name="text">
           <string>Axis</string>
@@ -1130,7 +1730,7 @@
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>250</width>
+           <width>325</width>
            <height>20</height>
           </size>
          </property>
@@ -1140,6 +1740,9 @@
         <widget class="QLabel" name="gaitStageLabel">
          <property name="enabled">
           <bool>true</bool>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">font: 8pt &quot;Microsoft JhengHei UI&quot;;</string>
          </property>
          <property name="text">
           <string>Gait Stage: </string>
@@ -1169,6 +1772,9 @@
            <height>16777215</height>
           </size>
          </property>
+         <property name="styleSheet">
+          <string notr="true">font: 8pt &quot;Microsoft JhengHei UI&quot;;</string>
+         </property>
          <property name="text">
           <string>-</string>
          </property>
@@ -1195,6 +1801,38 @@
          <property name="enabled">
           <bool>true</bool>
          </property>
+         <property name="styleSheet">
+          <string notr="true">font: 8pt &quot;Microsoft JhengHei UI&quot;;
+
+QRadioButton {
+    font-size: 14px;
+    color: white; /* Text color */
+    background-color: #2C3E50; /* Dark background to match buttons */
+    border-radius: 15px; /* Rounded edges */
+    padding: 5px 10px; /* Adjust padding */
+}
+
+/* Style the radio button indicator (circle) */
+QRadioButton::indicator {
+    width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    border: 2px solid white; /* Default border */
+    background-color: transparent;
+}
+
+/* When the radio button is checked */
+QRadioButton::indicator:checked {
+    background-color: #3498DB; /* Highlight color (blue) */
+    border: 2px solid #3498DB; /* Match highlight color */
+}
+
+/* Hover effect */
+QRadioButton:hover {
+    background-color: #34495E; /* Slightly lighter shade on hover */
+}
+</string>
+         </property>
          <property name="text">
           <string>Both</string>
          </property>
@@ -1205,6 +1843,38 @@
          <property name="enabled">
           <bool>true</bool>
          </property>
+         <property name="styleSheet">
+          <string notr="true">font: 8pt &quot;Microsoft JhengHei UI&quot;;
+
+QRadioButton {
+    font-size: 14px;
+    color: white; /* Text color */
+    background-color: #2C3E50; /* Dark background to match buttons */
+    border-radius: 15px; /* Rounded edges */
+    padding: 5px 10px; /* Adjust padding */
+}
+
+/* Style the radio button indicator (circle) */
+QRadioButton::indicator {
+    width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    border: 2px solid white; /* Default border */
+    background-color: transparent;
+}
+
+/* When the radio button is checked */
+QRadioButton::indicator:checked {
+    background-color: #3498DB; /* Highlight color (blue) */
+    border: 2px solid #3498DB; /* Match highlight color */
+}
+
+/* Hover effect */
+QRadioButton:hover {
+    background-color: #34495E; /* Slightly lighter shade on hover */
+}
+</string>
+         </property>
          <property name="text">
           <string>Right</string>
          </property>
@@ -1214,6 +1884,37 @@
         <widget class="QRadioButton" name="leftOnlyButton">
          <property name="enabled">
           <bool>true</bool>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">font: 8pt &quot;Microsoft JhengHei UI&quot;;
+QRadioButton {
+    font-size: 14px;
+    color: white; /* Text color */
+    background-color: #2C3E50; /* Dark background to match buttons */
+    border-radius: 15px; /* Rounded edges */
+    padding: 5px 10px; /* Adjust padding */
+}
+
+/* Style the radio button indicator (circle) */
+QRadioButton::indicator {
+    width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    border: 2px solid white; /* Default border */
+    background-color: transparent;
+}
+
+/* When the radio button is checked */
+QRadioButton::indicator:checked {
+    background-color: #3498DB; /* Highlight color (blue) */
+    border: 2px solid #3498DB; /* Match highlight color */
+}
+
+/* Hover effect */
+QRadioButton:hover {
+    background-color: #34495E; /* Slightly lighter shade on hover */
+}
+</string>
          </property>
          <property name="text">
           <string>Left</string>
@@ -1286,6 +1987,44 @@
         <height>22</height>
        </rect>
       </property>
+      <property name="styleSheet">
+       <string notr="true">QSlider::groove:horizontal {
+    border: none;
+    height: 8px;
+    background: #E0E0E0;  /* Light gray background */
+    border-radius: 4px;   /* Rounded groove */
+}
+
+QSlider::sub-page:horizontal {
+    background: #8B4513;  /* Brown progress bar */
+    border-radius: 4px;
+}
+
+QSlider::add-page:horizontal {
+    background: #E0E0E0;  /* Gray remaining bar */
+    border-radius: 4px;
+}
+
+QSlider::handle:horizontal {
+    background: white;
+    border: 2px solid #8B4513;  /* Brown border */
+    width: 14px;
+    height: 14px;
+    border-radius: 7px;   /* Circular handle */
+    margin: -3px 0;       /* Center handle */
+}
+
+QSlider::handle:horizontal:hover {
+    background: #8B4513;  /* Brown on hover */
+    border: 2px solid #5C3317;
+}
+
+QSlider::handle:horizontal:pressed {
+    background: #5C3317;
+    border: 2px solid #3D2309;
+}
+</string>
+      </property>
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
@@ -1298,6 +2037,9 @@
         <width>90</width>
         <height>39</height>
        </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">font: 8pt &quot;Microsoft JhengHei UI&quot;;</string>
       </property>
       <property name="text">
        <string>Gait Stage (°): </string>
@@ -1312,6 +2054,9 @@
         <height>39</height>
        </rect>
       </property>
+      <property name="styleSheet">
+       <string notr="true">font: 8pt &quot;Microsoft JhengHei UI&quot;;</string>
+      </property>
       <property name="text">
        <string>Gait Stage (°): </string>
       </property>
@@ -1324,6 +2069,9 @@
         <width>151</width>
         <height>39</height>
        </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">font: 8pt &quot;Microsoft JhengHei UI&quot;;</string>
       </property>
       <property name="text">
        <string>T00_antalgic</string>
@@ -1351,6 +2099,9 @@
         <height>39</height>
        </rect>
       </property>
+      <property name="styleSheet">
+       <string notr="true">font: 8pt &quot;Microsoft JhengHei UI&quot;;</string>
+      </property>
       <property name="text">
        <string>Base Trial:</string>
       </property>
@@ -1366,6 +2117,9 @@
         <width>71</width>
         <height>39</height>
        </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">font: 8pt &quot;Microsoft JhengHei UI&quot;;</string>
       </property>
       <property name="text">
        <string>Versus:</string>
@@ -1383,6 +2137,20 @@
         <height>41</height>
        </rect>
       </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+    border: 2px solid black; /* Black border */
+    border-radius: 5px; /* Optional: Rounded corners */
+    padding: 5px;
+    color: white; /* Text color */
+    background-color: #2c3e50; /* Button background color */
+}
+
+QPushButton:hover {
+    background-color: #34495e; /* Slightly darker on hover */
+}
+</string>
+      </property>
       <property name="text">
        <string>Choose Verse</string>
       </property>
@@ -1399,6 +2167,20 @@
       <layout class="QHBoxLayout" name="horizontalLayout_5">
        <item>
         <widget class="QPushButton" name="comparativeAllButton">
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+    border: 2px solid black; /* Black border */
+    border-radius: 5px; /* Optional: Rounded corners */
+    padding: 5px;
+    color: white; /* Text color */
+    background-color: #2c3e50; /* Button background color */
+}
+
+QPushButton:hover {
+    background-color: #34495e; /* Slightly darker on hover */
+}
+</string>
+         </property>
          <property name="text">
           <string>All</string>
          </property>
@@ -1415,6 +2197,20 @@
          <property name="enabled">
           <bool>true</bool>
          </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+    border: 2px solid black; /* Black border */
+    border-radius: 5px; /* Optional: Rounded corners */
+    padding: 5px;
+    color: white; /* Text color */
+    background-color: #2c3e50; /* Button background color */
+}
+
+QPushButton:hover {
+    background-color: #34495e; /* Slightly darker on hover */
+}
+</string>
+         </property>
          <property name="text">
           <string>Hip</string>
          </property>
@@ -1428,6 +2224,20 @@
        </item>
        <item>
         <widget class="QPushButton" name="comparativeKneeButton">
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+    border: 2px solid black; /* Black border */
+    border-radius: 5px; /* Optional: Rounded corners */
+    padding: 5px;
+    color: white; /* Text color */
+    background-color: #2c3e50; /* Button background color */
+}
+
+QPushButton:hover {
+    background-color: #34495e; /* Slightly darker on hover */
+}
+</string>
+         </property>
          <property name="text">
           <string>Knee</string>
          </property>
@@ -1438,6 +2248,20 @@
        </item>
        <item>
         <widget class="QPushButton" name="comparativeAnkleButton">
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+    border: 2px solid black; /* Black border */
+    border-radius: 5px; /* Optional: Rounded corners */
+    padding: 5px;
+    color: white; /* Text color */
+    background-color: #2c3e50; /* Button background color */
+}
+
+QPushButton:hover {
+    background-color: #34495e; /* Slightly darker on hover */
+}
+</string>
+         </property>
          <property name="text">
           <string>Ankle</string>
          </property>
@@ -1457,6 +2281,9 @@
         <height>16</height>
        </rect>
       </property>
+      <property name="styleSheet">
+       <string notr="true">font: 8pt &quot;Microsoft JhengHei UI&quot;;</string>
+      </property>
       <property name="text">
        <string>Toe Off</string>
       </property>
@@ -1470,6 +2297,9 @@
         <height>16</height>
        </rect>
       </property>
+      <property name="styleSheet">
+       <string notr="true">font: 8pt &quot;Microsoft JhengHei UI&quot;;</string>
+      </property>
       <property name="text">
        <string>-</string>
       </property>
@@ -1478,6 +2308,9 @@
    </widget>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="final_resources/final_resources.qrc"/>
+  <include location="final_resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

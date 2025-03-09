@@ -1,0 +1,79 @@
+<RCC>
+  <qresource>
+    <file>final_resources/skip.png</file>
+    <file>final_resources/analytics.png</file>
+    <file>final_resources/compare.png</file>
+    <file>final_resources/session.png</file>
+    <file>final_resources/processing.png</file>
+    <file>final_resources/Stacks.png</file>
+    <file>final_resources/Group.png</file>
+    <file>final_resources/Videocam Off.png</file>
+    <file>final_resources/Exit.png</file>
+    <file>final_resources/Joint Analytics.png</file>
+    <file>final_resources/3D Simulation.png</file>
+    <file>final_resources/Cameras.png</file>
+    <file>final_resources/Dashboard.png</file>
+    <file>final_resources/Pause.png</file>
+    <file>final_resources/Play.png</file>
+    <file>final_resources/Icon (4).png</file>
+    <file>final_resources/Icon (3).png</file>
+    <file>final_resources/Icon (2).png</file>
+    <file>final_resources/exit_text.png</file>
+    <file>final_resources/joint_analytics_text.png</file>
+    <file>final_resources/3dsimulationtext.png</file>
+    <file>final_resources/camerastext.png</file>
+    <file>final_resources/dashboardtext.png</file>
+    <file>final_resources/Polygon 1.png</file>
+    <file>final_resources/Logo Text.png</file>
+    <file>final_resources/Logo 1.png</file>
+    <file>final_resources/profile.png</file>
+    <file>final_resources/right.png</file>
+    <file>final_resources/left.png</file>
+    <file>final_resources/comment.png</file>
+    <file>final_resources/record.png</file>
+    <file>final_resources/files2.png</file>
+    <file>final_resources/files1.png</file>
+    <file>final_resources/settings.png</file>
+    <file>final_resources/home.png</file>
+    <file>final_resources/joint_analytics.png</file>
+    <file>final_resources/notification.png</file>
+    <file>skip.png</file>
+    <file>skip.png</file>
+    <file>analytics.png</file>
+    <file>compare.png</file>
+    <file>session.png</file>
+    <file>processing.png</file>
+    <file>Stacks.png</file>
+    <file>Group.png</file>
+    <file>Videocam Off.png</file>
+    <file>Exit.png</file>
+    <file>Joint Analytics.png</file>
+    <file>3D Simulation.png</file>
+    <file>Cameras.png</file>
+    <file>Dashboard.png</file>
+    <file>Pause.png</file>
+    <file>Play.png</file>
+    <file>Icon (4).png</file>
+    <file>Icon (3).png</file>
+    <file>Icon (2).png</file>
+    <file>exit_text.png</file>
+    <file>joint_analytics_text.png</file>
+    <file>3dsimulationtext.png</file>
+    <file>camerastext.png</file>
+    <file>dashboardtext.png</file>
+    <file>Polygon 1.png</file>
+    <file>Logo Text.png</file>
+    <file>Logo 1.png</file>
+    <file>profile.png</file>
+    <file>right.png</file>
+    <file>left.png</file>
+    <file>comment.png</file>
+    <file>record.png</file>
+    <file>files2.png</file>
+    <file>files1.png</file>
+    <file>settings.png</file>
+    <file>home.png</file>
+    <file>joint_analytics.png</file>
+    <file>notification.png</file>
+  </qresource>
+</RCC>
