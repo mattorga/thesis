@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from typing import List, Tuple, Dict
 import pandas as pd
 import os
+import matplotlib.pyplot as plt
 
 
 class GaitPhase(Enum):
@@ -165,7 +166,78 @@ class ImprovedGaitClassifier:
         
         return adjusted_threshold
         
-    # The detect_gait_cycles method has been removed since we no longer need cycle detection
+    def add_threshold_visualization(self, distances, threshold, phases=None, output_file=None):
+        """
+        Visualize the deviation distances, threshold, and gait phases.
+        
+        Args:
+            distances: Numpy array of deviation distances
+            threshold: The Q threshold used for classification
+            phases: Optional list of GaitPhase values corresponding to each frame
+            output_file: Optional file path to save the plot
+        """
+        plt.figure(figsize=(14, 8))
+        
+        # Create two subplots - one for distances, one for phases
+        if phases is not None:
+            gs = plt.GridSpec(2, 1, height_ratios=[3, 1])
+            ax1 = plt.subplot(gs[0])
+            ax2 = plt.subplot(gs[1], sharex=ax1)
+        else:
+            ax1 = plt.gca()
+        
+        # Plot distances on the first subplot
+        ax1.plot(distances, 'b-', label='Deviation Distances')
+        
+        # Plot threshold
+        ax1.axhline(y=threshold, color='r', linestyle='--', label=f'Q Threshold: {threshold:.4f}')
+        
+        # Highlight high activity regions
+        high_activity = distances >= threshold
+        ax1.fill_between(range(len(distances)), 0, distances, 
+                        where=high_activity, 
+                        alpha=0.3, color='orange', 
+                        label='High Activity Regions')
+        
+        # Add labels and legend
+        ax1.set_ylabel('Deviation Distance')
+        ax1.set_title('Gait Phase Deviation Distances with Q Threshold')
+        ax1.legend()
+        ax1.grid(True, alpha=0.3)
+        
+        # If phases are provided, plot them on the second subplot
+        if phases is not None:
+            # Convert phases to numeric values for visualization
+            phase_dict = {phase: i for i, phase in enumerate(GaitPhase)}
+            numeric_phases = [phase_dict[phase] for phase in phases]
+            
+            # Plot phases
+            ax2.plot(numeric_phases, 'g-', linewidth=2)
+            
+            # Add markers for phase changes
+            phase_changes = [i for i in range(1, len(phases)) if phases[i] != phases[i-1]]
+            if phase_changes:
+                ax2.plot(phase_changes, [numeric_phases[i] for i in phase_changes], 'ro', markersize=4)
+            
+            # Set y-ticks to match phase names
+            ax2.set_yticks(list(range(len(GaitPhase))))
+            ax2.set_yticklabels([phase.value for phase in GaitPhase])
+            ax2.set_ylim(-0.5, len(GaitPhase) - 0.5)
+            
+            # Add grid and labels
+            ax2.grid(True, axis='y', alpha=0.3)
+            ax2.set_xlabel('Frame Index')
+            ax2.set_ylabel('Gait Phase')
+        else:
+            ax1.set_xlabel('Frame Index')
+        
+        plt.tight_layout()
+        
+        # Save if output file provided
+        if output_file:
+            plt.savefig(output_file, dpi=300, bbox_inches='tight')
+            
+        return plt.gcf()
         
     def classify_gait_phases(self, angles: List[JointAngles]) -> List[GaitPhase]:
         """Classify gait phases using Fisher's discriminant for the entire dataset"""
@@ -281,7 +353,7 @@ class ImprovedGaitClassifier:
         original_df.to_csv(output_original, index=False, float_format='%.6f')
 
     def process_mot_file(self, input_file: str, output_file: str = None) -> Dict[str, List]:
-        """Process a MOT file, classify gait phases and optionally write to CSV with cycle indicators"""
+        """Process a MOT file, classify gait phases and visualize the threshold"""
         # Read the original MOT file to get time data if available
         mot_data = read_mot_file(input_file)
         time_data = mot_data.get('time', None)
@@ -289,13 +361,29 @@ class ImprovedGaitClassifier:
         # Load joint angles from MOT file
         angles = self.load_mot_file(input_file)
         
+        # Calculate distances
+        distances = self.calculate_deviation_distances(angles)
+        
+        # Find optimal threshold
+        threshold = self.optimize_threshold(distances)
+        
         # Classify gait phases
         phases = self.classify_gait_phases(angles)
+        
+        # Create visualization output path if needed
+        if output_file:
+            output_base = os.path.splitext(output_file)[0]
+            viz_output = f"{output_base}_threshold_visualization.png"
+            
+            # Generate and save visualization with phases
+            self.add_threshold_visualization(distances, threshold, phases, viz_output)
         
         # Create output dictionary
         result = {
             'angles': angles,
-            'gait_phases': phases
+            'gait_phases': phases,
+            'distances': distances,
+            'threshold': threshold
         }
         
         # Write to CSV if output file specified
@@ -547,13 +635,18 @@ def gait_classification(trial_path):
     metrics_file = os.path.join(output_dir, f"{input_base_name}_metrics.csv")
     
     try:
-        # Load data and process
-        angles = classifier.load_mot_file(input_file)
-        report = metrics.generate_full_report(angles)
+        # Process the file with visualization
+        result = classifier.process_mot_file(input_file, results_file)
         
-        # Write outputs
+        # Generate metrics report
+        report = metrics.generate_full_report(result['angles'])
+        
+        # Write metrics report
         metrics.write_report_to_csv(report, metrics_file)
-        classifier.process_mot_file(input_file, results_file)
+        
+        print(f"Classification complete. Results saved to {results_file}")
+        print(f"Metrics saved to {metrics_file}")
+        print(f"Threshold visualization saved at: {os.path.splitext(results_file)[0]}_threshold_visualization.png")
         
     except Exception as e:
         print(f"Error processing {os.path.basename(input_file)}: {str(e)}")
