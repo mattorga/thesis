@@ -176,75 +176,101 @@ function handleLoadError(error) {
 	alert("Failed to load FBX model. Check the console for details.");
 }
 
+function loadFbxModel(fbxPath) {
 // Load FBX file - using relative URL path for better compatibility
-const loader = new THREE.FBXLoader();
-loader.load(
-	// Use a relative path instead of absolute
-	"Sample_working.fbx",
-	(object) => {
-		// Hide the loading screen once the model is loaded
-		if (typeof hideLoading === "function") {
-			hideLoading();
-		}
 
-		// Scale down the model
-		object.scale.set(0.01, 0.01, 0.01);
-
-		// Enable shadows for all meshes in the model
-		object.traverse(function (child) {
-			if (child.isMesh) {
-				child.castShadow = true;
-				child.receiveShadow = true;
+	// Clear existing model if any
+    if (animatedObject) {
+        scene.remove(animatedObject);
+        animatedObject = null;
+    }
+    
+    // Reset mixer
+    if (mixer) {
+        mixer.stopAllAction();
+        mixer = null;
+    }
+	
+	const loader = new THREE.FBXLoader();
+	loader.load(
+		// Use a relative path instead of absolute
+		"Sample_working.fbx",
+		(object) => {
+			// Hide the loading screen once the model is loaded
+			if (typeof hideLoading === "function") {
+				hideLoading();
 			}
-		});
 
-		if (centerAnimation) {
-			// Compute the bounding box
-			const box = new THREE.Box3().setFromObject(object);
-			const center = box.getCenter(new THREE.Vector3());
+			// Scale down the model
+			object.scale.set(0.01, 0.01, 0.01);
 
-			// Position to center horizontally but keep vertical position
-			object.position.x = -center.x;
-			object.position.z = -center.z;
-			// Don't center vertically - keep model on the floor
-			object.position.y = 0;
-		}
-
-		scene.add(object);
-		animatedObject = object; // Save reference for tracking
-
-		console.log(
-			"Object loaded successfully. Animations:",
-			object.animations.length
-		);
-
-		// Only create mixer if animations exist
-		if (object.animations && object.animations.length > 0) {
-			// Create animation mixer
-			mixer = new THREE.AnimationMixer(object);
-			const action = mixer.clipAction(object.animations[0]);
-			action.play();
-			mixer.timeScale = 0; // Start animation paused
-
-			// Get animation duration
-			duration = object.animations[0].duration;
-
-			// Listen for loop events
-			mixer.addEventListener("loop", () => {
-				if (isPlaying) {
-					currentTime = 0;
-					mixer.setTime(0);
+			// Enable shadows for all meshes in the model
+			object.traverse(function (child) {
+				if (child.isMesh) {
+					child.castShadow = true;
+					child.receiveShadow = true;
 				}
 			});
 
-			// console.log(`Animation loaded. Duration: ${duration} seconds`);
-		} else {
-			console.warn("No animations found in the model");
-		}
-	},
-	(xhr) => console.log((xhr.loaded / xhr.total) * 100 + "% loaded"),
-	handleLoadError
-);
+			if (centerAnimation) {
+				// Compute the bounding box
+				const box = new THREE.Box3().setFromObject(object);
+				const center = box.getCenter(new THREE.Vector3());
+
+				// Position to center horizontally but keep vertical position
+				object.position.x = -center.x;
+				object.position.z = -center.z;
+				// Don't center vertically - keep model on the floor
+				object.position.y = 0;
+			}
+
+			scene.add(object);
+			animatedObject = object; // Save reference for tracking
+
+			console.log(
+				"Object loaded successfully. Animations:",
+				object.animations.length
+			);
+
+			// Only create mixer if animations exist
+			if (object.animations && object.animations.length > 0) {
+				// Create animation mixer
+				mixer = new THREE.AnimationMixer(object);
+				const action = mixer.clipAction(object.animations[0]);
+				action.play();
+				mixer.timeScale = 0; // Start animation paused
+
+				// Get animation duration
+				duration = object.animations[0].duration;
+
+				// Listen for loop events
+				mixer.addEventListener("loop", () => {
+					if (isPlaying) {
+						currentTime = 0;
+						mixer.setTime(0);
+					}
+				});
+
+				// console.log(`Animation loaded. Duration: ${duration} seconds`);
+			} else {
+				console.warn("No animations found in the model");
+			}
+		},
+		(xhr) => console.log((xhr.loaded / xhr.total) * 100 + "% loaded"),
+		handleLoadError
+	);
+}
+
+let defaultFbxPath = "Sample_working.fbx";
+
+if (window.pendingFbxPath) {
+    defaultFbxPath = window.pendingFbxPath;
+    window.pendingFbxPath = null;
+}
+
+// Load the default or specified FBX
+loadFbxModel(defaultFbxPath);
+
 
 // Resize handler
 window.addEventListener("resize", () => {

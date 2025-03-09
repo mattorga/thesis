@@ -112,9 +112,18 @@ class ViewerManager:
     
     def initialize_viewer(self):
         """Initialize the viewer by loading the HTML page"""
-        # Load the existing HTML file
-        viewer_url = "file:///Users/mattheworga/Documents/Git/DLSU/thesis/final_ui/web/viewer.html"
-        self.browser.load(QUrl(viewer_url))
+        # Create a path relative to the current file (viewer_manager.py)
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        html_path = os.path.join(current_dir, "web", "viewer.html")
+        
+        # Convert to file URL format
+        if os.name == 'nt':  # Windows
+            viewer_url = QUrl.fromLocalFile(html_path)
+        else:  # macOS, Linux
+            viewer_url = QUrl("file://" + html_path)
+        
+        print(f"Loading viewer from: {viewer_url.toString()}")
+        self.browser.load(viewer_url)
         
         # After the page loads, we can interact with it
         self.browser.loadFinished.connect(self._on_page_loaded)
@@ -286,6 +295,26 @@ class ViewerManager:
         js_code = f"""
         if (typeof setAxisVisible === 'function') {{ 
             setAxisVisible({str(is_visible).lower()}); 
+        }}
+        """
+        self.page.runJavaScript(js_code)
+    def set_fbx_path(self, fbx_path):
+        """
+        Set the path to the FBX file to load
+        
+        Args:
+            fbx_path (str): Path to the FBX file
+        """
+        # Normalize the path for JavaScript
+        normalized_path = fbx_path.replace('\\', '/')
+        
+        # After the page loads, set the FBX path via JavaScript
+        js_code = f"""
+        if (typeof loadFbxModel === 'function') {{
+            loadFbxModel('{normalized_path}');
+        }} else {{
+            // If loadFbxModel is not available yet, store the path for later use
+            window.pendingFbxPath = '{normalized_path}';
         }}
         """
         self.page.runJavaScript(js_code)
