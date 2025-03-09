@@ -244,7 +244,7 @@ class MainWindow(QMainWindow):
 
     # --- Cameras Page Functions --- #
     def on_detect_cameras(self):
-        self.camera_manager.detect_available_cameras()
+        self.camera_manager.detect_available_cameras(max_cameras=3)
     
         # Update UI elements
         self.ui.camerasValue.setText(str(self.camera_manager.camera_count))
@@ -939,18 +939,28 @@ class MainWindow(QMainWindow):
 
     # --- Processing Function --- #
     def on_process(self):
-        # session_config_path = os.path.join(self.directory_manager.session_path, "Config.toml")
-        # session_config_dict = toml.load(session_config_path)
-        # session_config_dict.get("project").update({"project_dir":os.path.join(self.directory_manager.session_path)})
-
-        participant_config_path = os.path.join(self.directory_manager.participant_path, "Config.toml")
-        participant_config_dict = toml.load(participant_config_path)
-        participant_config_dict.get("project").update({"project_dir":os.path.join(self.directory_manager.participant_path)})
-
-        trial_config_path = os.path.join(self.directory_manager.trial_path, "Config.toml")
-        trial_config_dict = toml.load(trial_config_path)
-        trial_config_dict.get("project").update({"project_dir":self.directory_manager.trial_path})
+        # Get the paths and normalize them for consistency
+        participant_config_path = os.path.normpath(os.path.join(self.directory_manager.participant_path, "Config.toml"))
+        
+        # Check if file exists before trying to load it
+        if not os.path.exists(participant_config_path):
+            QMessageBox.critical(self, "Error",  # Changed self.main_window to self
+                            f"Configuration file not found: {participant_config_path}")
+            return
             
+        participant_config_dict = toml.load(participant_config_path)
+        participant_config_dict.get("project").update({"project_dir": os.path.normpath(self.directory_manager.participant_path)})
+
+        trial_config_path = os.path.normpath(os.path.join(self.directory_manager.trial_path, "Config.toml"))
+        
+        # Check if file exists before trying to load it
+        if not os.path.exists(trial_config_path):
+            QMessageBox.critical(self, "Error",  # Changed self.main_window to self
+                            f"Configuration file not found: {trial_config_path}")
+            return
+            
+        trial_config_dict = toml.load(trial_config_path)
+        trial_config_dict.get("project").update({"project_dir": os.path.normpath(self.directory_manager.trial_path)})        
         #   Print message based on selected algorithm
         if self.directory_manager.algorithm == "rtmpose":
             print("RTMPose Selected")
