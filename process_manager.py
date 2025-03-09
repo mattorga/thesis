@@ -246,7 +246,7 @@ class PoseConfigurationDialog(QDialog):
 model_path = '{self.model_path or "none"}'
 face = false
 hand = false
-net_resolution = "320x240" # default -1x368
+net_resolution = "480x640" # default -1x368
 model_pose = "BODY_25"
 number_people_max = 5
 '''

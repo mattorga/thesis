@@ -939,60 +939,287 @@ class MainWindow(QMainWindow):
 
     # --- Processing Function --- #
     def on_process(self):
-        # Get the paths and normalize them for consistency
-        participant_config_path = os.path.normpath(os.path.join(self.directory_manager.participant_path, "Config.toml"))
-        
-        # Check if file exists before trying to load it
-        if not os.path.exists(participant_config_path):
-            QMessageBox.critical(self, "Error",  # Changed self.main_window to self
-                            f"Configuration file not found: {participant_config_path}")
-            return
+        """Handle the processing of the selected trial"""
+        try:
+            # Load configuration files
+            participant_config_path = os.path.join(self.directory_manager.participant_path, "Config.toml")
+            participant_config_dict = toml.load(participant_config_path)
+            participant_config_dict.get("project").update({"project_dir": os.path.join(self.directory_manager.participant_path)})
+
+            trial_config_path = os.path.join(self.directory_manager.trial_path, "Config.toml")
+            trial_config_dict = toml.load(trial_config_path)
+            trial_config_dict.get("project").update({"project_dir": self.directory_manager.trial_path})
+
+            # Create progress dialog
+            progress_dialog = QProgressDialog("Processing trial...", "Cancel", 0, 7, self)
+            progress_dialog.setWindowTitle("Processing")
+            progress_dialog.setWindowModality(Qt.WindowModal)
+            progress_dialog.setValue(0)
+            progress_dialog.show()
+            QApplication.processEvents()
+
+            # --- Step 1: Pose Estimation --- #
+            progress_dialog.setLabelText("Step 1/7: Pose Estimation...")
+            QApplication.processEvents()
+
+            # Update the pose_model in the Config.toml based on the selected algorithm
+            if 'pose' not in trial_config_dict:
+                trial_config_dict['pose'] = {}
+                
+            # Set the appropriate pose_model based on the algorithm
+            if self.directory_manager.algorithm == "rtmpose":
+                print("Using RTMPose for pose estimation - setting pose_model to 'Body_with_feet'")
+                trial_config_dict['pose']['pose_model'] = 'Body_with_feet'
+                
+                # Save the updated Config.toml file
+                with open(trial_config_path, 'w') as f:
+                    toml.dump(trial_config_dict, f)
+                    
+                # Proceed with RTMPose estimation
+                Pose2Sim.poseEstimation(trial_config_dict)
+            else:  # Default is "openpose"
+                print("Using OpenPose for pose estimation - setting pose_model to 'BODY_25'")
+                trial_config_dict['pose']['pose_model'] = 'BODY_25'
+                
+                # Save the updated Config.toml file
+                with open(trial_config_path, 'w') as f:
+                    toml.dump(trial_config_dict, f)
+                # Create the pose directory structure if it doesn't exist
+                pose_dir = os.path.join(self.directory_manager.trial_path, "pose")
+                if not os.path.exists(pose_dir):
+                    os.makedirs(pose_dir)
+                    
+                # Find video files in the trial directory
+                videos_dir = os.path.join(self.directory_manager.trial_path, "videos")
+                if not os.path.exists(videos_dir):
+                    raise ValueError(f"No videos directory found at {videos_dir}. Please record videos first.")
+                
+                # Debug: Print directory information to help diagnose import issues
+                print(f"Current working directory: {os.getcwd()}")
+                main_dir = os.path.dirname(os.path.abspath(__file__))
+                print(f"Directory of main.py: {main_dir}")
+                
+                # Find the openposelocal.py file by searching for it
+                openpose_local_path = None
+                
+                # Common locations to search
+                possible_paths = [
+                    os.path.join(os.getcwd(), 'utils', 'openpose', 'openposelocal.py'),
+                    os.path.join(main_dir, 'utils', 'openpose', 'openposelocal.py'),
+                    os.path.join(os.path.dirname(main_dir), 'utils', 'openpose', 'openposelocal.py'),
+                    # Search for utils directory recursively up to 3 levels up
+                    *[os.path.join(os.path.dirname(os.path.abspath(__file__)), *['..'] * i, 'utils', 'openpose', 'openposelocal.py') 
+                    for i in range(4)]
+                ]
+                
+                # Try to find the file
+                for path in possible_paths:
+                    norm_path = os.path.normpath(os.path.abspath(path))
+                    print(f"Checking for openposelocal.py at: {norm_path}")
+                    if os.path.isfile(norm_path):
+                        openpose_local_path = norm_path
+                        print(f"Found openposelocal.py at: {norm_path}")
+                        break
+                
+                if not openpose_local_path:
+                    raise ImportError("Could not find openposelocal.py in any expected location")
+                
+                # Import using the file path directly
+                import importlib.util
+                spec = importlib.util.spec_from_file_location("openposelocal", openpose_local_path)
+                openpose_module = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(openpose_module)
+                OpenPoseRunner = openpose_module.OpenPoseRunner
+                
+                # Initialize OpenPoseRunner
+                runner = OpenPoseRunner()
+                
+                # Set OpenPose path from directory manager
+                openpose_path = self.directory_manager.openpose_path
+                if not openpose_path or not os.path.exists(openpose_path):
+                    raise ValueError("OpenPose path not properly configured. Please set it in the configuration dialog.")
+                
+                # Find OpenPoseDemo.exe in the openpose_path directory
+                openpose_exe = None
+                for root, dirs, files in os.walk(openpose_path):
+                    for file in files:
+                        if file == "OpenPoseDemo.exe" or file == "openpose.exe" or file == "OpenPoseDemo":
+                            openpose_exe = os.path.join(root, file)
+                            break
+                    if openpose_exe:
+                        break
+                
+                if not openpose_exe:
+                    # If not found, try with default locations based on the provided path
+                    if os.path.exists(os.path.join(openpose_path, "bin", "OpenPoseDemo.exe")):
+                        openpose_exe = os.path.join(openpose_path, "bin", "OpenPoseDemo.exe")
+                    elif os.path.exists(os.path.join(openpose_path, "OpenPoseDemo.exe")):
+                        openpose_exe = os.path.join(openpose_path, "OpenPoseDemo.exe")
+                    else:
+                        raise ValueError(f"OpenPoseDemo.exe not found in {openpose_path} or its subdirectories.")
+                
+                runner.set_openpose_path(openpose_exe)
+                
+                # Set model folder from directory manager or default location
+                model_path = self.directory_manager.model_path
+                if not model_path or not os.path.exists(model_path):
+                    # Try to find models folder in openpose_path
+                    if os.path.exists(os.path.join(openpose_path, "models")):
+                        model_path = os.path.join(openpose_path, "models")
+                    else:
+                        raise ValueError("Model path not properly configured. Please set it in the configuration dialog.")
+                
+                runner.set_model_folder(model_path)
+                
+                # Set input and output directories
+                runner.set_input_directory(videos_dir)
+                runner.set_output_directory(pose_dir)
+                
+                # Load default config or create one with your desired settings
+                openpose_config = {
+                    'face': False,
+                    'hand': False,
+                    'net_resolution': '-1x368',  # Use -1 to maintain aspect ratio with 368px height
+                    'model_pose': 'BODY_25',
+                    'number_people_max': 5
+                }
+                
+                # Get trial-specific openpose.toml if available
+                trial_openpose_config_path = os.path.join(self.directory_manager.trial_path, "openpose.toml")
+                if os.path.exists(trial_openpose_config_path):
+                    try:
+                        config = toml.load(trial_openpose_config_path)
+                        
+                        # Handle OpenPose section if it exists
+                        if 'openpose' in config:
+                            openpose_config.update(config['openpose'])
+                        
+                        # Also look for direct keys
+                        for key, value in config.items():
+                            if key not in ['openpose'] and not isinstance(value, dict):
+                                openpose_config[key] = value
+                                
+                        print(f"Loaded OpenPose configuration from {trial_openpose_config_path}")
+                    except Exception as e:
+                        print(f"Error loading openpose.toml: {str(e)}")
+                
+                # Also apply pose settings from the trial Config.toml
+                if 'pose' in trial_config_dict:
+                    pose_config = trial_config_dict['pose']
+                    
+                    # Apply specific settings from pose section
+                    if 'pose_model' in pose_config and pose_config['pose_model'] == 'BODY_25':
+                        openpose_config['model_pose'] = 'BODY_25'
+                
+                # Apply settings from the directory manager's openpose configuration
+                if self.directory_manager.openpose_path:
+                    if 'net_resolution' in openpose_config:
+                        print(f"Using net_resolution: {openpose_config['net_resolution']}")
+                
+                # Debug: Print the final OpenPose config
+                print("Final OpenPose configuration:")
+                for key, value in openpose_config.items():
+                    print(f"  {key}: {value}")
+                
+                runner.config = openpose_config
+                
+                # Process the videos - this function will wait for OpenPose to finish
+                print("Starting OpenPose processing...")
+                runner.process_videos()
+                print("OpenPose processing complete.")
+                
+                # Verify output
+                json_files_found = False
+                for root, dirs, files in os.walk(pose_dir):
+                    for file in files:
+                        if file.endswith('.json'):
+                            json_files_found = True
+                            break
+                    if json_files_found:
+                        break
+                
+                if not json_files_found:
+                    raise ValueError(f"No JSON files were created by OpenPose in {pose_dir}. Check OpenPose settings and try again.")
             
-        participant_config_dict = toml.load(participant_config_path)
-        participant_config_dict.get("project").update({"project_dir": os.path.normpath(self.directory_manager.participant_path)})
-
-        trial_config_path = os.path.normpath(os.path.join(self.directory_manager.trial_path, "Config.toml"))
-        
-        # Check if file exists before trying to load it
-        if not os.path.exists(trial_config_path):
-            QMessageBox.critical(self, "Error",  # Changed self.main_window to self
-                            f"Configuration file not found: {trial_config_path}")
-            return
+            progress_dialog.setValue(1)
             
-        trial_config_dict = toml.load(trial_config_path)
-        trial_config_dict.get("project").update({"project_dir": os.path.normpath(self.directory_manager.trial_path)})        
-        #   Print message based on selected algorithm
-        if self.directory_manager.algorithm == "rtmpose":
-            print("RTMPose Selected")
-            Pose2Sim.poseEstimation(trial_config_dict)
-        else:  # Default is "openpose"
-            print("OpenPose selected")
-            # OpenPose Pose Estimation Methods
-            # directory_manager.openpose_path - path to folder, di pa .exe
-            # directory_manager.model_path - path to folder
-            # directory_manager.trial_path
+            # --- Step 2: Synchronization --- #
+            progress_dialog.setLabelText("Step 2/7: Synchronization...")
+            QApplication.processEvents()
+            Pose2Sim.synchronization(trial_config_dict)
+            progress_dialog.setValue(2)
+            
+            # --- Step 3: Triangulation --- #
+            progress_dialog.setLabelText("Step 3/7: Triangulation...")
+            QApplication.processEvents()
+            Pose2Sim.triangulation(trial_config_dict)
+            progress_dialog.setValue(3)
+            
+            # --- Step 4: Filtering --- #
+            progress_dialog.setLabelText("Step 4/7: Filtering...")
+            QApplication.processEvents()
+            Pose2Sim.filtering(trial_config_dict)
+            progress_dialog.setValue(4)
+            
+            # --- Step 5: Marker Augmentation --- #
+            progress_dialog.setLabelText("Step 5/7: Marker Augmentation...")
+            QApplication.processEvents()
+            Pose2Sim.markerAugmentation(trial_config_dict)
+            progress_dialog.setValue(5)
+            
+            # --- Step 6: Kinematics --- #
+            progress_dialog.setLabelText("Step 6/7: Kinematics...")
+            QApplication.processEvents()
+            Pose2Sim.kinematics(trial_config_dict)
+            progress_dialog.setValue(6)
+            
+            # --- Step 7: Gait Classification --- #
+            progress_dialog.setLabelText("Step 7/7: Gait Classification...")
+            QApplication.processEvents()
+            gait_classification(self.directory_manager.trial_path)
+            progress_dialog.setValue(7)
+            
+            self.motion_data_file = self.directory_manager.find_motion_data_file()
 
-        Pose2Sim.synchronization(trial_config_dict)
-        Pose2Sim.triangulation(trial_config_dict)
-        Pose2Sim.filtering(trial_config_dict)
-        Pose2Sim.markerAugmentation(trial_config_dict)
-        Pose2Sim.kinematics(trial_config_dict)
+            # If no versus data file is set yet, try to find a reference file
+            if not self.versus_data_file:
+                self.versus_data_file = self.directory_manager.find_reference_data_file()
+            
+            # Update the display if we found a data file
+            if self.motion_data_file:
+                # Enable analytics and comparative buttons since a motion file now exists
+                self.ui.analyticsButton.setEnabled(True)
+                self.ui.jointAnalyticsButton.setEnabled(True)
+                self.on_display_data()
+                
+                QMessageBox.information(
+                    self,
+                    "Processing Complete",
+                    "The trial has been successfully processed."
+                )
+            else:
+                QMessageBox.warning(
+                    self,
+                    "Processing Warning",
+                    "Processing completed, but no motion data file was found. Check logs for issues."
+                )
         
-        gait_classification(self.directory_manager.trial_path)
-        self.motion_data_file = self.directory_manager.find_motion_data_file()
-
-        # Joint Analysis Script
-
-        # If no versus data file is set yet, try to find a reference file
-        if not self.versus_data_file:
-            self.versus_data_file = self.directory_manager.find_reference_data_file()
-        
-        # Update the display if we found a data file
-        if self.motion_data_file:
-            # Enable analytics and comparative buttons since a motion file now exists
-            self.ui.analyticsButton.setEnabled(True)
-            self.ui.jointAnalyticsButton.setEnabled(True)
-            self.on_display_data()
+        except Exception as e:
+            # Close the progress dialog if it's open
+            if 'progress_dialog' in locals():
+                progress_dialog.close()
+                
+            import traceback
+            traceback.print_exc()
+            QMessageBox.critical(
+                self,
+                "Processing Error",
+                f"An error occurred during processing:\n\n{str(e)}"
+            )
+        finally:
+            # Ensure progress dialog is closed
+            if 'progress_dialog' in locals():
+                progress_dialog.close()
 
     def on_process_configuration(self):
         """Open the process configuration dialog"""
