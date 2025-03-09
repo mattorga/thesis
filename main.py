@@ -1261,6 +1261,20 @@ class MainWindow(QMainWindow):
             if not self.versus_data_file:
                 self.versus_data_file = self.directory_manager.find_reference_data_file()
             
+
+            fbx_output = os.path.join(kinematics_dir, "exported_pose2sim.fbx")
+            if os.path.exists(fbx_output):
+                print(f"Found processed FBX file: {fbx_output}")
+                # Set the FBX file path in the viewer
+                if hasattr(self, 'viewer_manager') and self.viewer_manager:
+                    self.viewer_manager.set_fbx_path(fbx_output)
+                    
+                    # If we're on the analytics page, update the viewer
+                    if self.ui.stackedWidget.currentIndex() == 2:  # 2=Analytics page
+                        # Use a small delay to ensure the viewer has time to load the new FBX
+                        QTimer.singleShot(500, lambda: self.viewer_manager.sync_with_slider(
+                            self.ui.slider.value(), self.ui.slider.maximum()))
+                        
             # Update the display if we found a data file
             if self.motion_data_file:
                 # Enable analytics and comparative buttons since a motion file now exists

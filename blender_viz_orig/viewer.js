@@ -53,62 +53,92 @@ function handleLoadError(error) {
 	alert("Failed to load FBX model. Check the console for details.");
 }
 
-// Load FBX file - using relative URL path for better compatibility
-const loader = new THREE.FBXLoader();
-loader.load(
-	// Use a relative path instead of absolute
-	"Sample_working.fbx",
-	(object) => {
-		object.scale.set(0.01, 0.01, 0.01);
+function loadFbxModel(fbxPath) {
+    console.log("Loading FBX from path:", fbxPath);
+    
+    // Clear existing model if any
+    if (animatedObject) {
+        scene.remove(animatedObject);
+        animatedObject = null;
+    }
+    
+    // Reset mixer
+    if (mixer) {
+        mixer.stopAllAction();
+        mixer = null;
+    }
+    
+    // Load the new FBX file
+    const loader = new THREE.FBXLoader();
+    loader.load(
+        fbxPath,
+        (object) => {
+            object.scale.set(0.01, 0.01, 0.01);
 
-		if (centerAnimation) {
-			// Compute the bounding box
-			const box = new THREE.Box3().setFromObject(object);
-			const center = box.getCenter(new THREE.Vector3());
+            if (centerAnimation) {
+                // Compute the bounding box
+                const box = new THREE.Box3().setFromObject(object);
+                const center = box.getCenter(new THREE.Vector3());
 
-			// Offset the model to center it at the origin
-			object.position.sub(center);
-		}
+                // Offset the model to center it at the origin
+                object.position.sub(center);
+            }
 
-		scene.add(object);
-		animatedObject = object; // Save reference for tracking
+            scene.add(object);
+            animatedObject = object; // Save reference for tracking
 
-		console.log(
-			"Object loaded successfully. Animations:",
-			object.animations.length
-		);
+            console.log(
+                "Object loaded successfully. Animations:",
+                object.animations.length
+            );
 
-		// Only create mixer if animations exist
-		if (object.animations && object.animations.length > 0) {
-			// Create animation mixer
-			mixer = new THREE.AnimationMixer(object);
-			const action = mixer.clipAction(object.animations[0]);
-			action.play();
-			mixer.timeScale = 0; // Start animation paused
+            // Only create mixer if animations exist
+            if (object.animations && object.animations.length > 0) {
+                // Create animation mixer
+                mixer = new THREE.AnimationMixer(object);
+                const action = mixer.clipAction(object.animations[0]);
+                action.play();
+                mixer.timeScale = 0; // Start animation paused
 
-			// Get animation duration
-			duration = object.animations[0].duration;
+                // Get animation duration
+                duration = object.animations[0].duration;
 
-			// Update seekbar max value
-			seekBar.max = duration.toFixed(2); // Max value with two decimal places
-			seekBar.step = 0.01; // Granularity of 0.01 seconds
+                // Update seekbar max value
+                seekBar.max = duration.toFixed(2); // Max value with two decimal places
+                seekBar.step = 0.01; // Granularity of 0.01 seconds
 
-			// Listen for loop events to reset seekbar
-			mixer.addEventListener("loop", () => {
-				if (isPlaying) {
-					seekBar.value = 0; // Reset seekbar position on loop
-					mixer.setTime(0);
-				}
-			});
+                // Listen for loop events to reset seekbar
+                mixer.addEventListener("loop", () => {
+                    if (isPlaying) {
+                        seekBar.value = 0; // Reset seekbar position on loop
+                        mixer.setTime(0);
+                    }
+                });
 
-			console.log(`Animation loaded. Duration: ${duration} seconds`);
-		} else {
-			console.warn("No animations found in the model");
-		}
-	},
-	(xhr) => console.log((xhr.loaded / xhr.total) * 100 + "% loaded"),
-	handleLoadError
-);
+                console.log(`Animation loaded. Duration: ${duration} seconds`);
+                
+                // Notify PyQt if available
+                if (window.qt && typeof window.qt.updateSliderFromWeb === 'function') {
+                    window.qt.updateSliderFromWeb(0);
+                }
+            } else {
+                console.warn("No animations found in the model");
+            }
+        },
+        (xhr) => console.log((xhr.loaded / xhr.total) * 100 + "% loaded"),
+        handleLoadError
+    );
+}
+let defaultFbxPath = "Sample_working.fbx";
+
+if (window.pendingFbxPath) {
+    defaultFbxPath = window.pendingFbxPath;
+    window.pendingFbxPath = null;
+}
+
+// Load the default or specified FBX
+loadFbxModel(defaultFbxPath);
+
 
 // Resize handler
 window.addEventListener("resize", () => {
