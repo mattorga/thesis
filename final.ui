@@ -187,6 +187,9 @@ QPushButton:hover {
         </item>
         <item>
          <widget class="QPushButton" name="analyticsButton">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="font">
            <font>
             <family>Microsoft JhengHei UI</family>
@@ -225,6 +228,9 @@ QPushButton:hover {
         </item>
         <item>
          <widget class="QPushButton" name="jointAnalyticsButton">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="font">
            <font>
             <family>Microsoft JhengHei UI</family>
@@ -390,7 +396,7 @@ QPushButton:hover {
           <item>
            <widget class="QPushButton" name="participantSelectButton">
             <property name="enabled">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -452,7 +458,7 @@ QPushButton:hover {
           <item>
            <widget class="QPushButton" name="participantAddButton">
             <property name="enabled">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
             <property name="sizePolicy">
              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -497,7 +503,7 @@ QPushButton:hover {
           <item>
            <widget class="QPushButton" name="trialSelectButton">
             <property name="enabled">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
             <property name="font">
              <font>
@@ -559,7 +565,7 @@ QPushButton:hover {
           <item>
            <widget class="QPushButton" name="trialAddButton">
             <property name="enabled">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
             <property name="sizePolicy">
              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -630,7 +636,7 @@ QPushButton:hover {
           <item>
            <widget class="QPushButton" name="processButton">
             <property name="enabled">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
             <property name="styleSheet">
              <string notr="true">QPushButton {
@@ -662,7 +668,7 @@ QPushButton:hover {
           <item>
            <widget class="QPushButton" name="processConfiguration">
             <property name="enabled">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
             <property name="maximumSize">
              <size>
@@ -740,6 +746,10 @@ QPushButton:hover {
         </property>
         <property name="text">
          <string>Exit</string>
+        </property>
+        <property name="icon">
+         <iconset resource="final_resources.qrc">
+          <normaloff>:/final_resources/Exit.png</normaloff>:/final_resources/Exit.png</iconset>
         </property>
        </widget>
       </item>
