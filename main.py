@@ -9,7 +9,7 @@ import toml
 import os
 import pathlib
 
-from final_ui import Ui_MainWindow
+from ui_final import Ui_MainWindow
 from utils.gait_classification import gait_classification
 
 from camera_manager import Camera, CameraManager
