@@ -2,13 +2,14 @@ import sys
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-
+import glob
 from Pose2Sim import Pose2Sim
+from Pose2Sim.Utilities import bodykin_from_mot_osim
 import toml
-
+import configparser
 import os
 import pathlib
-
+import subprocess
 from final import Ui_MainWindow
 from utils.gait_classification import gait_classification
 
@@ -1179,6 +1180,81 @@ class MainWindow(QMainWindow):
             gait_classification(self.directory_manager.trial_path)
             progress_dialog.setValue(7)
             
+
+            # --- Step 8: Convert .mot to CSV ---
+            progress_dialog.setLabelText("Step 8/9: Converting .mot to CSV...")
+            QApplication.processEvents()
+
+            # Define the kinematics directory dynamically
+            kinematics_dir = os.path.join(self.directory_manager.trial_path, "kinematics")
+
+            # Dynamically find the .mot and .osim files in the kinematics directory
+            mot_files = glob.glob(os.path.join(kinematics_dir, "*.mot"))
+            osim_files = glob.glob(os.path.join(kinematics_dir, "*.osim"))
+
+            if not mot_files or not osim_files:
+                raise ValueError("Could not find a .mot or .osim file in the kinematics directory.")
+
+
+            mot_path = mot_files[0]
+            osim_path = osim_files[0]
+
+            # Define the output CSV file in the kinematics folder
+            csv_path = os.path.join(kinematics_dir, "motion.csv")
+
+            # Call the conversion function (ensure bodykin_from_mot_osim is in your PYTHONPATH)
+            bodykin_from_mot_osim.bodykin_from_mot_osim_func(mot_path, osim_path, csv_path)
+            progress_dialog.setValue(8)
+
+            # --- Step 9: Generate FBX file using Blender ---
+            progress_dialog.setLabelText("Step 9/9: Generating FBX file using Blender...")
+            QApplication.processEvents()
+
+            pose_3d_dir  =  os.path.join(self.directory_manager.trial_path, "pose-3d")
+            all_files = glob.glob(os.path.join(pose_3d_dir, "*"))
+            print("All files in pose_3d directory:", all_files)
+            print(f"pose_3d_dirpath detected: {pose_3d_dir}")
+            trc_file_path  = glob.glob(os.path.join(pose_3d_dir, "*_LSTM.trc"))
+            print(f"Trc file path detected: {trc_file_path}")
+            trc_file = trc_file_path[0]
+            # osim_file and csv_file were defined in Step 8
+            csv_file  = os.path.join(kinematics_dir, "motion.csv")
+            fbx_output = os.path.join(kinematics_dir, "exported_pose2sim.fbx")
+
+
+            
+            # Paths to the Blender executable and the Blender script
+            blender_path_ini = os.path.join(self.directory_manager.session_path, "blender_path.ini")
+            config = configparser.ConfigParser()
+            config.read(blender_path_ini)
+            blender_exe = config.get('Paths', 'blender')
+            base_dir = os.path.dirname(os.path.abspath(__file__))
+
+            blender_script =  os.path.join(base_dir, "blender_viz_orig", "blender_script_fbx.py")
+
+            
+            # Build the command.
+            # Note the '--' marker: everything after it is passed as arguments to your Python script inside Blender.
+            cmd = [
+                blender_exe,
+                "--background",
+                "--python", blender_script,
+                "--",  # everything after this marker is passed to blender_script_fbx.py
+                "--base", pose_3d_dir,
+                "--trc", trc_file,
+                "--osim", osim_path,
+                "--csv", csv_file,
+                "--fbx", fbx_output,
+                "--fps", '30'
+            ]
+
+            result = subprocess.run(cmd, capture_output=True, text=True)
+            print("Blender output:", result.stdout)
+            print("Blender errors:", result.stderr)
+
+            progress_dialog.setValue(9)
+
+
             self.motion_data_file = self.directory_manager.find_motion_data_file()
 
             # If no versus data file is set yet, try to find a reference file
