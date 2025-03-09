@@ -240,11 +240,15 @@ class DirectoryManager:
     
     if dialog.exec_():
         selected_path = dialog.selectedFiles()[0]
-        if os.path.dirname(selected_path) == gaitscape_path:
+        # Normalize both paths for comparison
+        normalized_selected_parent = os.path.normpath(os.path.dirname(selected_path)).lower()
+        normalized_gaitscape = os.path.normpath(gaitscape_path).lower()
+        
+        if normalized_selected_parent == normalized_gaitscape:
             self.session_path = selected_path  # Uses the property setter
         else:
             QMessageBox.warning(self.main_window, "Invalid Selection", 
-                              "Please select a session folder directly under GaitScape folder.")  
+                            "Please select a session folder directly under GaitScape folder.")  
   def set_participant(self):
     dialog = QFileDialog(self.main_window)
     dialog.setFileMode(QFileDialog.Directory)
