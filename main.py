@@ -209,7 +209,7 @@ class MainWindow(QMainWindow):
             self.ui.processButton.setEnabled(True)
             
             # Check if processed data already exists for this trial
-            self.motion_data_file = self.directory_manager.find_motion_data_file()
+            self.motion_data_file = self.directory_manager.find_motion_csv_file()
             
             # Enable or disable analytics and comparative buttons based on motion file existence
             has_data = self.motion_data_file is not None
@@ -230,7 +230,7 @@ class MainWindow(QMainWindow):
                 self.params_manager.refresh_dialog()
             
             # After resetting verse data, try to find a reference file
-            self.versus_data_file = self.directory_manager.find_reference_data_file()
+            self.versus_data_file = self.directory_manager.find_reference_csv_file()
             
             # If data file was found, update display
             if self.motion_data_file:
@@ -1230,7 +1230,6 @@ class MainWindow(QMainWindow):
             if not mot_files or not osim_files:
                 raise ValueError("Could not find a .mot or .osim file in the kinematics directory.")
 
-
             mot_path = mot_files[0]
             osim_path = osim_files[0]
 
@@ -1290,14 +1289,6 @@ class MainWindow(QMainWindow):
 
                 progress_dialog.setValue(9)
 
-
-                self.motion_data_file = self.directory_manager.find_motion_data_file()
-
-                # If no versus data file is set yet, try to find a reference file
-                if not self.versus_data_file:
-                    self.versus_data_file = self.directory_manager.find_reference_data_file()
-                
-
                 fbx_output = os.path.join(kinematics_dir, "exported_pose2sim.fbx")
                 if os.path.exists(fbx_output):
                     print(f"Found processed FBX file: {fbx_output}")
@@ -1324,7 +1315,7 @@ class MainWindow(QMainWindow):
                 self.params_manager.refresh_dialog()
             progress_dialog.setValue(10)
 
-            self.motion_data_file = self.directory_manager.find_motion_data_file()
+            self.motion_data_file = self.directory_manager.find_motion_csv_file()
 
             # Update the display if we found a data file
             if self.motion_data_file:
