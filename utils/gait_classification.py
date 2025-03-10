@@ -98,7 +98,7 @@ def read_mot_file(filename: str) -> pd.DataFrame:
             
     return data
 
-class ImprovedGaitClassifier:
+class GaitClassifier:
     def __init__(self, convergence_threshold: float = 1e-6, max_iterations: int = 100):
         self.convergence_threshold = convergence_threshold
         self.max_iterations = max_iterations
@@ -602,7 +602,7 @@ def print_report(report: Dict):
 
 def gait_classification(trial_path):
     # Initialize classifier and metrics
-    classifier = ImprovedGaitClassifier()
+    classifier = GaitClassifier()
     metrics = GaitPhaseMetrics(classifier)
 
     # Find the .mot file in the kinematics folder

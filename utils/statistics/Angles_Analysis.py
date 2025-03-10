@@ -26,22 +26,24 @@ def load_mot_file(file_path):
 def scalar_distance(a, b):
     return abs(a - b)
 
-def analyze_gait_patterns(before_data, after_data):
+def analyze_gait_patterns(base_mot, versus_mot):
     """
     Analyze gait patterns using FastDTW and Cross-correlation
     """
     # Get minimum length
-    min_length = min(len(before_data), len(after_data))
     
+    base_trial = load_mot_file(base_mot)
+    versus_trial = load_mot_file(versus_mot)
+
+    min_length = min(len(base_trial), len(versus_trial))
+    
+
     # Trim data to same length
-    before_data = before_data[:min_length]
-    after_data = after_data[:min_length]
-    
-    print(before_data.shape)
-    print(after_data.shape)
+    base_trial = base_trial[:min_length]
+    versus_trial = versus_trial[:min_length]
 
     # Initialize results containers
-    num_features = before_data.shape[1]
+    num_features = base_trial.shape[1]
     dtw_distances = np.zeros(num_features)
     cross_corr_max = np.zeros(num_features)
     cross_corr_lags = np.zeros(num_features)
@@ -54,8 +56,8 @@ def analyze_gait_patterns(before_data, after_data):
         if col in skip_cols:
             continue
         # Extract sequences
-        seq1 = before_data[:, col]
-        seq2 = after_data[:, col]
+        seq1 = base_trial[:, col]
+        seq2 = versus_trial[:, col]
         
         # Normalize sequences (z score norm)
         seq1_norm = (seq1 - np.mean(seq1)) / (np.std(seq1) + 1e-10)
@@ -84,7 +86,6 @@ def analyze_gait_patterns(before_data, after_data):
             p_values[col] = p
             
         except Exception as e:
-            print(f"Error processing column {col}: {str(e)}")
             dtw_distances[col] = np.nan
             cross_corr_max[col] = np.nan
             cross_corr_lags[col] = np.nan
@@ -96,58 +97,8 @@ def analyze_gait_patterns(before_data, after_data):
         'cross_corr_max': cross_corr_max,
         'cross_corr_lags': cross_corr_lags,
         'pearson_corr': pearson_corr,
-        'p_values': p_values
+        'p_values': p_values,
+        'ave_dtw': np.nanmean(dtw_distances),
+        'ave_corr': np.nanmean(dtw_distances),
+        'ave_pearson_corr': np.nanmean(dtw_distances)
     }
-
-
-def print_analysis_results_to_file(results, filename="gait_analysis_results.txt"):
-    # Define columns to skip: time column (0) plus extra columns
-    skip_cols = [0, 44, 45, 53, 54, 55, 60, 61, 62]
-
-    with open(filename, "w") as f:
-        # Write header
-        f.write("\nGait Analysis Results:\n")
-        f.write("-" * 100 + "\n")
-        f.write(f"{'Column':^8} {'DTW Dist':^12} {'Cross-Corr':^12} {'Time Lag':^10} {'Pearson r':^12} {'P-value':^12}\n")
-        f.write("-" * 100 + "\n")
-        
-        # Loop through each column and skip specified columns
-        for col in range(len(results['dtw_distances'])):
-            if col in skip_cols:
-                continue
-                
-            dtw_dist = results['dtw_distances'][col]
-            cross_corr = results['cross_corr_max'][col]
-            time_lag = results['cross_corr_lags'][col]
-            pearson = results['pearson_corr'][col]
-            p_val = results['p_values'][col]
-            
-            # Write the formatted results for this column
-            f.write(f"{col:^8d} {dtw_dist:^12.4f} {cross_corr:^12.4f} {time_lag:^10.0f} "
-                    f"{pearson:^12.4f} {p_val:^12.4f}\n")
-        
-        # Write summary statistics
-        f.write("\nSummary Statistics:\n")
-        f.write(f"Average DTW distance: {np.nanmean(results['dtw_distances'][1:]):.4f}\n")
-        f.write(f"Average cross-correlation: {np.nanmean(results['cross_corr_max'][1:]):.4f}\n")
-        f.write(f"Average Pearson correlation: {np.nanmean(results['pearson_corr'][1:]):.4f}\n")
-
-# Example usage:
-if __name__ == "__main__":
-    # Your file paths
-    before_file = "D:\Miro Hernandez\Documents\openpose-1.7.0-binaries-win64-gpu-python3.7-flir-3d_recommended\Statistics test\BatchSession_Ronnel\T01_spastic_1.5\kinematics\T01_spastic_1_filt_butterworth_on_speed.mot"
-    after_file = "D:\Miro Hernandez\Documents\openpose-1.7.0-binaries-win64-gpu-python3.7-flir-3d_recommended\Statistics test\BatchSession_Ronnel\T02_spastic_1.5\kinematics\T02_spastic_1_filt_butterworth_on_speed.mot"
-    
-    # Load data
-    before_data = load_mot_file(before_file)
-    after_data = load_mot_file(after_file)
-    
-    print(f'Before data dimensions: {before_data.shape}')
-    print(f'After data dimensions: {after_data.shape}')
-    
-    # Run analysis
-    results = analyze_gait_patterns(before_data, after_data)
-    
-    # Print results
-    txt_filename = "Ronnel_T01_spastic_vs_T02_spastic.txt"
-    print_analysis_results_to_file(results, txt_filename)
