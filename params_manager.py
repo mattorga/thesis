@@ -54,32 +54,6 @@ class AnalyticsParamsDialog(QDialog):
             
         if 'stride_width_cm' in parameters:
             self.ui.strideWidthValue.setText(f"{parameters['stride_width_cm']:.2f}")
-        
-        # The remaining parameters are placeholders - the ST_params file might not have these
-        # but we include them for completeness
-        params_mapping = {
-            'single_stance': self.ui.label_19,
-            'single_stance_error': self.ui.label_25,
-            'double_stance': self.ui.label_20,
-            'double_stance_error': self.ui.label_26,
-            'left_stance': self.ui.label_21,
-            'left_stance_error': self.ui.label_27,
-            'right_stance': self.ui.label_22,
-            'right_stance_error': self.ui.label_28,
-            'left_swing': self.ui.label_23,
-            'left_swing_error': self.ui.label_29,
-            'right_swing': self.ui.label_24,
-            'right_swing_error': self.ui.label_30
-        }
-        
-        # Update any available parameters
-        for param_name, label in params_mapping.items():
-            if param_name in parameters:
-                # Format as percentage if it's a stance or swing parameter
-                if 'stance' in param_name or 'swing' in param_name:
-                    label.setText(f"{parameters[param_name]:.1f}%")
-                else:
-                    label.setText(f"{parameters[param_name]:.2f}")
 
 
 class ParamsManager:

@@ -98,14 +98,10 @@ if __name__ == "__main__":
     # Example file paths (replace with your actual paths)
     abnormal_csvs = [
         "D:\Miro Hernandez\Documents\openpose-1.7.0-binaries-win64-gpu-python3.7-flir-3d_recommended\Statistics test\Spatio temporal Kinematics\Ronnel\T00_spastic_1_filt_butterworth_on_speed.csv",
-        "D:\Miro Hernandez\Documents\openpose-1.7.0-binaries-win64-gpu-python3.7-flir-3d_recommended\Statistics test\Spatio temporal Kinematics\Ronnel\T01_spastic_1_filt_butterworth_on_speed.csv",
-        "D:\Miro Hernandez\Documents\openpose-1.7.0-binaries-win64-gpu-python3.7-flir-3d_recommended\Statistics test\Spatio temporal Kinematics\Ronnel\T02_spastic_1_filt_butterworth_on_speed.csv"
     ]
     
     normal_csvs = [
         "D:\Miro Hernandez\Documents\openpose-1.7.0-binaries-win64-gpu-python3.7-flir-3d_recommended\Statistics test\Spatio temporal Kinematics\Ronnel\T03_normal_1_filt_butterworth_on_speed.csv",
-        "D:\Miro Hernandez\Documents\openpose-1.7.0-binaries-win64-gpu-python3.7-flir-3d_recommended\Statistics test\Spatio temporal Kinematics\Ronnel\T04_normal_1_filt_butterworth_on_speed.csv",
-        "D:\Miro Hernandez\Documents\openpose-1.7.0-binaries-win64-gpu-python3.7-flir-3d_recommended\Statistics test\Spatio temporal Kinematics\Ronnel\T05_normal_1_filt_butterworth_on_speed.csv"
     ]
 
    

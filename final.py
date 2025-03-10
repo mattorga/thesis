@@ -562,11 +562,15 @@ class Ui_MainWindow(object):
         self.label_5 = QtWidgets.QLabel(self.analyticsPage)
         self.label_5.setGeometry(QtCore.QRect(680, 360, 60, 16))
         self.label_5.setObjectName("label_5")
+        self.pushButton = QtWidgets.QPushButton(self.analyticsPage)
+        self.pushButton.setGeometry(QtCore.QRect(920, 650, 113, 32))
+        self.pushButton.setCheckable(True)
+        self.pushButton.setObjectName("pushButton")
         self.stackedWidget.addWidget(self.analyticsPage)
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
-        self.stackedWidget.setCurrentIndex(2)
+        self.stackedWidget.setCurrentIndex(3)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -630,3 +634,4 @@ class Ui_MainWindow(object):
         self.comparativeAnkleButton.setText(_translate("MainWindow", "Ankle"))
         self.label.setText(_translate("MainWindow", "Toe Off"))
         self.label_5.setText(_translate("MainWindow", "-"))
+        self.pushButton.setText(_translate("MainWindow", "Statistics"))

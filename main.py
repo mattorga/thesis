@@ -12,7 +12,7 @@ import pathlib
 import subprocess
 from final import Ui_MainWindow
 from utils.gait_classification import gait_classification
-from utils.statistics import Calc_ST_params
+from utils.statistics import Calc_ST_params, paired_t_test_gait
 from params_manager import ParamsManager
 
 
