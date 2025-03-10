@@ -664,7 +664,7 @@ model_path = '{config_dict.get("model_path", "none")}'
                 except Exception as cleanup_error:
                     print(f"Failed to clean up after error: {str(cleanup_error)}")
 
-  def find_motion_data_file(self):
+  def find_motion_csv_file(self):
     """
     Finds the path to the processed gait classification CSV file for the current trial.
 
@@ -700,7 +700,7 @@ model_path = '{config_dict.get("model_path", "none")}'
         print(f"Error finding motion data file: {str(e)}")
         return None
 
-  def find_reference_data_file(self):
+  def find_reference_csv_file(self):
     """
     Finds a reference/normal gait pattern file for comparison.
 
