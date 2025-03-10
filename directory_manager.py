@@ -81,11 +81,9 @@ class DirectoryManager:
     self._model_path = None
     self._algorithm = "openpose"  # Default algorithm
 
-  
   @property
   def trial_name(self):
      return self._trial_name
-  
   @trial_name.setter
   def trial_name(self, trial_name):
      self._trial_name = trial_name
@@ -94,11 +92,9 @@ class DirectoryManager:
   @property
   def session_path(self):
      return self._session_path
-  
   @property
   def participant_path(self):
      return self._participant_path
-  
   @property
   def trial_path(self):
      return self._trial_path
@@ -114,7 +110,6 @@ class DirectoryManager:
     
     # Update OpenPose configuration when session changes
     self._update_openpose_config()
-
   @participant_path.setter
   def participant_path(self, value):
       if value is not None and not os.path.exists(value):
@@ -124,7 +119,6 @@ class DirectoryManager:
       
       # Update OpenPose configuration when participant changes
       self._update_openpose_config()
-  
   @trial_path.setter
   def trial_path(self, value):
     if value is not None and not os.path.exists(value):
@@ -150,12 +144,10 @@ class DirectoryManager:
   def openpose_path(self):
       """Get the configured OpenPose installation path"""
       return self._openpose_path
-      
   @property
   def model_path(self):
       """Get the configured OpenPose model path"""
       return self._model_path
-      
   @property
   def algorithm(self):
       """Get the configured pose estimation algorithm (openpose or rtmpose)"""
@@ -183,7 +175,6 @@ class DirectoryManager:
       # Finally try trial level configuration (highest priority)
       if self._trial_path:
           self._load_openpose_config(os.path.join(self._trial_path, "openpose.toml"))
-  
   def _load_global_openpose_config(self):
       """Load OpenPose configuration from user's home directory"""
       config_file = os.path.join(os.path.expanduser("~"), ".gaitscape", "pose_config.toml")
@@ -204,7 +195,6 @@ class DirectoryManager:
                   self._model_path = config["model_path"]
           except Exception as e:
               print(f"Error loading global OpenPose configuration: {str(e)}")
-      
   def _load_openpose_config(self, config_path):
       """Load OpenPose configuration from specified path"""
       if os.path.exists(config_path):
@@ -292,7 +282,6 @@ class DirectoryManager:
           "openpose_path": self._openpose_path,
           "model_path": self._model_path
       }
-  
   def save_openpose_config(self, config_dict):
       """
       Save the provided OpenPose configuration to the appropriate level
@@ -368,9 +357,10 @@ class DirectoryManager:
                   content = content + f'\nmodel_path = \'{model_path or "none"}\''
           else:
               # Create a new openpose.toml with default settings
-              content = f'''OpenPose_path = '{config_dict.get("openpose_path", "none")}'
-model_path = '{config_dict.get("model_path", "none")}'
-'''
+            content = f'''
+                        OpenPose_path = '{config_dict.get("openpose_path", "none")}'
+                        model_path = '{config_dict.get("model_path", "none")}'
+                        '''
           
           # Write the updated content back to the file
           with open(openpose_config_path, 'w') as f:
@@ -390,7 +380,6 @@ model_path = '{config_dict.get("model_path", "none")}'
       except Exception as e:
           print(f"Error saving OpenPose configuration: {str(e)}")
           return False
-  
   def _propagate_openpose_config(self, source_config_path):
       """
       Propagate the OpenPose configuration from session to participants and trials
@@ -664,6 +653,7 @@ model_path = '{config_dict.get("model_path", "none")}'
                 except Exception as cleanup_error:
                     print(f"Failed to clean up after error: {str(cleanup_error)}")
 
+  # --- File Retrievers --- #
   def find_motion_csv_file(self):
     """
     Finds the path to the processed gait classification CSV file for the current trial.
@@ -690,7 +680,6 @@ model_path = '{config_dict.get("model_path", "none")}'
         if csv_files:
             # Use the first CSV file found
             file_path = os.path.join(gait_class_dir, csv_files[0])
-            print(f"Found motion data file: {file_path}")
             return file_path
         else:
             print(f"Warning: No CSV files found in {gait_class_dir}")
@@ -699,7 +688,6 @@ model_path = '{config_dict.get("model_path", "none")}'
     except Exception as e:
         print(f"Error finding motion data file: {str(e)}")
         return None
-
   def find_reference_csv_file(self):
     """
     Finds a reference/normal gait pattern file for comparison.
@@ -728,3 +716,100 @@ model_path = '{config_dict.get("model_path", "none")}'
     except Exception as e:
         print(f"Error finding reference data file: {str(e)}")
         return None 
+            
+  def find_motion_mot_file(self):
+    """
+    Finds the path to the MOT file in the kinematics directory for the current trial.
+    
+    Returns:
+        str or None: Path to the motion MOT file if found, None otherwise
+    """
+    if not self._trial_path:
+        print("Warning: No trial path set, cannot find motion MOT file")
+        return None
+        
+    try:
+        # Construct expected path to the kinematics directory
+        kinematics_dir = os.path.join(self._trial_path, "kinematics")
+        
+        # Ensure the directory exists
+        if not os.path.exists(kinematics_dir):
+            print(f"Warning: Kinematics directory not found at {kinematics_dir}")
+            return None
+        
+        # Look for MOT files in the kinematics directory
+        mot_files = [f for f in os.listdir(kinematics_dir) if f.endswith('.mot')]
+        
+        if mot_files:
+            # Use the first MOT file found
+            file_path = os.path.join(kinematics_dir, mot_files[0])
+            return file_path
+        else:
+            print(f"Warning: No MOT files found in {kinematics_dir}")
+            return None
+            
+    except Exception as e:
+        print(f"Error finding motion MOT file: {str(e)}")
+        return None
+  def find_reference_mot_file(self, selected_path=None):
+    """
+    Finds a reference/normal gait pattern MOT file for comparison.
+    
+    Args:
+        selected_path (str, optional): Path selected from the newVerseButton dialog.
+            If None, tries to find a default reference file.
+    
+    Returns:
+        str or None: Path to the reference MOT file if found, None otherwise
+    """
+    try:
+        # If a specific path was provided (from dialog), use it
+        if selected_path and os.path.exists(selected_path):
+            # Look for MOT files in the selected directory
+            mot_files = [f for f in os.listdir(selected_path) if f.endswith('.mot')]
+            
+            if mot_files:
+                # Use the first MOT file found
+                file_path = os.path.join(selected_path, mot_files[0])
+                print(f"Found reference MOT file: {file_path}")
+                return file_path
+                
+            # If no MOT files in the main directory, check for kinematics subdirectory
+            kinematics_dir = os.path.join(selected_path, "kinematics")
+            if os.path.exists(kinematics_dir):
+                mot_files = [f for f in os.listdir(kinematics_dir) if f.endswith('.mot')]
+                if mot_files:
+                    file_path = os.path.join(kinematics_dir, mot_files[0])
+                    print(f"Found reference MOT file in kinematics directory: {file_path}")
+                    return file_path
+        
+        # Fall back to original behavior if no path provided or nothing found
+        elif self._session_path:
+            # Look for a reference directory in the session folder
+            reference_dir = os.path.join(self._session_path, "reference")
+            
+            if os.path.exists(reference_dir):
+                # Look for MOT files in the reference directory
+                mot_files = [f for f in os.listdir(reference_dir) if f.endswith('.mot')]
+                
+                if mot_files:
+                    # Use the first reference MOT file found
+                    file_path = os.path.join(reference_dir, mot_files[0])
+                    print(f"Found reference MOT file: {file_path}")
+                    return file_path
+                    
+                # If no MOT files in the main reference directory, check for kinematics subdirectory
+                kinematics_dir = os.path.join(reference_dir, "kinematics")
+                if os.path.exists(kinematics_dir):
+                    mot_files = [f for f in os.listdir(kinematics_dir) if f.endswith('.mot')]
+                    if mot_files:
+                        file_path = os.path.join(kinematics_dir, mot_files[0])
+                        print(f"Found reference MOT file in kinematics directory: {file_path}")
+                        return file_path
+        else:
+            print("Warning: No path provided and no session path set")
+        
+        return None
+    except Exception as e:
+        print(f"Error finding reference MOT file: {str(e)}")
+        return None

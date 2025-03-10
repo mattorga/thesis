@@ -29,33 +29,39 @@
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QLabel" name="avgDTWLabel">
+  <widget class="QLabel" name="aveDTWLabel">
    <property name="geometry">
     <rect>
      <x>20</x>
      <y>40</y>
-     <width>91</width>
+     <width>181</width>
      <height>16</height>
     </rect>
    </property>
    <property name="text">
     <string>Average DTW:</string>
    </property>
+   <property name="alignment">
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+   </property>
   </widget>
-  <widget class="QLabel" name="avgCorrLabel">
+  <widget class="QLabel" name="aveCorrLabel">
    <property name="geometry">
     <rect>
      <x>20</x>
      <y>60</y>
-     <width>131</width>
+     <width>181</width>
      <height>16</height>
     </rect>
    </property>
    <property name="text">
     <string>Average Correlation:</string>
    </property>
+   <property name="alignment">
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+   </property>
   </widget>
-  <widget class="QLabel" name="avgPearCorrLabel">
+  <widget class="QLabel" name="avePearCorrLabel">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -68,7 +74,7 @@
     <string>Average Pearson Correlation:</string>
    </property>
   </widget>
-  <widget class="QLabel" name="avgDTWValue">
+  <widget class="QLabel" name="aveDTWValue">
    <property name="geometry">
     <rect>
      <x>210</x>
@@ -81,7 +87,7 @@
     <string>-</string>
    </property>
   </widget>
-  <widget class="QLabel" name="avgCorrValue">
+  <widget class="QLabel" name="aveCorrValue">
    <property name="geometry">
     <rect>
      <x>210</x>
@@ -94,11 +100,40 @@
     <string>-</string>
    </property>
   </widget>
-  <widget class="QLabel" name="avgPearCorrValue">
+  <widget class="QLabel" name="avePearCorrValue">
    <property name="geometry">
     <rect>
      <x>210</x>
      <y>80</y>
+     <width>171</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>-</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="avePValuesLabel">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>100</y>
+     <width>181</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Average P-Values:</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="avePValuesValue">
+   <property name="geometry">
+    <rect>
+     <x>210</x>
+     <y>100</y>
      <width>171</width>
      <height>21</height>
     </rect>
