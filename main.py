@@ -45,7 +45,7 @@ class MainWindow(QMainWindow):
         self.camera_manager = CameraManager(self)
         self.process_manager = ProcessManager(self)
         self.chart_manager = ChartManager(self)
-        self.params_manager = ParamsManager(self)  # Add this line
+        self.params_manager = ParamsManager(self) 
 
         self.motion_data_file = None
         self.versus_data_file = None
@@ -298,9 +298,21 @@ class MainWindow(QMainWindow):
                     # Store the motion data for later use
                     self.motion_data = motion_data
                     
+                    # ADDED: Also update the base_motion_data for comparative page
+                    self.base_motion_data = motion_data
+                    
                     if motion_data:
                         self.table_manager.display_data_in_table(self.ui.jointsTable, motion_data, True, "all")
                         self.chart_manager.display_data_in_chart(self.ui.trialChart, motion_data, False, "all")
+
+                        # ADDED: Update the comparative page base trial if it exists
+                        if hasattr(self.ui, 'baseTrialTable') and hasattr(self.ui, 'baseTrialChart'):
+                            self.table_manager.display_data_in_table(self.ui.baseTrialTable, motion_data, True, "all")
+                            self.chart_manager.display_data_in_chart(self.ui.baseTrialChart, motion_data, False, "all")
+                        
+                        # ADDED: If we're currently on the comparative page, update trial value
+                        if self.ui.stackedWidget.currentIndex() == 3 and hasattr(self.ui, 'baseTrialValue'):
+                            self.ui.baseTrialValue.setText(self.directory_manager.trial_dir)
 
                         num_rows = len(motion_data['time'])
                         self.ui.slider.setMinimum(0)
@@ -313,22 +325,12 @@ class MainWindow(QMainWindow):
                         # Initialize the gait stage value
                         self.update_gait_stage_value(0)
                     else:
-                        # QMessageBox.warning(
-                        #     self,
-                        #     "Data Loading Error",
-                        #     "Failed to load motion data file."
-                        # )
                         pass
             else:
-                # QMessageBox.information(
-                #     self,
-                #     "No Data File",
-                #     "No motion data file found in trial directory."
                 pass
                 
-            
         finally:
-        # Restore cursor
+            # Restore cursor
             QApplication.restoreOverrideCursor()
     def update_analytics_chart(self, joint_filter):
         """Update the chart in the analytics page based on the selected joint filter"""
@@ -398,8 +400,11 @@ class MainWindow(QMainWindow):
     def load_comparative_data(self):
         """Load data for the comparative analysis page"""
         try:
+            print("Loading comparative data...")
+            
             # Load base trial data
             if hasattr(self, 'motion_data') and self.motion_data:
+                print("Base motion data available")
                 # Use the motion data from the Analytics page as the base trial
                 self.base_motion_data = self.motion_data
                 
@@ -420,9 +425,12 @@ class MainWindow(QMainWindow):
                     
                     # Update UI
                     self.ui.baseTrialValue.setText(self.directory_manager.trial_dir)
+            else:
+                print("No base motion data available")
             
             # Load versus trial data if available
             if self.versus_data_file:
+                print(f"Loading versus data from {self.versus_data_file}")
                 # Check file extension to determine how to read it
                 if self.versus_data_file.endswith('.mot'):
                     self.versus_motion_data = self.data_manager.read_mot_file(self.versus_data_file)
@@ -430,6 +438,7 @@ class MainWindow(QMainWindow):
                     self.versus_motion_data = self.data_manager.read_csv_file(self.versus_data_file)
                 
                 if self.versus_motion_data:
+                    print("Versus motion data loaded successfully")
                     self.table_manager.display_data_in_table(
                         self.ui.versusTrialTable, 
                         self.versus_motion_data, 
@@ -452,9 +461,11 @@ class MainWindow(QMainWindow):
                     if hasattr(self.ui, 'versusTrialValue'):
                         self.ui.versusTrialValue.setText(versus_trial_name)
                 else:
+                    print("Failed to load versus motion data")
                     # Clear versus charts and tables if data couldn't be loaded
                     self.clear_versus_display()
             else:
+                print("No versus data file available")
                 # Clear versus charts and tables if no file is selected
                 self.clear_versus_display()
             
@@ -467,6 +478,7 @@ class MainWindow(QMainWindow):
                 max_rows = max(max_rows, len(self.versus_motion_data['time']))
                 
             if max_rows > 0:
+                print(f"Setting comparative slider range: 0-{max_rows-1}")
                 self.ui.comparativeSlider.setMinimum(0)
                 self.ui.comparativeSlider.setMaximum(max_rows - 1)
                 self.ui.comparativeSlider.setValue(0)
@@ -491,38 +503,48 @@ class MainWindow(QMainWindow):
             joint_filter (str): Type of filter ("all", "hip", "knee", "ankle")
         """
         try:
+            print(f"Changing comparative filter to: {joint_filter}")
+            
             # Update base trial display
-            if hasattr(self, 'base_trial_data') and self.base_trial_data:
+            if hasattr(self, 'base_motion_data') and self.base_motion_data:
+                print("Updating base trial display with filter")
                 self.table_manager.display_data_in_table(
                     self.ui.baseTrialTable, 
-                    self.base_trial_data, 
+                    self.base_motion_data, 
                     True,  # scrollable
                     joint_filter
                 )
                 self.chart_manager.display_data_in_chart(
                     self.ui.baseTrialChart, 
-                    self.base_trial_data, 
+                    self.base_motion_data, 
                     False,  # not scrollable
                     joint_filter
                 )
                 
             # Update versus trial display
-            if hasattr(self, 'versus_trial_data') and self.versus_trial_data:
+            if hasattr(self, 'versus_motion_data') and self.versus_motion_data:
+                print("Updating versus trial display with filter")
                 self.table_manager.display_data_in_table(
                     self.ui.versusTrialTable, 
-                    self.versus_trial_data, 
+                    self.versus_motion_data, 
                     True,  # scrollable
                     joint_filter
                 )
                 self.chart_manager.display_data_in_chart(
                     self.ui.versusTrialChart, 
-                    self.versus_trial_data, 
+                    self.versus_motion_data, 
                     False,  # not scrollable
                     joint_filter
                 )
+            
+            # Reapply highlighting and vertical lines after updates
+            QTimer.singleShot(5, self.reapply_comparative_table_highlighting)
+            QTimer.singleShot(5, self.reapply_comparative_chart_vertical_lines)
                 
         except Exception as e:
             print(f"Error updating comparative filter: {str(e)}")
+            import traceback
+            traceback.print_exc()
     def setup_comparative_buttons(self):
         self.comparative_filter_group = QButtonGroup(self)
         self.comparative_filter_group.addButton(self.ui.comparativeAllButton)
