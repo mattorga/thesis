@@ -12,7 +12,7 @@ import pathlib
 import subprocess
 from final import Ui_MainWindow
 from utils.gait_classification import gait_classification
-from utils.statistics import Calc_ST_params, paired_t_test_gait
+from utils.statistics import Calc_ST_params, paired_t_test_gait, Angles_Analysis
 from params_manager import ParamsManager
 
 
@@ -23,6 +23,7 @@ from data_manager import DataManager
 from process_manager import ProcessManager
 from chart_manager import ChartManager
 from viewer_manager import ViewerManager
+from compatative_stats_manager import ComparativeStatsManager
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -45,7 +46,8 @@ class MainWindow(QMainWindow):
         self.camera_manager = CameraManager(self)
         self.process_manager = ProcessManager(self)
         self.chart_manager = ChartManager(self)
-        self.params_manager = ParamsManager(self) 
+        self.params_manager = ParamsManager(self)
+        self.stats_manager = ComparativeStatsManager(self) 
 
         self.motion_data_file = None
         self.versus_data_file = None
@@ -139,6 +141,7 @@ class MainWindow(QMainWindow):
 
         self.ui.processConfiguration.clicked.connect(self.on_process_configuration)
         self.params_manager.setup_connections()
+        self.stats_manager.setup_connections()
 
     # --- User Selection Functions --- #
     def on_select_session(self):
@@ -211,6 +214,9 @@ class MainWindow(QMainWindow):
             # Check if processed data already exists for this trial
             self.motion_data_file = self.directory_manager.find_motion_csv_file()
             
+            # Also store the MOT file path for use in comparative analysis
+            self.base_mot_file = self.directory_manager.find_motion_mot_file()
+            
             # Enable or disable analytics and comparative buttons based on motion file existence
             has_data = self.motion_data_file is not None
             self.ui.analyticsButton.setEnabled(has_data)
@@ -219,12 +225,15 @@ class MainWindow(QMainWindow):
             
             # Reset verse trial data when a new trial is selected
             self.versus_data_file = None
+            self.versus_mot_file = None
             if hasattr(self, 'versus_motion_data'):
                 self.versus_motion_data = None
             
             # Reset versus UI elements
             if hasattr(self.ui, 'versusTrialValue'):
                 self.ui.versusTrialValue.setText("-")  # Reset to default value
+
+            self.update_comparative_stats_button_state()
 
             if hasattr(self, 'params_manager'):
                 self.params_manager.refresh_dialog()
@@ -245,7 +254,7 @@ class MainWindow(QMainWindow):
                 # automatically go back to Cameras page
                 current_page = self.ui.stackedWidget.currentIndex()
                 if current_page in [2, 3]:  # 2=Analytics, 3=Comparative
-                    self.ui.stackedWidget.setCurrentIndex(1)  # 1=Cameras page   
+                    self.ui.stackedWidget.setCurrentIndex(1)  # 1=Cameras page 
     def add_participant(self):
         self.directory_manager.add_participant()
     def add_trial(self):
@@ -348,7 +357,6 @@ class MainWindow(QMainWindow):
                 
         except Exception as e:
             print(f"Error updating analytics chart: {str(e)}")
-    
     def on_slider_value_changed(self, value):
         """
         Handles when the slider value changes by highlighting the corresponding row in the table,
@@ -399,9 +407,7 @@ class MainWindow(QMainWindow):
         self.load_comparative_data()
     def load_comparative_data(self):
         """Load data for the comparative analysis page"""
-        try:
-            print("Loading comparative data...")
-            
+        try:            
             # Load base trial data
             if hasattr(self, 'motion_data') and self.motion_data:
                 print("Base motion data available")
@@ -425,8 +431,7 @@ class MainWindow(QMainWindow):
                     
                     # Update UI
                     self.ui.baseTrialValue.setText(self.directory_manager.trial_dir)
-            else:
-                print("No base motion data available")
+            
             
             # Load versus trial data if available
             if self.versus_data_file:
@@ -465,7 +470,6 @@ class MainWindow(QMainWindow):
                     # Clear versus charts and tables if data couldn't be loaded
                     self.clear_versus_display()
             else:
-                print("No versus data file available")
                 # Clear versus charts and tables if no file is selected
                 self.clear_versus_display()
             
@@ -490,7 +494,8 @@ class MainWindow(QMainWindow):
                 
                 # Initialize the gait stage values
                 self.update_comparative_gait_stage_values(0)
-        
+
+            self.update_comparative_stats_button_state()
         except Exception as e:
             print(f"Error loading comparative data: {str(e)}")
             import traceback
@@ -653,6 +658,7 @@ class MainWindow(QMainWindow):
         """
         Handles when the 'Choose Verse' button is clicked to select a different trial for comparison.
         Opens a file dialog to select a trial folder and ensures it's not the same as the base trial.
+        Uses CSV files for visualization (tables/charts) and MOT files for comparative analysis.
         """
         try:
             # Get current base trial directory path (if any)
@@ -693,43 +699,62 @@ class MainWindow(QMainWindow):
                     )
                     return
                 
-                # Look for motion data file in the selected trial directory
+                # 1. Find CSV file for visualization in tables and charts
                 gait_class_dir = os.path.join(selected_path, "gait-classification")
-                if not os.path.exists(gait_class_dir):
+                csv_file_path = None
+                
+                if os.path.exists(gait_class_dir):
+                    # Find CSV files in the gait classification directory
+                    csv_files = [f for f in os.listdir(gait_class_dir) if f.endswith('.csv')]
+                    if csv_files:
+                        # Use the first CSV file found
+                        csv_file_path = os.path.join(gait_class_dir, csv_files[0])
+                
+                if not csv_file_path:
                     QMessageBox.warning(
                         self,
                         "Missing Data",
-                        f"No gait classification data found in {trial_dir}. Please process this trial first."
+                        f"No CSV data found in {trial_dir}. Please process this trial first."
                     )
                     return
                 
-                # Find CSV files in the gait classification directory
-                csv_files = [f for f in os.listdir(gait_class_dir) if f.endswith('.csv')]
-                if not csv_files:
+                # 2. Find MOT file for comparative analysis
+                kinematics_dir = os.path.join(selected_path, "kinematics")
+                mot_file_path = None
+                
+                if os.path.exists(kinematics_dir):
+                    # Find MOT files in the kinematics directory
+                    mot_files = [f for f in os.listdir(kinematics_dir) if f.endswith('.mot')]
+                    if mot_files:
+                        # Use the first MOT file found
+                        mot_file_path = os.path.join(kinematics_dir, mot_files[0])
+                
+                if not mot_file_path:
                     QMessageBox.warning(
                         self,
                         "Missing Data",
-                        f"No CSV data files found in {trial_dir}/gait-classification. Please process this trial first."
+                        f"No MOT data found in {trial_dir}. Please process this trial first."
                     )
                     return
                 
-                # Use the first CSV file found
-                verse_data_file = os.path.join(gait_class_dir, csv_files[0])
-                
-                # Load the verse trial data
-                verse_motion_data = self.data_manager.read_csv_file(verse_data_file)
+                # 3. Load the CSV data for visualization
+                verse_motion_data = self.data_manager.read_csv_file(csv_file_path)
                 if not verse_motion_data:
                     QMessageBox.warning(
                         self,
                         "Data Loading Error",
-                        f"Failed to load data from {verse_data_file}."
+                        f"Failed to load CSV data from {csv_file_path}."
                     )
                     return
                 
-                # Update the versus trial data and UI
-                self.versus_data_file = verse_data_file
+                # Store both file paths and data for later use
+                self.versus_data_file = csv_file_path  # For visualization
+                self.versus_mot_file = mot_file_path   # For comparative analysis
                 self.versus_motion_data = verse_motion_data
                 
+                # Update the comparative stats button state
+                self.update_comparative_stats_button_state()
+
                 # Update the UI elements
                 self.ui.versusTrialValue.setText(trial_dir)
                 
@@ -745,14 +770,14 @@ class MainWindow(QMainWindow):
                 # Update the table and chart with the new data
                 self.table_manager.display_data_in_table(
                     self.ui.versusTrialTable, 
-                    verse_motion_data, 
+                    self.versus_motion_data, 
                     True,  # scrollable 
                     current_filter
                 )
                 
                 self.chart_manager.display_data_in_chart(
                     self.ui.versusTrialChart, 
-                    verse_motion_data, 
+                    self.versus_motion_data, 
                     False,  # not scrollable
                     current_filter
                 )
@@ -762,8 +787,8 @@ class MainWindow(QMainWindow):
                 if hasattr(self, 'base_motion_data') and 'time' in self.base_motion_data:
                     max_rows = max(max_rows, len(self.base_motion_data['time']))
                     
-                if 'time' in verse_motion_data:
-                    max_rows = max(max_rows, len(verse_motion_data['time']))
+                if 'time' in self.versus_motion_data:
+                    max_rows = max(max_rows, len(self.versus_motion_data['time']))
                     
                 if max_rows > 0:
                     self.ui.comparativeSlider.setMinimum(0)
@@ -796,7 +821,10 @@ class MainWindow(QMainWindow):
         self.ui.versusTrialTable.clear()
         self.ui.versusTrialTable.setRowCount(0)
         self.ui.versusTrialTable.setColumnCount(0)
-        
+
+        # Disable stats button
+        self.ui.comparativeStatsButton.setEnabled(False)
+
         # Clear the chart
         # We need to create an empty chart to replace the existing one
         if hasattr(self.chart_manager, 'versus_chart') and self.chart_manager.versus_chart:
@@ -811,6 +839,15 @@ class MainWindow(QMainWindow):
         # Reset the versus trial value label
         if hasattr(self.ui, 'versusTrialValue'):
             self.ui.versusTrialValue.setText("-")
+    def update_comparative_stats_button_state(self):
+        """
+        Update the state of the comparative stats button based on whether versus data is available
+        """
+        if hasattr(self, 'versus_motion_data') and self.versus_motion_data is not None:
+            self.ui.comparativeStatsButton.setEnabled(True)
+        else:
+            self.ui.comparativeStatsButton.setEnabled(False)
+    
     # --- Table & Charts Functions --- # 
     def on_tab_changed(self, index):
         """
@@ -939,7 +976,6 @@ class MainWindow(QMainWindow):
                     
         except Exception as e:
             print(f"Error updating table filter: {str(e)}")
-    
     def update_gait_stage_value(self, row_index):
         """
         Updates the gaitStageValue text in the UI based on the current row index
@@ -1353,7 +1389,6 @@ class MainWindow(QMainWindow):
             # Ensure progress dialog is closed
             if 'progress_dialog' in locals():
                 progress_dialog.close()
-
     def on_process_configuration(self):
         """Open the process configuration dialog"""
         if hasattr(self, 'process_manager'):
@@ -1651,6 +1686,10 @@ class MainWindow(QMainWindow):
         # Clean up params manager resources
         if hasattr(self, 'params_manager'):
             self.params_manager.cleanup()
+        
+        # Clean up stats manager resources
+        if hasattr(self, 'stats_manager'):
+            self.stats_manager.cleanup()
         
         super().closeEvent(event)
     
