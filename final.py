@@ -568,11 +568,6 @@ class Ui_MainWindow(object):
         self.comparativeStatsButton.setCheckable(True)
         self.comparativeStatsButton.setObjectName("comparativeStatsButton")
         self.stackedWidget.addWidget(self.analyticsPage)
-        self.line_2 = QtWidgets.QFrame(self.centralwidget)
-        self.line_2.setGeometry(QtCore.QRect(200, 20, 3, 750))
-        self.line_2.setFrameShape(QtWidgets.QFrame.VLine)
-        self.line_2.setFrameShadow(QtWidgets.QFrame.Sunken)
-        self.line_2.setObjectName("line_2")
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
