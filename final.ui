@@ -478,7 +478,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>3</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="dashboardPage">
      <widget class="QLabel" name="dashboardLabel">
@@ -514,11 +514,11 @@
        <bool>false</bool>
       </property>
       <property name="styleSheet">
-       <string notr="true">border: 3px solid black
+       <string notr="true">border: 1px solid black
 </string>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Plain</enum>
       </property>
       <property name="text">
        <string>Camera 1</string>
@@ -545,7 +545,7 @@
        <bool>false</bool>
       </property>
       <property name="styleSheet">
-       <string notr="true">border: 3px solid black
+       <string notr="true">border: 1px solid black
 </string>
       </property>
       <property name="frameShadow">
@@ -576,7 +576,7 @@
        <bool>false</bool>
       </property>
       <property name="styleSheet">
-       <string notr="true">border: 3px solid black
+       <string notr="true">border: 1px solid black
 </string>
       </property>
       <property name="frameShadow">
@@ -1525,6 +1525,19 @@
       </property>
      </widget>
     </widget>
+   </widget>
+   <widget class="Line" name="line_2">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>20</y>
+      <width>3</width>
+      <height>750</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Vertical</enum>
+    </property>
    </widget>
   </widget>
  </widget>
