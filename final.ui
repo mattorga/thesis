@@ -1526,19 +1526,6 @@
      </widget>
     </widget>
    </widget>
-   <widget class="Line" name="line_2">
-    <property name="geometry">
-     <rect>
-      <x>200</x>
-      <y>20</y>
-      <width>3</width>
-      <height>750</height>
-     </rect>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Vertical</enum>
-    </property>
-   </widget>
   </widget>
  </widget>
  <resources/>
