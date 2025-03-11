@@ -8,13 +8,14 @@ from poseConfiguration import Ui_Dialog
 from PyQt5.QtWidgets import QDialog
 
 class PoseConfigurationDialog(QDialog):
-    def __init__(self, parent=None, session_path=None, initial_config=None):
+    def __init__(self, parent=None, session_path=None, trial_path=None, initial_config=None):
         super(PoseConfigurationDialog, self).__init__(parent)
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
         
-        # Store session path to update Config.toml
+        # Store paths to update Config.toml and check process status
         self.session_path = session_path
+        self.trial_path = trial_path
         
         # Connect radio buttons to page switching
         self.ui.openPoseButton.toggled.connect(self.onPoseButtonToggled)
@@ -38,7 +39,105 @@ class PoseConfigurationDialog(QDialog):
         else:
             # Otherwise, load any existing configuration
             self.loadConfiguration()
+            
+        # Update process status labels if trial_path is provided
+        if self.trial_path:
+            self.updateProcessStatus()
+    
+    def updateProcessStatus(self):
+        """
+        Check if each process has been completed by looking for specific files/folders
+        and update the status labels accordingly.
+        """
+        if not self.trial_path or not os.path.exists(self.trial_path):
+            return
+            
+        # Check for pose estimation (pose folder with JSON files)
+        pose_dir = os.path.join(self.trial_path, "pose")
+        if os.path.exists(pose_dir) and os.path.isdir(pose_dir):
+            # Check for JSON files in the pose directory
+            json_files = False
+            for root, dirs, files in os.walk(pose_dir):
+                if any(f.endswith('.json') for f in files):
+                    json_files = True
+                    break
+                    
+            if json_files:
+                # The UI has no direct label for pose estimation status
+                print(f"Pose estimation has been performed for {self.trial_path}")
+            
+        # Check for synchronization (pose-sync folder exists)
+        sync_dir = os.path.join(self.trial_path, "pose-sync")
+        if os.path.exists(sync_dir) and os.path.isdir(sync_dir) and len(os.listdir(sync_dir)) > 0:
+            self.ui.syncPerformed.setText("Yes")
+        else:
+            self.ui.syncPerformed.setText("No")
+            
+        # Check for triangulation (pose-3d folder with .trc files)
+        triangulation_dir = os.path.join(self.trial_path, "pose-3d")
+        if os.path.exists(triangulation_dir) and os.path.isdir(triangulation_dir):
+            trc_files = [f for f in os.listdir(triangulation_dir) if f.endswith('.trc')]
+            if trc_files:
+                self.ui.triangulationPerformed.setText("Yes")
+            else:
+                self.ui.triangulationPerformed.setText("No")
+        else:
+            self.ui.triangulationPerformed.setText("No")
+            
+        # Check for filtering (pose-3d folder with 'filt' in the filename of .trc files)
+        if os.path.exists(triangulation_dir) and os.path.isdir(triangulation_dir):
+            filt_files = [f for f in os.listdir(triangulation_dir) if f.endswith('.trc') and 'filt' in f]
+            if filt_files:
+                self.ui.filteringPerformed.setText("Yes")
+            else:
+                self.ui.filteringPerformed.setText("No")
+        else:
+            self.ui.filteringPerformed.setText("No")
+            
+        # Check for marker augmentation (pose-3d folder with 'LSTM' in the filename of .trc files)
+        if os.path.exists(triangulation_dir) and os.path.isdir(triangulation_dir):
+            lstm_files = [f for f in os.listdir(triangulation_dir) if f.endswith('.trc') and 'LSTM' in f]
+            if lstm_files:
+                self.ui.markerAugmentationPerformed.setText("Yes")
+            else:
+                self.ui.markerAugmentationPerformed.setText("No")
+        else:
+            self.ui.markerAugmentationPerformed.setText("No")
+            
+        # Check for kinematics (kinematics folder with .mot and .osim files)
+        kinematics_dir = os.path.join(self.trial_path, "kinematics")
+        if os.path.exists(kinematics_dir) and os.path.isdir(kinematics_dir):
+            mot_files = [f for f in os.listdir(kinematics_dir) if f.endswith('.mot')]
+            osim_files = [f for f in os.listdir(kinematics_dir) if f.endswith('.osim')]
+            if mot_files and osim_files:
+                self.ui.kinematicsPerformed.setText("Yes")
+            else:
+                self.ui.kinematicsPerformed.setText("No")
+        else:
+            self.ui.kinematicsPerformed.setText("No")
         
+    def get_configuration(self):
+        """
+        Get the current configuration from the dialog, including the process checkboxes
+        
+        Returns:
+            dict: Dictionary containing OpenPose configuration and process states
+        """
+        # Get OpenPose configuration
+        config = {
+            "algorithm": "rtmpose" if self.ui.rtmPoseButton.isChecked() else "openpose",
+            "openpose_path": self.openpose_path,
+            "model_path": self.model_path,
+            # Add process checkbox states
+            "pose_estimation": self.ui.poseEstimationCheck.isChecked(),
+            "synchronization": self.ui.syncCheck.isChecked(),
+            "triangulation": self.ui.triangulationCheck.isChecked(),
+            "filtering": self.ui.filteringCheck.isChecked(),
+            "marker_augmentation": self.ui.markerAugCheck.isChecked()
+        }
+        
+        return config
+            
     def apply_configuration(self, config):
         """Apply the provided configuration to the dialog"""
         # Set algorithm
@@ -57,6 +156,22 @@ class PoseConfigurationDialog(QDialog):
             self.model_path = config["model_path"]
             self.ui.modelPathLabel.setText(self.truncatePath(self.model_path))
             self.ui.modelPathLabel.setToolTip(self.model_path)
+            
+        # Set process checkboxes if provided
+        if "pose_estimation" in config:
+            self.ui.poseEstimationCheck.setChecked(config["pose_estimation"])
+        
+        if "synchronization" in config:
+            self.ui.syncCheck.setChecked(config["synchronization"])
+            
+        if "triangulation" in config:
+            self.ui.triangulationCheck.setChecked(config["triangulation"])
+            
+        if "filtering" in config:
+            self.ui.filteringCheck.setChecked(config["filtering"])
+            
+        if "marker_augmentation" in config:
+            self.ui.markerAugCheck.setChecked(config["marker_augmentation"])
             
     def get_configuration(self):
         """Get the current configuration from the dialog"""
@@ -449,69 +564,36 @@ class ProcessManager:
     def __init__(self, main_window):
         self.main_window = main_window
         self.process_thread = None
+        self.configuration_dialog = None
+        # Initialize default process configuration
+        self.process_config = {
+            'pose_estimation': True,
+            'synchronization': True,
+            'triangulation': True,
+            'filtering': True,
+            'marker_augmentation': True,
+            'kinematics': True
+        }
         
-    def run_process(self, directory_manager):
-        """Run the processing pipeline for the selected trial"""
-        # Create and configure the processing thread
-        self.process_thread = ProcessThread(directory_manager)
+    def get_process_configuration(self):
+        """
+        Get the current process configuration
         
-        # Connect signals
-        self.process_thread.progress_update.connect(self.on_progress_update)
-        self.process_thread.process_complete.connect(self.on_process_complete)
-        
-        # Start processing in a separate thread
-        self.process_thread.start()
-        
-        # Disable the process button while processing is running
-        self.main_window.ui.processButton.setEnabled(False)
-        self.main_window.ui.processConfiguration.setEnabled(False)
-        
-        # Show a progress message
-        QMessageBox.information(
-            self.main_window,
-            "Processing Started",
-            "Processing has started. This may take several minutes.\n"
-            "You will be notified when processing is complete."
-        )
+        Returns:
+            dict: Dictionary containing process configuration settings
+        """
+        # Simply return the stored process configuration
+        return self.process_config
     
-    def on_progress_update(self, message):
-        """Handle progress updates from the processing thread"""
-        print(f"Processing update: {message}")
-        # You could update a status bar or progress dialog here
-        
-    def on_process_complete(self, success, message):
-        """Handle completion of the processing thread"""
-        # Re-enable the process buttons
-        self.main_window.ui.processButton.setEnabled(True)
-        self.main_window.ui.processConfiguration.setEnabled(True)
-        
-        if success:
-            # Processing was successful, update the motion data file path
-            self.main_window.motion_data_file = self.main_window.directory_manager.find_motion_data_file()
-            
-            # If no versus data file is set yet, try to find a reference file
-            if not self.main_window.versus_data_file:
-                self.main_window.versus_data_file = self.main_window.directory_manager.find_reference_data_file()
-            
-            # Enable analytics and comparative buttons since a motion file now exists
-            if self.main_window.motion_data_file:
-                self.main_window.ui.analyticsButton.setEnabled(True)
-                self.main_window.ui.jointAnalyticsButton.setEnabled(True)
-                self.main_window.on_display_data()
-                
-            # Show success message
-            QMessageBox.information(
-                self.main_window,
-                "Processing Complete",
-                "Processing has completed successfully."
-            )
-        else:
-            # Show error message
-            QMessageBox.critical(
-                self.main_window,
-                "Processing Error",
-                message
-            )
+    def update_process_status(self):
+        """
+        Update the process status labels in the configuration dialog if it's open
+        """
+        if self.configuration_dialog and hasattr(self.main_window, 'directory_manager'):
+            trial_path = self.main_window.directory_manager.trial_path
+            if trial_path:
+                self.configuration_dialog.trial_path = trial_path
+                self.configuration_dialog.updateProcessStatus()
     
     def open_configuration_dialog(self, openpose_config=None):
         """
@@ -522,21 +604,52 @@ class ProcessManager:
         """
         # Pass the session path to the dialog so it can update the Config.toml file
         session_path = None
+        trial_path = None
         if hasattr(self.main_window, 'directory_manager'):
             session_path = self.main_window.directory_manager.session_path
+            trial_path = self.main_window.directory_manager.trial_path
             
         # Use provided config or get it from directory manager
         if openpose_config is None and hasattr(self.main_window, 'directory_manager'):
             openpose_config = self.main_window.directory_manager.get_openpose_config_dict()
             
-        dialog = PoseConfigurationDialog(self.main_window, session_path, openpose_config)
-        if dialog.exec_():
+        # Create the dialog and set its checkbox states from the current process_config
+        self.configuration_dialog = PoseConfigurationDialog(
+            self.main_window, 
+            session_path, 
+            trial_path,  # Pass trial_path to check process status
+            openpose_config
+        )
+        
+        # Apply our current process configuration to the dialog's checkboxes
+        self.configuration_dialog.ui.poseEstimationCheck.setChecked(self.process_config['pose_estimation'])
+        self.configuration_dialog.ui.syncCheck.setChecked(self.process_config['synchronization'])
+        self.configuration_dialog.ui.triangulationCheck.setChecked(self.process_config['triangulation'])
+        self.configuration_dialog.ui.filteringCheck.setChecked(self.process_config['filtering'])
+        self.configuration_dialog.ui.markerAugCheck.setChecked(self.process_config['marker_augmentation'])
+        self.configuration_dialog.ui.kinematicsCheck.setChecked(self.process_config['kinematics'])
+        
+        if self.configuration_dialog.exec_():
             # If dialog was accepted, get the updated configuration
-            updated_config = dialog.get_configuration()
+            updated_config = self.configuration_dialog.get_configuration()
             
-            # Save the updated configuration using the directory manager
+            # Update our stored process configuration
+            self.process_config['pose_estimation'] = self.configuration_dialog.ui.poseEstimationCheck.isChecked()
+            self.process_config['synchronization'] = self.configuration_dialog.ui.syncCheck.isChecked()
+            self.process_config['triangulation'] = self.configuration_dialog.ui.triangulationCheck.isChecked()
+            self.process_config['filtering'] = self.configuration_dialog.ui.filteringCheck.isChecked()
+            self.process_config['marker_augmentation'] = self.configuration_dialog.ui.markerAugCheck.isChecked()
+            self.process_config['kinematics'] = self.configuration_dialog.ui.kinematicsCheck.isChecked()
+            
+            # Save the updated OpenPose configuration using the directory manager
             if hasattr(self.main_window, 'directory_manager'):
-                self.main_window.directory_manager.save_openpose_config(updated_config)
+                # Only pass the openpose-related config, not the process states
+                openpose_only_config = {
+                    "algorithm": updated_config.get("algorithm", "openpose"),
+                    "openpose_path": updated_config.get("openpose_path", ""),
+                    "model_path": updated_config.get("model_path", "")
+                }
+                self.main_window.directory_manager.save_openpose_config(openpose_only_config)
     
     def cleanup(self):
         """Clean up resources when the application is closing"""
@@ -549,3 +662,7 @@ class ProcessManager:
                 # If thread doesn't stop within timeout, terminate it forcefully
                 self.process_thread.terminate()
                 print("Warning: Process thread had to be terminated forcefully.")
+        
+        # Also clean up any dialog resources
+        if self.configuration_dialog:
+            self.configuration_dialog = None
