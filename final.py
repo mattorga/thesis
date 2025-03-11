@@ -226,9 +226,9 @@ class Ui_MainWindow(object):
         font.setFamily("Helvetica")
         self.cameraSlot1.setFont(font)
         self.cameraSlot1.setAutoFillBackground(False)
-        self.cameraSlot1.setStyleSheet("border: 3px solid black\n"
+        self.cameraSlot1.setStyleSheet("border: 1px solid black\n"
 "")
-        self.cameraSlot1.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.cameraSlot1.setFrameShadow(QtWidgets.QFrame.Plain)
         self.cameraSlot1.setAlignment(QtCore.Qt.AlignCenter)
         self.cameraSlot1.setObjectName("cameraSlot1")
         self.cameraSlot2 = QtWidgets.QLabel(self.camerasPage)
@@ -237,7 +237,7 @@ class Ui_MainWindow(object):
         font.setFamily("Helvetica")
         self.cameraSlot2.setFont(font)
         self.cameraSlot2.setAutoFillBackground(False)
-        self.cameraSlot2.setStyleSheet("border: 3px solid black\n"
+        self.cameraSlot2.setStyleSheet("border: 1px solid black\n"
 "")
         self.cameraSlot2.setFrameShadow(QtWidgets.QFrame.Raised)
         self.cameraSlot2.setAlignment(QtCore.Qt.AlignCenter)
@@ -248,7 +248,7 @@ class Ui_MainWindow(object):
         font.setFamily("Helvetica")
         self.cameraSlot3.setFont(font)
         self.cameraSlot3.setAutoFillBackground(False)
-        self.cameraSlot3.setStyleSheet("border: 3px solid black\n"
+        self.cameraSlot3.setStyleSheet("border: 1px solid black\n"
 "")
         self.cameraSlot3.setFrameShadow(QtWidgets.QFrame.Raised)
         self.cameraSlot3.setAlignment(QtCore.Qt.AlignCenter)
@@ -524,10 +524,10 @@ class Ui_MainWindow(object):
         self.baseTrialLabel.setGeometry(QtCore.QRect(10, 60, 71, 39))
         self.baseTrialLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.baseTrialLabel.setObjectName("baseTrialLabel")
-        self.baseTrialLabel_2 = QtWidgets.QLabel(self.analyticsPage)
-        self.baseTrialLabel_2.setGeometry(QtCore.QRect(10, 350, 71, 39))
-        self.baseTrialLabel_2.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
-        self.baseTrialLabel_2.setObjectName("baseTrialLabel_2")
+        self.verseTrialLabel = QtWidgets.QLabel(self.analyticsPage)
+        self.verseTrialLabel.setGeometry(QtCore.QRect(10, 350, 71, 39))
+        self.verseTrialLabel.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.verseTrialLabel.setObjectName("verseTrialLabel")
         self.newVerseButton = QtWidgets.QPushButton(self.analyticsPage)
         self.newVerseButton.setGeometry(QtCore.QRect(240, 350, 201, 41))
         self.newVerseButton.setObjectName("newVerseButton")
@@ -568,10 +568,15 @@ class Ui_MainWindow(object):
         self.comparativeStatsButton.setCheckable(True)
         self.comparativeStatsButton.setObjectName("comparativeStatsButton")
         self.stackedWidget.addWidget(self.analyticsPage)
+        self.line_2 = QtWidgets.QFrame(self.centralwidget)
+        self.line_2.setGeometry(QtCore.QRect(200, 20, 3, 750))
+        self.line_2.setFrameShape(QtWidgets.QFrame.VLine)
+        self.line_2.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.line_2.setObjectName("line_2")
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
-        self.stackedWidget.setCurrentIndex(3)
+        self.stackedWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -624,10 +629,10 @@ class Ui_MainWindow(object):
         self.rightOnlyButton.setText(_translate("MainWindow", "Right"))
         self.baseGSLabel.setText(_translate("MainWindow", "Gait Stage (°): "))
         self.versusGSLabel.setText(_translate("MainWindow", "Gait Stage (°): "))
-        self.baseTrialValue.setText(_translate("MainWindow", "T00_antalgic"))
+        self.baseTrialValue.setText(_translate("MainWindow", "-"))
         self.versusTrialValue.setText(_translate("MainWindow", "-"))
         self.baseTrialLabel.setText(_translate("MainWindow", "Base Trial:"))
-        self.baseTrialLabel_2.setText(_translate("MainWindow", "Versus:"))
+        self.verseTrialLabel.setText(_translate("MainWindow", "Versus:"))
         self.newVerseButton.setText(_translate("MainWindow", "Choose Verse"))
         self.comparativeAllButton.setText(_translate("MainWindow", "All"))
         self.comparativeHipButton.setText(_translate("MainWindow", "Hip"))
@@ -636,3 +641,13 @@ class Ui_MainWindow(object):
         self.label.setText(_translate("MainWindow", "Toe Off"))
         self.label_5.setText(_translate("MainWindow", "-"))
         self.comparativeStatsButton.setText(_translate("MainWindow", "Statistics"))
+
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    MainWindow = QtWidgets.QMainWindow()
+    ui = Ui_MainWindow()
+    ui.setupUi(MainWindow)
+    MainWindow.show()
+    sys.exit(app.exec_())
