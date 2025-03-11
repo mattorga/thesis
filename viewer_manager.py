@@ -180,8 +180,6 @@ class ViewerManager:
         }
         """)
         
-
-        
         # Initialize a temporary qt object if it doesn't exist yet
         self.page.runJavaScript("""
         if (!window.qt) {
@@ -199,105 +197,142 @@ class ViewerManager:
                 self.visualization_widget.window().update_slider_from_web
             )
     
-    def sync_with_slider(self, value, max_value):
+    # --------------------------------------------------------
+    # Playback Control Functions - directly tied to viewer.js
+    # --------------------------------------------------------
+
+    def play_pause(self):
+        """Toggle play/pause state by triggering the playPauseBtn click in JavaScript"""
+        js_code = """
+        if (playPauseBtn) {
+            playPauseBtn.click();
+        }
         """
-        Synchronize the 3D animation with the slider value
+        self.page.runJavaScript(js_code)
+
+    def rewind(self):
+        """Trigger the rewind button click in JavaScript"""
+        js_code = """
+        if (rewindBtn) {
+            rewindBtn.click();
+        }
+        """
+        self.page.runJavaScript(js_code)
+
+    def forward(self):
+        """Trigger the forward button click in JavaScript"""
+        js_code = """
+        if (forwardBtn) {
+            forwardBtn.click();
+        }
+        """
+        self.page.runJavaScript(js_code)
+
+    def replay(self):
+        """Trigger the replay button click in JavaScript"""
+        js_code = """
+        if (replayBtn) {
+            replayBtn.click();
+        }
+        """
+        self.page.runJavaScript(js_code)
+
+    def set_seek_position(self, value):
+        """
+        Set the seek bar position in JavaScript
         
         Args:
-            value (int): The current slider value
-            max_value (int): The maximum slider value
+            value (float): The normalized position (0.0 to 1.0)
         """
-        # Calculate normalized time (0.0 to 1.0)
-        if max_value > 0:
-            normalized_time = value / max_value
-            
-            # Set the animation time via JavaScript
-            js_code = f"if (typeof setAnimationTime === 'function') {{ setAnimationTime({normalized_time}); }}"
-            self.page.runJavaScript(js_code)
-    
-    def set_playing(self, is_playing):
-      """
-      Set the play/pause state of the 3D animation
-      
-      Args:
-          is_playing (bool): True to play, False to pause
-      """
-      # Update the animation state via JavaScript
-      js_code = f"""
-      if (typeof setPlaying === 'function') {{ 
-          setPlaying({str(is_playing).lower()}); 
-      }}
-      """
-      self.page.runJavaScript(js_code)
-  
-    def set_speed(self, speed_multiplier):
-        """
-        Set the animation playback speed in the 3D viewer
-        
-        Args:
-            speed_multiplier (float): Playback speed multiplier (e.g., 0.5, 1.0, 2.0)
-        """
-        # Update the animation speed via JavaScript
         js_code = f"""
-        if (typeof window.animationSpeedSelector !== 'undefined') {{
-            // Try to find the closest speed in the selector
-            const selector = document.getElementById('animationSpeed');
-            if (selector) {{
-                // Look for exact match first
-                let found = false;
-                for (let i = 0; i < selector.options.length; i++) {{
-                    if (parseFloat(selector.options[i].value) === {speed_multiplier}) {{
-                        selector.selectedIndex = i;
-                        found = true;
-                        break;
-                    }}
-                }}
+        if (seekBar && mixer && duration) {{
+            const newTime = {value} * duration;
+            seekBar.value = newTime;
+            
+            // Manually trigger the input event
+            const event = new Event('input');
+            seekBar.dispatchEvent(event);
+        }}
+        """
+        self.page.runJavaScript(js_code)
+
+    def set_speed(self, speed_value):
+        """
+        Set the animation playback speed in the JavaScript viewer
+        
+        Args:
+            speed_value (float): Speed multiplier (e.g., 0.25, 0.5, 1.0, 2.0)
+        """
+        js_code = f"""
+        if (animationSpeedSelector) {{
+            // Find the option with the closest value
+            let bestOption = null;
+            let bestDiff = Infinity;
+            
+            for (let i = 0; i < animationSpeedSelector.options.length; i++) {{
+                const option = animationSpeedSelector.options[i];
+                const diff = Math.abs(parseFloat(option.value) - {speed_value});
                 
-                // If no exact match, set the custom value
-                if (!found && typeof timeScaleBuffer !== 'undefined') {{
-                    timeScaleBuffer = {speed_multiplier};
-                    if (isPlaying && mixer) {{
-                        mixer.timeScale = {speed_multiplier};
-                    }}
+                if (diff < bestDiff) {{
+                    bestDiff = diff;
+                    bestOption = i;
                 }}
+            }}
+            
+            if (bestOption !== null) {{
+                animationSpeedSelector.selectedIndex = bestOption;
                 
-                // Trigger the change event
+                // Manually trigger the change event
                 const event = new Event('change');
-                selector.dispatchEvent(event);
+                animationSpeedSelector.dispatchEvent(event);
+            }} else {{
+                // If no matching option, directly set the timeScaleBuffer
+                timeScaleBuffer = {speed_value};
+                if (isPlaying && mixer) {{
+                    mixer.timeScale = {speed_value};
+                }}
             }}
         }}
         """
         self.page.runJavaScript(js_code)
 
     def set_center_animation(self, is_center_enabled):
-      """
-      Set whether the animation should be centered in the view
-      
-      Args:
-          is_center_enabled (bool): True to center animation, False to disable centering
-      """
-      # Update the center animation state via JavaScript
-      js_code = f"""
-      if (typeof setCenterAnimation === 'function') {{ 
-          setCenterAnimation({str(is_center_enabled).lower()}); 
-      }}
-      """
-      self.page.runJavaScript(js_code)
-      
-    def set_axis_visible(self, is_visible):
         """
-        Set whether the x,y,z axes should be visible
+        Set whether the animation should be centered
         
         Args:
-            is_visible (bool): True to show axes, False to hide them
+            is_center_enabled (bool): True to center animation, False otherwise
         """
-        # Update the axis visibility via JavaScript
         js_code = f"""
-        if (typeof setAxisVisible === 'function') {{ 
-            setAxisVisible({str(is_visible).lower()}); 
+        if (centerAnimationCheckbox) {{
+            centerAnimationCheckbox.checked = {str(is_center_enabled).lower()};
+            
+            // Manually trigger the change event
+            const event = new Event('change');
+            centerAnimationCheckbox.dispatchEvent(event);
+            
+            // Update global state variable
+            centerAnimation = {str(is_center_enabled).lower()};
         }}
         """
         self.page.runJavaScript(js_code)
+
+    def set_axis_visible(self, is_visible):
+        """
+        Set whether the axes should be visible
+        
+        Args:
+            is_visible (bool): True to show axes, False to hide
+        """
+        js_code = f"""
+        // Toggle axes helper visibility
+        const axesHelper = scene.children.find(child => child instanceof THREE.AxesHelper);
+        if (axesHelper) {{
+            axesHelper.visible = {str(is_visible).lower()};
+        }}
+        """
+        self.page.runJavaScript(js_code)
+
     def set_fbx_path(self, fbx_path):
         """
         Set the path to the FBX file to load
@@ -308,7 +343,7 @@ class ViewerManager:
         # Normalize the path for JavaScript
         normalized_path = fbx_path.replace('\\', '/')
         
-        # After the page loads, set the FBX path via JavaScript
+        # Call the loadFbxModel function in viewer.js
         js_code = f"""
         if (typeof loadFbxModel === 'function') {{
             loadFbxModel('{normalized_path}');
@@ -318,3 +353,53 @@ class ViewerManager:
         }}
         """
         self.page.runJavaScript(js_code)
+    
+    def force_hide_loading_screen(self):
+        """Force hide the loading screen via JavaScript"""
+        js_code = """
+        function hideLoading() {
+            const loadingScreen = document.getElementById('loadingScreen');
+            if (loadingScreen) {
+                loadingScreen.style.opacity = '0';
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 500);
+            }
+        }
+        
+        hideLoading();
+        """
+        self.page.runJavaScript(js_code)
+    
+    def get_animation_state(self, callback):
+        """
+        Get the current animation state from JavaScript
+        
+        Args:
+            callback (function): Function to call with the animation state
+        """
+        js_code = """
+        const state = {
+            isPlaying: isPlaying,
+            currentTime: mixer ? mixer.time : 0,
+            duration: duration,
+            speed: timeScaleBuffer,
+            centerAnimation: centerAnimation
+        };
+        state;
+        """
+        self.page.runJavaScript(js_code, callback)
+    
+    def sync_with_slider(self, value, max_value):
+        """
+        Synchronize the 3D animation with the slider value
+        
+        Args:
+            value (int): The current slider value
+            max_value (int): The maximum slider value
+        """
+        # Calculate normalized position (0.0 to 1.0)
+        if max_value > 0:
+            normalized_pos = value / max_value
+            # Update the seek bar in JavaScript
+            self.set_seek_position(normalized_pos)
