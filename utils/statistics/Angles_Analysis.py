@@ -28,9 +28,19 @@ def scalar_distance(a, b):
 
 def analyze_gait_patterns(base_mot, versus_mot):
     """
-    Analyze gait patterns using FastDTW and Cross-correlation
+    Analyzes gait patterns from two MOT files and computes similarity metrics.
+    
+    Args:
+        base_mot (str): Path to the first MOT file (base trial)
+        versus_mot (str): Path to the second MOT file (verse trial)
+        
+    Returns:
+        dict: Dictionary containing similarity metrics
     """
-    # Get minimum length
+    # Suppress specific warnings that occur during analysis
+    import warnings
+    import numpy as np
+    from scipy import stats
     
     base_trial = load_mot_file(base_mot)
     versus_trial = load_mot_file(versus_mot)
@@ -97,8 +107,8 @@ def analyze_gait_patterns(base_mot, versus_mot):
         'cross_corr_max': cross_corr_max,
         'cross_corr_lags': cross_corr_lags,
         'pearson_corr': pearson_corr,
-        'p_values': p_values,
+        'ave_p_values': np.nanmean(p_values),
         'ave_dtw': np.nanmean(dtw_distances),
-        'ave_corr': np.nanmean(dtw_distances),
-        'ave_pearson_corr': np.nanmean(dtw_distances)
+        'ave_corr': np.nanmean(cross_corr_lags),
+        'ave_pearson_corr': np.nanmean(pearson_corr)
     }

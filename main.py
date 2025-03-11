@@ -12,7 +12,7 @@ import pathlib
 import subprocess
 from final import Ui_MainWindow
 from utils.gait_classification import gait_classification
-from utils.statistics import Calc_ST_params, paired_t_test_gait
+from utils.statistics import Calc_ST_params
 from params_manager import ParamsManager
 
 
@@ -23,6 +23,7 @@ from data_manager import DataManager
 from process_manager import ProcessManager
 from chart_manager import ChartManager
 from viewer_manager import ViewerManager
+from comparative_params_manager import ComparativeStatsManager
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -45,7 +46,8 @@ class MainWindow(QMainWindow):
         self.camera_manager = CameraManager(self)
         self.process_manager = ProcessManager(self)
         self.chart_manager = ChartManager(self)
-        self.params_manager = ParamsManager(self) 
+        self.params_manager = ParamsManager(self)
+        self.stats_manager = ComparativeStatsManager(self) 
 
         self.motion_data_file = None
         self.versus_data_file = None
@@ -139,6 +141,7 @@ class MainWindow(QMainWindow):
 
         self.ui.processConfiguration.clicked.connect(self.on_process_configuration)
         self.params_manager.setup_connections()
+        self.stats_manager.setup_connections()
 
     # --- User Selection Functions --- #
     def on_select_session(self):
@@ -163,6 +166,9 @@ class MainWindow(QMainWindow):
             # Disable analytics and comparative buttons when changing session
             self.ui.analyticsButton.setEnabled(False)
             self.ui.jointAnalyticsButton.setEnabled(False)
+
+            if hasattr(self, 'stats_manager'):
+                self.stats_manager.reset_selected_trials()
             
             # If we are on Analytics or Comparative page, switch to Cameras page
             current_page = self.ui.stackedWidget.currentIndex()
@@ -183,6 +189,9 @@ class MainWindow(QMainWindow):
             # Disable analytics and comparative buttons when changing participant
             self.ui.analyticsButton.setEnabled(False)
             self.ui.jointAnalyticsButton.setEnabled(False)
+
+            if hasattr(self, 'stats_manager'):
+                self.stats_manager.check_selected_trials_validity()
             
             # If we are on Analytics or Comparative page, switch to Cameras page
             current_page = self.ui.stackedWidget.currentIndex()
@@ -211,6 +220,9 @@ class MainWindow(QMainWindow):
             # Check if processed data already exists for this trial
             self.motion_data_file = self.directory_manager.find_motion_csv_file()
             
+            # Also store the MOT file path for use in comparative analysis
+            self.base_mot_file = self.directory_manager.find_motion_mot_file()
+            
             # Enable or disable analytics and comparative buttons based on motion file existence
             has_data = self.motion_data_file is not None
             self.ui.analyticsButton.setEnabled(has_data)
@@ -219,12 +231,18 @@ class MainWindow(QMainWindow):
             
             # Reset verse trial data when a new trial is selected
             self.versus_data_file = None
+            self.versus_mot_file = None
             if hasattr(self, 'versus_motion_data'):
                 self.versus_motion_data = None
             
             # Reset versus UI elements
             if hasattr(self.ui, 'versusTrialValue'):
                 self.ui.versusTrialValue.setText("-")  # Reset to default value
+            
+            if hasattr(self, 'stats_manager'):
+                self.stats_manager.check_selected_trials_validity()
+            
+            self.update_comparative_stats_button_state()
 
             if hasattr(self, 'params_manager'):
                 self.params_manager.refresh_dialog()
@@ -245,7 +263,7 @@ class MainWindow(QMainWindow):
                 # automatically go back to Cameras page
                 current_page = self.ui.stackedWidget.currentIndex()
                 if current_page in [2, 3]:  # 2=Analytics, 3=Comparative
-                    self.ui.stackedWidget.setCurrentIndex(1)  # 1=Cameras page   
+                    self.ui.stackedWidget.setCurrentIndex(1)  # 1=Cameras page 
     def add_participant(self):
         self.directory_manager.add_participant()
     def add_trial(self):
@@ -348,27 +366,25 @@ class MainWindow(QMainWindow):
                 
         except Exception as e:
             print(f"Error updating analytics chart: {str(e)}")
-    
     def on_slider_value_changed(self, value):
         """
-        Handles when the slider value changes by highlighting the corresponding row in the table,
-        updating the vertical line on the chart, and updating the gait stage value.
-
+        Handles when the slider value changes in the PyQt UI
+        
         Args:
-            value (int): The current slider value, corresponding directly to the row index
+            value (int): The current slider value
         """
-        # Since slider maximum is now (num_frames - 1), we can use the value directly
+        # Store the current row index
         self.current_highlighted_row = value
-
+        
         # Update the table highlight
         self.table_manager.highlight_row(self.ui.jointsTable, value)
-
+        
         # Update the vertical line position on the chart
         self.chart_manager.update_vertical_line(value)
-
+        
         # Update the gait stage value if data is available
         self.update_gait_stage_value(value)
-
+        
         # Sync the 3D viewer with the slider
         if hasattr(self, 'viewer_manager') and self.viewer_manager:
             max_value = self.ui.slider.maximum()
@@ -399,9 +415,7 @@ class MainWindow(QMainWindow):
         self.load_comparative_data()
     def load_comparative_data(self):
         """Load data for the comparative analysis page"""
-        try:
-            print("Loading comparative data...")
-            
+        try:            
             # Load base trial data
             if hasattr(self, 'motion_data') and self.motion_data:
                 print("Base motion data available")
@@ -425,8 +439,7 @@ class MainWindow(QMainWindow):
                     
                     # Update UI
                     self.ui.baseTrialValue.setText(self.directory_manager.trial_dir)
-            else:
-                print("No base motion data available")
+            
             
             # Load versus trial data if available
             if self.versus_data_file:
@@ -465,7 +478,6 @@ class MainWindow(QMainWindow):
                     # Clear versus charts and tables if data couldn't be loaded
                     self.clear_versus_display()
             else:
-                print("No versus data file available")
                 # Clear versus charts and tables if no file is selected
                 self.clear_versus_display()
             
@@ -490,7 +502,8 @@ class MainWindow(QMainWindow):
                 
                 # Initialize the gait stage values
                 self.update_comparative_gait_stage_values(0)
-        
+
+            self.update_comparative_stats_button_state()
         except Exception as e:
             print(f"Error loading comparative data: {str(e)}")
             import traceback
@@ -507,7 +520,6 @@ class MainWindow(QMainWindow):
             
             # Update base trial display
             if hasattr(self, 'base_motion_data') and self.base_motion_data:
-                print("Updating base trial display with filter")
                 self.table_manager.display_data_in_table(
                     self.ui.baseTrialTable, 
                     self.base_motion_data, 
@@ -523,7 +535,6 @@ class MainWindow(QMainWindow):
                 
             # Update versus trial display
             if hasattr(self, 'versus_motion_data') and self.versus_motion_data:
-                print("Updating versus trial display with filter")
                 self.table_manager.display_data_in_table(
                     self.ui.versusTrialTable, 
                     self.versus_motion_data, 
@@ -653,6 +664,8 @@ class MainWindow(QMainWindow):
         """
         Handles when the 'Choose Verse' button is clicked to select a different trial for comparison.
         Opens a file dialog to select a trial folder and ensures it's not the same as the base trial.
+        Uses CSV files for visualization (tables/charts) and MOT files for comparative analysis.
+        Specifically looks for files matching the "*_original.csv" pattern.
         """
         try:
             # Get current base trial directory path (if any)
@@ -693,43 +706,79 @@ class MainWindow(QMainWindow):
                     )
                     return
                 
-                # Look for motion data file in the selected trial directory
+                # 1. Find CSV file for visualization in tables and charts
+                # Look in multiple possible directories for files matching the "*_original.csv" pattern
+                csv_file_path = None
+                
+                # First, check the gait-classification directory
                 gait_class_dir = os.path.join(selected_path, "gait-classification")
-                if not os.path.exists(gait_class_dir):
+                if os.path.exists(gait_class_dir):
+                    # Find all CSV files matching the "*_original.csv" pattern
+                    original_csv_files = glob.glob(os.path.join(gait_class_dir, "*_original.csv"))
+                    if original_csv_files:
+                        # Use the first matching CSV file found
+                        csv_file_path = original_csv_files[0]
+                        print(f"Found original CSV file: {csv_file_path}")
+                
+                # If not found in gait-classification, check the trial root directory
+                if not csv_file_path:
+                    original_csv_files = glob.glob(os.path.join(selected_path, "*_original.csv"))
+                    if original_csv_files:
+                        csv_file_path = original_csv_files[0]
+                        print(f"Found original CSV file in trial root: {csv_file_path}")
+                
+                # If not found with _original pattern, fall back to any CSV in gait-classification
+                if not csv_file_path and os.path.exists(gait_class_dir):
+                    csv_files = [f for f in os.listdir(gait_class_dir) if f.endswith('.csv')]
+                    if csv_files:
+                        csv_file_path = os.path.join(gait_class_dir, csv_files[0])
+                        print(f"No '*_original.csv' file found, falling back to: {csv_file_path}")
+                
+                if not csv_file_path:
                     QMessageBox.warning(
                         self,
                         "Missing Data",
-                        f"No gait classification data found in {trial_dir}. Please process this trial first."
+                        f"No CSV data found in {trial_dir}. Please process this trial first."
                     )
                     return
                 
-                # Find CSV files in the gait classification directory
-                csv_files = [f for f in os.listdir(gait_class_dir) if f.endswith('.csv')]
-                if not csv_files:
+                # 2. Find MOT file for comparative analysis
+                kinematics_dir = os.path.join(selected_path, "kinematics")
+                mot_file_path = None
+                
+                if os.path.exists(kinematics_dir):
+                    # Find MOT files in the kinematics directory
+                    mot_files = [f for f in os.listdir(kinematics_dir) if f.endswith('.mot')]
+                    if mot_files:
+                        # Use the first MOT file found
+                        mot_file_path = os.path.join(kinematics_dir, mot_files[0])
+                
+                if not mot_file_path:
                     QMessageBox.warning(
                         self,
                         "Missing Data",
-                        f"No CSV data files found in {trial_dir}/gait-classification. Please process this trial first."
+                        f"No MOT data found in {trial_dir}. Please process this trial first."
                     )
                     return
                 
-                # Use the first CSV file found
-                verse_data_file = os.path.join(gait_class_dir, csv_files[0])
-                
-                # Load the verse trial data
-                verse_motion_data = self.data_manager.read_csv_file(verse_data_file)
+                # 3. Load the CSV data for visualization
+                verse_motion_data = self.data_manager.read_csv_file(csv_file_path)
                 if not verse_motion_data:
                     QMessageBox.warning(
                         self,
                         "Data Loading Error",
-                        f"Failed to load data from {verse_data_file}."
+                        f"Failed to load CSV data from {csv_file_path}."
                     )
                     return
                 
-                # Update the versus trial data and UI
-                self.versus_data_file = verse_data_file
+                # Store both file paths and data for later use
+                self.versus_data_file = csv_file_path  # For visualization
+                self.versus_mot_file = mot_file_path   # For comparative analysis
                 self.versus_motion_data = verse_motion_data
                 
+                # Update the comparative stats button state
+                self.update_comparative_stats_button_state()
+
                 # Update the UI elements
                 self.ui.versusTrialValue.setText(trial_dir)
                 
@@ -745,14 +794,14 @@ class MainWindow(QMainWindow):
                 # Update the table and chart with the new data
                 self.table_manager.display_data_in_table(
                     self.ui.versusTrialTable, 
-                    verse_motion_data, 
+                    self.versus_motion_data, 
                     True,  # scrollable 
                     current_filter
                 )
                 
                 self.chart_manager.display_data_in_chart(
                     self.ui.versusTrialChart, 
-                    verse_motion_data, 
+                    self.versus_motion_data, 
                     False,  # not scrollable
                     current_filter
                 )
@@ -762,8 +811,8 @@ class MainWindow(QMainWindow):
                 if hasattr(self, 'base_motion_data') and 'time' in self.base_motion_data:
                     max_rows = max(max_rows, len(self.base_motion_data['time']))
                     
-                if 'time' in verse_motion_data:
-                    max_rows = max(max_rows, len(verse_motion_data['time']))
+                if 'time' in self.versus_motion_data:
+                    max_rows = max(max_rows, len(self.versus_motion_data['time']))
                     
                 if max_rows > 0:
                     self.ui.comparativeSlider.setMinimum(0)
@@ -796,7 +845,10 @@ class MainWindow(QMainWindow):
         self.ui.versusTrialTable.clear()
         self.ui.versusTrialTable.setRowCount(0)
         self.ui.versusTrialTable.setColumnCount(0)
-        
+
+        # Disable stats button
+        self.ui.comparativeStatsButton.setEnabled(False)
+
         # Clear the chart
         # We need to create an empty chart to replace the existing one
         if hasattr(self.chart_manager, 'versus_chart') and self.chart_manager.versus_chart:
@@ -811,6 +863,15 @@ class MainWindow(QMainWindow):
         # Reset the versus trial value label
         if hasattr(self.ui, 'versusTrialValue'):
             self.ui.versusTrialValue.setText("-")
+    def update_comparative_stats_button_state(self):
+        """
+        Update the state of the comparative stats button based on whether versus data is available
+        """
+        if hasattr(self, 'versus_motion_data') and self.versus_motion_data is not None:
+            self.ui.comparativeStatsButton.setEnabled(True)
+        else:
+            self.ui.comparativeStatsButton.setEnabled(False)
+    
     # --- Table & Charts Functions --- # 
     def on_tab_changed(self, index):
         """
@@ -939,7 +1000,6 @@ class MainWindow(QMainWindow):
                     
         except Exception as e:
             print(f"Error updating table filter: {str(e)}")
-    
     def update_gait_stage_value(self, row_index):
         """
         Updates the gaitStageValue text in the UI based on the current row index
@@ -994,220 +1054,229 @@ class MainWindow(QMainWindow):
             progress_dialog.show()
             QApplication.processEvents()
 
+            # Get process states from configuration dialog
+            process_config = self.process_manager.get_process_configuration()
+            
             # --- Step 1: Pose Estimation --- #
-            progress_dialog.setLabelText("Step 1/7: Pose Estimation...")
-            QApplication.processEvents()
+            if process_config.get('pose_estimation', True):
+                progress_dialog.setLabelText("Step 1/7: Pose Estimation...")
+                QApplication.processEvents()
 
-            # Update the pose_model in the Config.toml based on the selected algorithm
-            if 'pose' not in trial_config_dict:
-                trial_config_dict['pose'] = {}
-                
-            # Set the appropriate pose_model based on the algorithm
-            if self.directory_manager.algorithm == "rtmpose":
-                print("Using RTMPose for pose estimation - setting pose_model to 'Body_with_feet'")
-                trial_config_dict['pose']['pose_model'] = 'Body_with_feet'
-                
-                # Save the updated Config.toml file
-                with open(trial_config_path, 'w') as f:
-                    toml.dump(trial_config_dict, f)
+                # Update the pose_model in the Config.toml based on the selected algorithm
+                if 'pose' not in trial_config_dict:
+                    trial_config_dict['pose'] = {}
                     
-                # Proceed with RTMPose estimation
-                Pose2Sim.poseEstimation(trial_config_dict)
-            else:  # Default is "openpose"
-                print("Using OpenPose for pose estimation - setting pose_model to 'BODY_25'")
-                trial_config_dict['pose']['pose_model'] = 'BODY_25'
-                
-                # Save the updated Config.toml file
-                with open(trial_config_path, 'w') as f:
-                    toml.dump(trial_config_dict, f)
-                # Create the pose directory structure if it doesn't exist
-                pose_dir = os.path.join(self.directory_manager.trial_path, "pose")
-                if not os.path.exists(pose_dir):
-                    os.makedirs(pose_dir)
+                # Set the appropriate pose_model based on the algorithm
+                if self.directory_manager.algorithm == "rtmpose":
+                    print("Using RTMPose for pose estimation - setting pose_model to 'Body_with_feet'")
+                    trial_config_dict['pose']['pose_model'] = 'Body_with_feet'
                     
-                # Find video files in the trial directory
-                videos_dir = os.path.join(self.directory_manager.trial_path, "videos")
-                if not os.path.exists(videos_dir):
-                    raise ValueError(f"No videos directory found at {videos_dir}. Please record videos first.")
-                
-                # Debug: Print directory information to help diagnose import issues
-                print(f"Current working directory: {os.getcwd()}")
-                main_dir = os.path.dirname(os.path.abspath(__file__))
-                print(f"Directory of main.py: {main_dir}")
-                
-                # Find the openposelocal.py file by searching for it
-                openpose_local_path = None
-                
-                # Common locations to search
-                possible_paths = [
-                    os.path.join(os.getcwd(), 'utils', 'openpose', 'openposelocal.py'),
-                    os.path.join(main_dir, 'utils', 'openpose', 'openposelocal.py'),
-                    os.path.join(os.path.dirname(main_dir), 'utils', 'openpose', 'openposelocal.py'),
-                    # Search for utils directory recursively up to 3 levels up
-                    *[os.path.join(os.path.dirname(os.path.abspath(__file__)), *['..'] * i, 'utils', 'openpose', 'openposelocal.py') 
-                    for i in range(4)]
-                ]
-                
-                # Try to find the file
-                for path in possible_paths:
-                    norm_path = os.path.normpath(os.path.abspath(path))
-                    print(f"Checking for openposelocal.py at: {norm_path}")
-                    if os.path.isfile(norm_path):
-                        openpose_local_path = norm_path
-                        print(f"Found openposelocal.py at: {norm_path}")
-                        break
-                
-                if not openpose_local_path:
-                    raise ImportError("Could not find openposelocal.py in any expected location")
-                
-                # Import using the file path directly
-                import importlib.util
-                spec = importlib.util.spec_from_file_location("openposelocal", openpose_local_path)
-                openpose_module = importlib.util.module_from_spec(spec)
-                spec.loader.exec_module(openpose_module)
-                OpenPoseRunner = openpose_module.OpenPoseRunner
-                
-                # Initialize OpenPoseRunner
-                runner = OpenPoseRunner()
-                
-                # Set OpenPose path from directory manager
-                openpose_path = self.directory_manager.openpose_path
-                if not openpose_path or not os.path.exists(openpose_path):
-                    raise ValueError("OpenPose path not properly configured. Please set it in the configuration dialog.")
-                
-                # Find OpenPoseDemo.exe in the openpose_path directory
-                openpose_exe = None
-                for root, dirs, files in os.walk(openpose_path):
-                    for file in files:
-                        if file == "OpenPoseDemo.exe" or file == "openpose.exe" or file == "OpenPoseDemo":
-                            openpose_exe = os.path.join(root, file)
-                            break
-                    if openpose_exe:
-                        break
-                
-                if not openpose_exe:
-                    # If not found, try with default locations based on the provided path
-                    if os.path.exists(os.path.join(openpose_path, "bin", "OpenPoseDemo.exe")):
-                        openpose_exe = os.path.join(openpose_path, "bin", "OpenPoseDemo.exe")
-                    elif os.path.exists(os.path.join(openpose_path, "OpenPoseDemo.exe")):
-                        openpose_exe = os.path.join(openpose_path, "OpenPoseDemo.exe")
-                    else:
-                        raise ValueError(f"OpenPoseDemo.exe not found in {openpose_path} or its subdirectories.")
-                
-                runner.set_openpose_path(openpose_exe)
-                
-                # Set model folder from directory manager or default location
-                model_path = self.directory_manager.model_path
-                if not model_path or not os.path.exists(model_path):
-                    # Try to find models folder in openpose_path
-                    if os.path.exists(os.path.join(openpose_path, "models")):
-                        model_path = os.path.join(openpose_path, "models")
-                    else:
-                        raise ValueError("Model path not properly configured. Please set it in the configuration dialog.")
-                
-                runner.set_model_folder(model_path)
-                
-                # Set input and output directories
-                runner.set_input_directory(videos_dir)
-                runner.set_output_directory(pose_dir)
-                
-                # Load default config or create one with your desired settings
-                openpose_config = {
-                    'face': False,
-                    'hand': False,
-                    'net_resolution': '-1x368',  # Use -1 to maintain aspect ratio with 368px height
-                    'model_pose': 'BODY_25',
-                    'number_people_max': 5
-                }
-                
-                # Get trial-specific openpose.toml if available
-                trial_openpose_config_path = os.path.join(self.directory_manager.trial_path, "openpose.toml")
-                if os.path.exists(trial_openpose_config_path):
-                    try:
-                        config = toml.load(trial_openpose_config_path)
+                    # Save the updated Config.toml file
+                    with open(trial_config_path, 'w') as f:
+                        toml.dump(trial_config_dict, f)
                         
-                        # Handle OpenPose section if it exists
-                        if 'openpose' in config:
-                            openpose_config.update(config['openpose'])
-                        
-                        # Also look for direct keys
-                        for key, value in config.items():
-                            if key not in ['openpose'] and not isinstance(value, dict):
-                                openpose_config[key] = value
-                                
-                        print(f"Loaded OpenPose configuration from {trial_openpose_config_path}")
-                    except Exception as e:
-                        print(f"Error loading openpose.toml: {str(e)}")
-                
-                # Also apply pose settings from the trial Config.toml
-                if 'pose' in trial_config_dict:
-                    pose_config = trial_config_dict['pose']
+                    # Proceed with RTMPose estimation
+                    Pose2Sim.poseEstimation(trial_config_dict)
+                else:  # Default is "openpose"
+                    print("Using OpenPose for pose estimation - setting pose_model to 'BODY_25'")
+                    trial_config_dict['pose']['pose_model'] = 'BODY_25'
                     
-                    # Apply specific settings from pose section
-                    if 'pose_model' in pose_config and pose_config['pose_model'] == 'BODY_25':
-                        openpose_config['model_pose'] = 'BODY_25'
-                
-                # Apply settings from the directory manager's openpose configuration
-                if self.directory_manager.openpose_path:
-                    if 'net_resolution' in openpose_config:
-                        print(f"Using net_resolution: {openpose_config['net_resolution']}")
-                
-                # Debug: Print the final OpenPose config
-                print("Final OpenPose configuration:")
-                for key, value in openpose_config.items():
-                    print(f"  {key}: {value}")
-                
-                runner.config = openpose_config
-                
-                # Process the videos - this function will wait for OpenPose to finish
-                print("Starting OpenPose processing...")
-                runner.process_videos()
-                print("OpenPose processing complete.")
-                
-                # Verify output
-                json_files_found = False
-                for root, dirs, files in os.walk(pose_dir):
-                    for file in files:
-                        if file.endswith('.json'):
-                            json_files_found = True
+                    # Save the updated Config.toml file
+                    with open(trial_config_path, 'w') as f:
+                        toml.dump(trial_config_dict, f)
+                    # Create the pose directory structure if it doesn't exist
+                    pose_dir = os.path.join(self.directory_manager.trial_path, "pose")
+                    if not os.path.exists(pose_dir):
+                        os.makedirs(pose_dir)
+                        
+                    # Find video files in the trial directory
+                    videos_dir = os.path.join(self.directory_manager.trial_path, "videos")
+                    if not os.path.exists(videos_dir):
+                        raise ValueError(f"No videos directory found at {videos_dir}. Please record videos first.")
+                    
+                    # Debug: Print directory information to help diagnose import issues
+                    print(f"Current working directory: {os.getcwd()}")
+                    main_dir = os.path.dirname(os.path.abspath(__file__))
+                    print(f"Directory of main.py: {main_dir}")
+                    
+                    # Find the openposelocal.py file by searching for it
+                    openpose_local_path = None
+                    
+                    # Common locations to search
+                    possible_paths = [
+                        os.path.join(os.getcwd(), 'utils', 'openpose', 'openposelocal.py'),
+                        os.path.join(main_dir, 'utils', 'openpose', 'openposelocal.py'),
+                        os.path.join(os.path.dirname(main_dir), 'utils', 'openpose', 'openposelocal.py'),
+                        # Search for utils directory recursively up to 3 levels up
+                        *[os.path.join(os.path.dirname(os.path.abspath(__file__)), *['..'] * i, 'utils', 'openpose', 'openposelocal.py') 
+                        for i in range(4)]
+                    ]
+                    
+                    # Try to find the file
+                    for path in possible_paths:
+                        norm_path = os.path.normpath(os.path.abspath(path))
+                        print(f"Checking for openposelocal.py at: {norm_path}")
+                        if os.path.isfile(norm_path):
+                            openpose_local_path = norm_path
+                            print(f"Found openposelocal.py at: {norm_path}")
                             break
-                    if json_files_found:
-                        break
-                
-                if not json_files_found:
-                    raise ValueError(f"No JSON files were created by OpenPose in {pose_dir}. Check OpenPose settings and try again.")
+                    
+                    if not openpose_local_path:
+                        raise ImportError("Could not find openposelocal.py in any expected location")
+                    
+                    # Import using the file path directly
+                    import importlib.util
+                    spec = importlib.util.spec_from_file_location("openposelocal", openpose_local_path)
+                    openpose_module = importlib.util.module_from_spec(spec)
+                    spec.loader.exec_module(openpose_module)
+                    OpenPoseRunner = openpose_module.OpenPoseRunner
+                    
+                    # Initialize OpenPoseRunner
+                    runner = OpenPoseRunner()
+                    
+                    # Set OpenPose path from directory manager
+                    openpose_path = self.directory_manager.openpose_path
+                    if not openpose_path or not os.path.exists(openpose_path):
+                        raise ValueError("OpenPose path not properly configured. Please set it in the configuration dialog.")
+                    
+                    # Find OpenPoseDemo.exe in the openpose_path directory
+                    openpose_exe = None
+                    for root, dirs, files in os.walk(openpose_path):
+                        for file in files:
+                            if file == "OpenPoseDemo.exe" or file == "openpose.exe" or file == "OpenPoseDemo":
+                                openpose_exe = os.path.join(root, file)
+                                break
+                        if openpose_exe:
+                            break
+                    
+                    if not openpose_exe:
+                        # If not found, try with default locations based on the provided path
+                        if os.path.exists(os.path.join(openpose_path, "bin", "OpenPoseDemo.exe")):
+                            openpose_exe = os.path.join(openpose_path, "bin", "OpenPoseDemo.exe")
+                        elif os.path.exists(os.path.join(openpose_path, "OpenPoseDemo.exe")):
+                            openpose_exe = os.path.join(openpose_path, "OpenPoseDemo.exe")
+                        else:
+                            raise ValueError(f"OpenPoseDemo.exe not found in {openpose_path} or its subdirectories.")
+                    
+                    runner.set_openpose_path(openpose_exe)
+                    
+                    # Set model folder from directory manager or default location
+                    model_path = self.directory_manager.model_path
+                    if not model_path or not os.path.exists(model_path):
+                        # Try to find models folder in openpose_path
+                        if os.path.exists(os.path.join(openpose_path, "models")):
+                            model_path = os.path.join(openpose_path, "models")
+                        else:
+                            raise ValueError("Model path not properly configured. Please set it in the configuration dialog.")
+                    
+                    runner.set_model_folder(model_path)
+                    
+                    # Set input and output directories
+                    runner.set_input_directory(videos_dir)
+                    runner.set_output_directory(pose_dir)
+                    
+                    # Load default config or create one with your desired settings
+                    openpose_config = {
+                        'face': False,
+                        'hand': False,
+                        'net_resolution': '-1x368',  # Use -1 to maintain aspect ratio with 368px height
+                        'model_pose': 'BODY_25',
+                        'number_people_max': 5
+                    }
+                    
+                    # Get trial-specific openpose.toml if available
+                    trial_openpose_config_path = os.path.join(self.directory_manager.trial_path, "openpose.toml")
+                    if os.path.exists(trial_openpose_config_path):
+                        try:
+                            config = toml.load(trial_openpose_config_path)
+                            
+                            # Handle OpenPose section if it exists
+                            if 'openpose' in config:
+                                openpose_config.update(config['openpose'])
+                            
+                            # Also look for direct keys
+                            for key, value in config.items():
+                                if key not in ['openpose'] and not isinstance(value, dict):
+                                    openpose_config[key] = value
+                                    
+                            print(f"Loaded OpenPose configuration from {trial_openpose_config_path}")
+                        except Exception as e:
+                            print(f"Error loading openpose.toml: {str(e)}")
+                    
+                    # Also apply pose settings from the trial Config.toml
+                    if 'pose' in trial_config_dict:
+                        pose_config = trial_config_dict['pose']
+                        
+                        # Apply specific settings from pose section
+                        if 'pose_model' in pose_config and pose_config['pose_model'] == 'BODY_25':
+                            openpose_config['model_pose'] = 'BODY_25'
+                    
+                    # Apply settings from the directory manager's openpose configuration
+                    if self.directory_manager.openpose_path:
+                        if 'net_resolution' in openpose_config:
+                            print(f"Using net_resolution: {openpose_config['net_resolution']}")
+                    
+                    # Debug: Print the final OpenPose config
+                    print("Final OpenPose configuration:")
+                    for key, value in openpose_config.items():
+                        print(f"  {key}: {value}")
+                    
+                    runner.config = openpose_config
+                    
+                    # Process the videos - this function will wait for OpenPose to finish
+                    print("Starting OpenPose processing...")
+                    runner.process_videos()
+                    print("OpenPose processing complete.")
+                    
+                    # Verify output
+                    json_files_found = False
+                    for root, dirs, files in os.walk(pose_dir):
+                        for file in files:
+                            if file.endswith('.json'):
+                                json_files_found = True
+                                break
+                        if json_files_found:
+                            break
+                    
+                    if not json_files_found:
+                        raise ValueError(f"No JSON files were created by OpenPose in {pose_dir}. Check OpenPose settings and try again.")
             
             progress_dialog.setValue(1)
             
             # --- Step 2: Synchronization --- #
-            progress_dialog.setLabelText("Step 2/10: Synchronization...")
-            QApplication.processEvents()
-            Pose2Sim.synchronization(trial_config_dict)
+            if process_config.get('synchronization', True):
+                progress_dialog.setLabelText("Step 2/10: Synchronization...")
+                QApplication.processEvents()
+                Pose2Sim.synchronization(trial_config_dict)
             progress_dialog.setValue(2)
             
             # --- Step 3: Triangulation --- #
-            progress_dialog.setLabelText("Step 3/10: Triangulation...")
-            QApplication.processEvents()
-            Pose2Sim.triangulation(trial_config_dict)
+            if process_config.get('triangulation', True):
+                progress_dialog.setLabelText("Step 3/10: Triangulation...")
+                QApplication.processEvents()
+                Pose2Sim.triangulation(trial_config_dict)
             progress_dialog.setValue(3)
             
             # --- Step 4: Filtering --- #
-            progress_dialog.setLabelText("Step 4/10: Filtering...")
-            QApplication.processEvents()
-            Pose2Sim.filtering(trial_config_dict)
+            if process_config.get('filtering', True):
+                progress_dialog.setLabelText("Step 4/10: Filtering...")
+                QApplication.processEvents()
+                Pose2Sim.filtering(trial_config_dict)
             progress_dialog.setValue(4)
             
             # --- Step 5: Marker Augmentation --- #
-            progress_dialog.setLabelText("Step 5/10: Marker Augmentation...")
-            QApplication.processEvents()
-            Pose2Sim.markerAugmentation(trial_config_dict)
+            if process_config.get('marker_augmentation', True):
+                progress_dialog.setLabelText("Step 5/10: Marker Augmentation...")
+                QApplication.processEvents()
+                Pose2Sim.markerAugmentation(trial_config_dict)
             progress_dialog.setValue(5)
             
             # --- Step 6: Kinematics --- #
-            progress_dialog.setLabelText("Step 6/10: Kinematics...")
-            QApplication.processEvents()
-            Pose2Sim.kinematics(trial_config_dict)
-            progress_dialog.setValue(6)
+            if process_config.get('kinematics', True):
+                progress_dialog.setLabelText("Step 6/10: Kinematics...")
+                QApplication.processEvents()
+                Pose2Sim.kinematics(trial_config_dict)
+                progress_dialog.setValue(6)
             
             # --- Step 7: Gait Classification --- #
             progress_dialog.setLabelText("Step 7/10: Gait Classification...")
@@ -1215,8 +1284,7 @@ class MainWindow(QMainWindow):
             gait_classification(self.directory_manager.trial_path)
             progress_dialog.setValue(7)
             
-
-            # --- Step 8: Convert .mot to CSV ---
+            # --- Step 8: Convert .mot to CSV --- #
             progress_dialog.setLabelText("Step 8/10: Converting .mot to CSV...")
             QApplication.processEvents()
 
@@ -1315,6 +1383,10 @@ class MainWindow(QMainWindow):
                 self.params_manager.refresh_dialog()
             progress_dialog.setValue(10)
 
+            # Update the process status in the configuration dialog if it's open
+            if hasattr(self, 'process_manager'):
+                self.process_manager.update_process_status()
+
             self.motion_data_file = self.directory_manager.find_motion_csv_file()
 
             # Update the display if we found a data file
@@ -1353,7 +1425,6 @@ class MainWindow(QMainWindow):
             # Ensure progress dialog is closed
             if 'progress_dialog' in locals():
                 progress_dialog.close()
-
     def on_process_configuration(self):
         """Open the process configuration dialog"""
         if hasattr(self, 'process_manager'):
@@ -1372,7 +1443,8 @@ class MainWindow(QMainWindow):
             print("Initializing 3D viewer...")
             # Pass self to ViewerManager to enable callbacks
             self.viewer_manager = ViewerManager(self.ui.visualizationWidget)
-            
+
+            QTimer.singleShot(5000, self.viewer_manager.force_hide_loading_screen)
             # Set initial states for the toggle buttons once the viewer is loaded
             QTimer.singleShot(2000, self.initialize_viewer_settings)
         except Exception as e:
@@ -1410,7 +1482,7 @@ class MainWindow(QMainWindow):
                         if diff < min_diff:
                             min_diff = diff
                             closest_idx = i
-                    
+                      
                     # Only update if the index has changed
                     if closest_idx != self.current_highlighted_row:
                         # Temporarily block signals to avoid feedback loop
@@ -1457,33 +1529,52 @@ class MainWindow(QMainWindow):
         self.ui.playButton.clicked.connect(self.on_play_button_clicked)
         self.ui.pauseButton.clicked.connect(self.on_pause_button_clicked)
         
+        # Connect skip/back buttons
+        self.ui.skipButton.clicked.connect(self.on_skip_button_clicked)
+        self.ui.backButton.clicked.connect(self.on_back_button_clicked)
+        
+        # Connect speed buttons
+        self.ui.fastForwardButton.clicked.connect(self.on_speed_up_button_clicked)
+        self.ui.rewindButton.clicked.connect(self.on_speed_down_button_clicked)
+        
+        # Connect center animation and axis toggle buttons
+        self.ui.centerAnimationButton.clicked.connect(self.on_center_animation_toggled)
+        self.ui.axisButton.clicked.connect(self.on_axis_toggled)
+        
         # Initialize playback state
         self.is_playing = False
-        self.playback_timer = QTimer()
-        self.playback_timer.timeout.connect(self.update_playback_frame)
-        self.playback_speed = 30  # Default to 30 fps
+        
+        # Display initial speed value
+        self.update_speed_label(1.0)  # Default 1x speed
+
     def on_play_button_clicked(self):
         """Handle play button click"""
-        if not self.is_playing:
-            self.is_playing = True
+        if hasattr(self, 'viewer_manager') and self.viewer_manager:
+            # Toggle play/pause in the viewer.js
+            self.viewer_manager.play_pause()
             
-            # Start the timer for animation
-            self.playback_timer.start(1000 // self.playback_speed)  # milliseconds per frame
-            
-            # Update the 3D viewer's play state if available
-            if hasattr(self, 'viewer_manager') and self.viewer_manager:
-                self.viewer_manager.set_playing(True)
+            # Query the current state to update UI accordingly
+            self.viewer_manager.get_animation_state(self.update_ui_from_animation_state)
+
     def on_pause_button_clicked(self):
         """Handle pause button click"""
-        if self.is_playing:
-            self.is_playing = False
+        if hasattr(self, 'viewer_manager') and self.viewer_manager:
+            # This does the same as play - it toggles the state
+            self.viewer_manager.play_pause()
             
-            # Stop the timer
-            self.playback_timer.stop()
+            # Query the current state to update UI accordingly
+            self.viewer_manager.get_animation_state(self.update_ui_from_animation_state)
+
+    def update_ui_from_animation_state(self, state):
+        """Update UI based on the animation state received from JavaScript"""
+        if state:
+            # Update playing state
+            self.is_playing = state.get('isPlaying', False)
             
-            # Update the 3D viewer's play state if available
-            if hasattr(self, 'viewer_manager') and self.viewer_manager:
-                self.viewer_manager.set_playing(False)
+            # Update speed label if needed
+            speed = state.get('speed', 1.0)
+            self.update_speed_label(speed)
+
     def update_playback_frame(self):
         """Update the current frame during playback"""
         if not self.is_playing:
@@ -1501,95 +1592,72 @@ class MainWindow(QMainWindow):
         self.ui.slider.setValue(next_value)
     def on_back_button_clicked(self):
         """Move to the previous frame when the back button is clicked"""
-        if hasattr(self, 'motion_data') and self.motion_data:
-            current_value = self.ui.slider.value()
-            # Move to previous frame (minimum 0)
-            prev_value = max(0, current_value - 1)
-            
-            # Only update if we actually changed frames
-            if prev_value != current_value:
-                # Update the slider value, which will trigger all necessary updates
-                self.ui.slider.setValue(prev_value)
+        if hasattr(self, 'viewer_manager') and self.viewer_manager:
+            # Trigger the rewind button in viewer.js
+            self.viewer_manager.rewind()
+
     def on_skip_button_clicked(self):
         """Move to the next frame when the skip button is clicked"""
-        if hasattr(self, 'motion_data') and self.motion_data:
-            current_value = self.ui.slider.value()
-            max_value = self.ui.slider.maximum()
-            # Move to next frame (maximum is slider max)
-            next_value = min(max_value, current_value + 1)
-            
-            # Only update if we actually changed frames
-            if next_value != current_value:
-                # Update the slider value, which will trigger all necessary updates
-                self.ui.slider.setValue(next_value)
+        if hasattr(self, 'viewer_manager') and self.viewer_manager:
+            # Trigger the forward button in viewer.js
+            self.viewer_manager.forward()
+        
     def on_speed_up_button_clicked(self):
         """Increase the playback speed when the speed up button is clicked"""
         # Define speed increments - common multipliers for playback
         speed_options = [0.25, 0.5, 1.0, 1.5, 2.0, 3.0, 4.0]
         
+        # Get current speed from UI
+        current_text = self.ui.speedLabel.text().rstrip('x')
+        try:
+            current_speed = float(current_text)
+        except ValueError:
+            current_speed = 1.0  # Default if parsing fails
+        
         # Find the next higher speed option
-        current_index = -1
-        for i, speed in enumerate(speed_options):
-            if abs(self.playback_speed / 30 - speed) < 0.1:  # Using a small epsilon for float comparison
-                current_index = i
+        next_speed = 1.0  # Default if not found
+        for speed in speed_options:
+            if speed > current_speed:
+                next_speed = speed
                 break
+        if current_speed >= speed_options[-1]:
+            next_speed = speed_options[-1]  # Cap at maximum
         
-        # If current speed wasn't found or is already at max, use the highest speed
-        if current_index == -1 or current_index >= len(speed_options) - 1:
-            new_speed = speed_options[-1]
-        else:
-            new_speed = speed_options[current_index + 1]
-        
-        # Update playback speed (convert from multiplier to frames per second)
-        self.playback_speed = int(new_speed * 30)
-        
-        # Update timer interval if currently playing
-        if self.is_playing:
-            self.playback_timer.setInterval(1000 // self.playback_speed)
+        # Update the viewer speed
+        if hasattr(self, 'viewer_manager') and self.viewer_manager:
+            self.viewer_manager.set_speed(next_speed)
         
         # Update the speed label
-        self.update_speed_label(new_speed)
-        
-        # Display current speed as feedback (optional)
-        print(f"Playback speed: {new_speed}x")
-        
-        # Update the 3D viewer's speed if available
-        if hasattr(self, 'viewer_manager') and self.viewer_manager:
-            self.viewer_manager.set_speed(new_speed)
+        self.update_speed_label(next_speed)
+
     def on_speed_down_button_clicked(self):
         """Decrease the playback speed when the speed down button is clicked"""
         # Define speed increments - common multipliers for playback
         speed_options = [0.25, 0.5, 1.0, 1.5, 2.0, 3.0, 4.0]
         
+        # Get current speed from UI
+        current_text = self.ui.speedLabel.text().rstrip('x')
+        try:
+            current_speed = float(current_text)
+        except ValueError:
+            current_speed = 1.0  # Default if parsing fails
+        
         # Find the next lower speed option
-        current_index = -1
-        for i, speed in enumerate(speed_options):
-            if abs(self.playback_speed / 30 - speed) < 0.1:  # Using a small epsilon for float comparison
-                current_index = i
+        next_speed = 0.25  # Default if not found
+        for speed in reversed(speed_options):
+            if speed < current_speed:
+                next_speed = speed
                 break
+        if current_speed <= speed_options[0]:
+            next_speed = speed_options[0]  # Cap at minimum
         
-        # If current speed wasn't found or is already at min, use the lowest speed
-        if current_index == -1 or current_index <= 0:
-            new_speed = speed_options[0]
-        else:
-            new_speed = speed_options[current_index - 1]
-        
-        # Update playback speed (convert from multiplier to frames per second)
-        self.playback_speed = int(new_speed * 30)
-        
-        # Update timer interval if currently playing
-        if self.is_playing:
-            self.playback_timer.setInterval(1000 // self.playback_speed)
+        # Update the viewer speed
+        if hasattr(self, 'viewer_manager') and self.viewer_manager:
+            self.viewer_manager.set_speed(next_speed)
         
         # Update the speed label
-        self.update_speed_label(new_speed)
+        self.update_speed_label(next_speed)
         
-        # Display current speed as feedback (optional)
-        print(f"Playback speed: {new_speed}x")
-        
-        # Update the 3D viewer's speed if available
-        if hasattr(self, 'viewer_manager') and self.viewer_manager:
-            self.viewer_manager.set_speed(new_speed)
     def on_center_animation_toggled(self):
         """Handle the center animation button toggle"""
         # Get the checked state of the button
@@ -1597,7 +1665,8 @@ class MainWindow(QMainWindow):
         
         # Update the 3D viewer if available
         if hasattr(self, 'viewer_manager') and self.viewer_manager:
-            self.viewer_manager.set_center_animation(is_center_enabled)  
+            self.viewer_manager.set_center_animation(is_center_enabled)
+
     def on_axis_toggled(self):
         """Handle the axis visibility button toggle"""
         # Get the checked state of the button
@@ -1606,6 +1675,7 @@ class MainWindow(QMainWindow):
         # Update the 3D viewer if available
         if hasattr(self, 'viewer_manager') and self.viewer_manager:
             self.viewer_manager.set_axis_visible(is_axis_visible)
+
     def update_speed_label(self, speed_multiplier):
         """Update the speed label with the current playback speed multiplier"""
         # Format the speed as a string with the 'x' suffix
@@ -1651,6 +1721,10 @@ class MainWindow(QMainWindow):
         # Clean up params manager resources
         if hasattr(self, 'params_manager'):
             self.params_manager.cleanup()
+        
+        # Clean up stats manager resources
+        if hasattr(self, 'stats_manager'):
+            self.stats_manager.cleanup()
         
         super().closeEvent(event)
     
