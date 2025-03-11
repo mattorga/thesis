@@ -12,7 +12,7 @@ import pathlib
 import subprocess
 from final import Ui_MainWindow
 from utils.gait_classification import gait_classification
-from utils.statistics import Calc_ST_params, paired_t_test_gait, Angles_Analysis
+from utils.statistics import Calc_ST_params
 from params_manager import ParamsManager
 
 
@@ -23,7 +23,7 @@ from data_manager import DataManager
 from process_manager import ProcessManager
 from chart_manager import ChartManager
 from viewer_manager import ViewerManager
-from compatative_stats_manager import ComparativeStatsManager
+from comparative_params_manager import ComparativeStatsManager
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -166,6 +166,9 @@ class MainWindow(QMainWindow):
             # Disable analytics and comparative buttons when changing session
             self.ui.analyticsButton.setEnabled(False)
             self.ui.jointAnalyticsButton.setEnabled(False)
+
+            if hasattr(self, 'stats_manager'):
+                self.stats_manager.reset_selected_trials()
             
             # If we are on Analytics or Comparative page, switch to Cameras page
             current_page = self.ui.stackedWidget.currentIndex()
@@ -186,6 +189,9 @@ class MainWindow(QMainWindow):
             # Disable analytics and comparative buttons when changing participant
             self.ui.analyticsButton.setEnabled(False)
             self.ui.jointAnalyticsButton.setEnabled(False)
+
+            if hasattr(self, 'stats_manager'):
+                self.stats_manager.check_selected_trials_validity()
             
             # If we are on Analytics or Comparative page, switch to Cameras page
             current_page = self.ui.stackedWidget.currentIndex()
@@ -232,7 +238,10 @@ class MainWindow(QMainWindow):
             # Reset versus UI elements
             if hasattr(self.ui, 'versusTrialValue'):
                 self.ui.versusTrialValue.setText("-")  # Reset to default value
-
+            
+            if hasattr(self, 'stats_manager'):
+                self.stats_manager.check_selected_trials_validity()
+            
             self.update_comparative_stats_button_state()
 
             if hasattr(self, 'params_manager'):
@@ -657,6 +666,7 @@ class MainWindow(QMainWindow):
         Handles when the 'Choose Verse' button is clicked to select a different trial for comparison.
         Opens a file dialog to select a trial folder and ensures it's not the same as the base trial.
         Uses CSV files for visualization (tables/charts) and MOT files for comparative analysis.
+        Specifically looks for files matching the "*_original.csv" pattern.
         """
         try:
             # Get current base trial directory path (if any)
@@ -698,15 +708,32 @@ class MainWindow(QMainWindow):
                     return
                 
                 # 1. Find CSV file for visualization in tables and charts
-                gait_class_dir = os.path.join(selected_path, "gait-classification")
+                # Look in multiple possible directories for files matching the "*_original.csv" pattern
                 csv_file_path = None
                 
+                # First, check the gait-classification directory
+                gait_class_dir = os.path.join(selected_path, "gait-classification")
                 if os.path.exists(gait_class_dir):
-                    # Find CSV files in the gait classification directory
+                    # Find all CSV files matching the "*_original.csv" pattern
+                    original_csv_files = glob.glob(os.path.join(gait_class_dir, "*_original.csv"))
+                    if original_csv_files:
+                        # Use the first matching CSV file found
+                        csv_file_path = original_csv_files[0]
+                        print(f"Found original CSV file: {csv_file_path}")
+                
+                # If not found in gait-classification, check the trial root directory
+                if not csv_file_path:
+                    original_csv_files = glob.glob(os.path.join(selected_path, "*_original.csv"))
+                    if original_csv_files:
+                        csv_file_path = original_csv_files[0]
+                        print(f"Found original CSV file in trial root: {csv_file_path}")
+                
+                # If not found with _original pattern, fall back to any CSV in gait-classification
+                if not csv_file_path and os.path.exists(gait_class_dir):
                     csv_files = [f for f in os.listdir(gait_class_dir) if f.endswith('.csv')]
                     if csv_files:
-                        # Use the first CSV file found
                         csv_file_path = os.path.join(gait_class_dir, csv_files[0])
+                        print(f"No '*_original.csv' file found, falling back to: {csv_file_path}")
                 
                 if not csv_file_path:
                     QMessageBox.warning(
