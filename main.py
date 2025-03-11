@@ -359,24 +359,23 @@ class MainWindow(QMainWindow):
             print(f"Error updating analytics chart: {str(e)}")
     def on_slider_value_changed(self, value):
         """
-        Handles when the slider value changes by highlighting the corresponding row in the table,
-        updating the vertical line on the chart, and updating the gait stage value.
-
+        Handles when the slider value changes in the PyQt UI
+        
         Args:
-            value (int): The current slider value, corresponding directly to the row index
+            value (int): The current slider value
         """
-        # Since slider maximum is now (num_frames - 1), we can use the value directly
+        # Store the current row index
         self.current_highlighted_row = value
-
+        
         # Update the table highlight
         self.table_manager.highlight_row(self.ui.jointsTable, value)
-
+        
         # Update the vertical line position on the chart
         self.chart_manager.update_vertical_line(value)
-
+        
         # Update the gait stage value if data is available
         self.update_gait_stage_value(value)
-
+        
         # Sync the 3D viewer with the slider
         if hasattr(self, 'viewer_manager') and self.viewer_manager:
             max_value = self.ui.slider.maximum()
@@ -1407,7 +1406,8 @@ class MainWindow(QMainWindow):
             print("Initializing 3D viewer...")
             # Pass self to ViewerManager to enable callbacks
             self.viewer_manager = ViewerManager(self.ui.visualizationWidget)
-            
+
+            QTimer.singleShot(5000, self.viewer_manager.force_hide_loading_screen)
             # Set initial states for the toggle buttons once the viewer is loaded
             QTimer.singleShot(2000, self.initialize_viewer_settings)
         except Exception as e:
@@ -1445,7 +1445,7 @@ class MainWindow(QMainWindow):
                         if diff < min_diff:
                             min_diff = diff
                             closest_idx = i
-                    
+                      
                     # Only update if the index has changed
                     if closest_idx != self.current_highlighted_row:
                         # Temporarily block signals to avoid feedback loop
@@ -1492,33 +1492,52 @@ class MainWindow(QMainWindow):
         self.ui.playButton.clicked.connect(self.on_play_button_clicked)
         self.ui.pauseButton.clicked.connect(self.on_pause_button_clicked)
         
+        # Connect skip/back buttons
+        self.ui.skipButton.clicked.connect(self.on_skip_button_clicked)
+        self.ui.backButton.clicked.connect(self.on_back_button_clicked)
+        
+        # Connect speed buttons
+        self.ui.fastForwardButton.clicked.connect(self.on_speed_up_button_clicked)
+        self.ui.rewindButton.clicked.connect(self.on_speed_down_button_clicked)
+        
+        # Connect center animation and axis toggle buttons
+        self.ui.centerAnimationButton.clicked.connect(self.on_center_animation_toggled)
+        self.ui.axisButton.clicked.connect(self.on_axis_toggled)
+        
         # Initialize playback state
         self.is_playing = False
-        self.playback_timer = QTimer()
-        self.playback_timer.timeout.connect(self.update_playback_frame)
-        self.playback_speed = 30  # Default to 30 fps
+        
+        # Display initial speed value
+        self.update_speed_label(1.0)  # Default 1x speed
+
     def on_play_button_clicked(self):
         """Handle play button click"""
-        if not self.is_playing:
-            self.is_playing = True
+        if hasattr(self, 'viewer_manager') and self.viewer_manager:
+            # Toggle play/pause in the viewer.js
+            self.viewer_manager.play_pause()
             
-            # Start the timer for animation
-            self.playback_timer.start(1000 // self.playback_speed)  # milliseconds per frame
-            
-            # Update the 3D viewer's play state if available
-            if hasattr(self, 'viewer_manager') and self.viewer_manager:
-                self.viewer_manager.set_playing(True)
+            # Query the current state to update UI accordingly
+            self.viewer_manager.get_animation_state(self.update_ui_from_animation_state)
+
     def on_pause_button_clicked(self):
         """Handle pause button click"""
-        if self.is_playing:
-            self.is_playing = False
+        if hasattr(self, 'viewer_manager') and self.viewer_manager:
+            # This does the same as play - it toggles the state
+            self.viewer_manager.play_pause()
             
-            # Stop the timer
-            self.playback_timer.stop()
+            # Query the current state to update UI accordingly
+            self.viewer_manager.get_animation_state(self.update_ui_from_animation_state)
+
+    def update_ui_from_animation_state(self, state):
+        """Update UI based on the animation state received from JavaScript"""
+        if state:
+            # Update playing state
+            self.is_playing = state.get('isPlaying', False)
             
-            # Update the 3D viewer's play state if available
-            if hasattr(self, 'viewer_manager') and self.viewer_manager:
-                self.viewer_manager.set_playing(False)
+            # Update speed label if needed
+            speed = state.get('speed', 1.0)
+            self.update_speed_label(speed)
+
     def update_playback_frame(self):
         """Update the current frame during playback"""
         if not self.is_playing:
@@ -1536,95 +1555,72 @@ class MainWindow(QMainWindow):
         self.ui.slider.setValue(next_value)
     def on_back_button_clicked(self):
         """Move to the previous frame when the back button is clicked"""
-        if hasattr(self, 'motion_data') and self.motion_data:
-            current_value = self.ui.slider.value()
-            # Move to previous frame (minimum 0)
-            prev_value = max(0, current_value - 1)
-            
-            # Only update if we actually changed frames
-            if prev_value != current_value:
-                # Update the slider value, which will trigger all necessary updates
-                self.ui.slider.setValue(prev_value)
+        if hasattr(self, 'viewer_manager') and self.viewer_manager:
+            # Trigger the rewind button in viewer.js
+            self.viewer_manager.rewind()
+
     def on_skip_button_clicked(self):
         """Move to the next frame when the skip button is clicked"""
-        if hasattr(self, 'motion_data') and self.motion_data:
-            current_value = self.ui.slider.value()
-            max_value = self.ui.slider.maximum()
-            # Move to next frame (maximum is slider max)
-            next_value = min(max_value, current_value + 1)
-            
-            # Only update if we actually changed frames
-            if next_value != current_value:
-                # Update the slider value, which will trigger all necessary updates
-                self.ui.slider.setValue(next_value)
+        if hasattr(self, 'viewer_manager') and self.viewer_manager:
+            # Trigger the forward button in viewer.js
+            self.viewer_manager.forward()
+        
     def on_speed_up_button_clicked(self):
         """Increase the playback speed when the speed up button is clicked"""
         # Define speed increments - common multipliers for playback
         speed_options = [0.25, 0.5, 1.0, 1.5, 2.0, 3.0, 4.0]
         
+        # Get current speed from UI
+        current_text = self.ui.speedLabel.text().rstrip('x')
+        try:
+            current_speed = float(current_text)
+        except ValueError:
+            current_speed = 1.0  # Default if parsing fails
+        
         # Find the next higher speed option
-        current_index = -1
-        for i, speed in enumerate(speed_options):
-            if abs(self.playback_speed / 30 - speed) < 0.1:  # Using a small epsilon for float comparison
-                current_index = i
+        next_speed = 1.0  # Default if not found
+        for speed in speed_options:
+            if speed > current_speed:
+                next_speed = speed
                 break
+        if current_speed >= speed_options[-1]:
+            next_speed = speed_options[-1]  # Cap at maximum
         
-        # If current speed wasn't found or is already at max, use the highest speed
-        if current_index == -1 or current_index >= len(speed_options) - 1:
-            new_speed = speed_options[-1]
-        else:
-            new_speed = speed_options[current_index + 1]
-        
-        # Update playback speed (convert from multiplier to frames per second)
-        self.playback_speed = int(new_speed * 30)
-        
-        # Update timer interval if currently playing
-        if self.is_playing:
-            self.playback_timer.setInterval(1000 // self.playback_speed)
+        # Update the viewer speed
+        if hasattr(self, 'viewer_manager') and self.viewer_manager:
+            self.viewer_manager.set_speed(next_speed)
         
         # Update the speed label
-        self.update_speed_label(new_speed)
-        
-        # Display current speed as feedback (optional)
-        print(f"Playback speed: {new_speed}x")
-        
-        # Update the 3D viewer's speed if available
-        if hasattr(self, 'viewer_manager') and self.viewer_manager:
-            self.viewer_manager.set_speed(new_speed)
+        self.update_speed_label(next_speed)
+
     def on_speed_down_button_clicked(self):
         """Decrease the playback speed when the speed down button is clicked"""
         # Define speed increments - common multipliers for playback
         speed_options = [0.25, 0.5, 1.0, 1.5, 2.0, 3.0, 4.0]
         
+        # Get current speed from UI
+        current_text = self.ui.speedLabel.text().rstrip('x')
+        try:
+            current_speed = float(current_text)
+        except ValueError:
+            current_speed = 1.0  # Default if parsing fails
+        
         # Find the next lower speed option
-        current_index = -1
-        for i, speed in enumerate(speed_options):
-            if abs(self.playback_speed / 30 - speed) < 0.1:  # Using a small epsilon for float comparison
-                current_index = i
+        next_speed = 0.25  # Default if not found
+        for speed in reversed(speed_options):
+            if speed < current_speed:
+                next_speed = speed
                 break
+        if current_speed <= speed_options[0]:
+            next_speed = speed_options[0]  # Cap at minimum
         
-        # If current speed wasn't found or is already at min, use the lowest speed
-        if current_index == -1 or current_index <= 0:
-            new_speed = speed_options[0]
-        else:
-            new_speed = speed_options[current_index - 1]
-        
-        # Update playback speed (convert from multiplier to frames per second)
-        self.playback_speed = int(new_speed * 30)
-        
-        # Update timer interval if currently playing
-        if self.is_playing:
-            self.playback_timer.setInterval(1000 // self.playback_speed)
+        # Update the viewer speed
+        if hasattr(self, 'viewer_manager') and self.viewer_manager:
+            self.viewer_manager.set_speed(next_speed)
         
         # Update the speed label
-        self.update_speed_label(new_speed)
+        self.update_speed_label(next_speed)
         
-        # Display current speed as feedback (optional)
-        print(f"Playback speed: {new_speed}x")
-        
-        # Update the 3D viewer's speed if available
-        if hasattr(self, 'viewer_manager') and self.viewer_manager:
-            self.viewer_manager.set_speed(new_speed)
     def on_center_animation_toggled(self):
         """Handle the center animation button toggle"""
         # Get the checked state of the button
@@ -1632,7 +1628,8 @@ class MainWindow(QMainWindow):
         
         # Update the 3D viewer if available
         if hasattr(self, 'viewer_manager') and self.viewer_manager:
-            self.viewer_manager.set_center_animation(is_center_enabled)  
+            self.viewer_manager.set_center_animation(is_center_enabled)
+
     def on_axis_toggled(self):
         """Handle the axis visibility button toggle"""
         # Get the checked state of the button
@@ -1641,6 +1638,7 @@ class MainWindow(QMainWindow):
         # Update the 3D viewer if available
         if hasattr(self, 'viewer_manager') and self.viewer_manager:
             self.viewer_manager.set_axis_visible(is_axis_visible)
+
     def update_speed_label(self, speed_multiplier):
         """Update the speed label with the current playback speed multiplier"""
         # Format the speed as a string with the 'x' suffix
