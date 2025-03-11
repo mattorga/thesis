@@ -23,7 +23,6 @@
       background: rgba(0, 0, 0, 0.7);
       padding: 10px 20px;
       border-radius: 10px;
-      z-index: 100;
     }
     button {
       background: none;
@@ -36,25 +35,22 @@
     button:hover {
       color: #00aaff;
     }
-    input[type="range"] {
-      width: 150px;
-    }
 
     /* Joint Info Display */
     #jointInfoBox {
       position: absolute;
-      top: 20px;
-      left: 20px;
+      top: 10px;
+      left: 10px;
       background: rgba(0, 0, 0, 0.7);
       color: white;
-      padding: 12px 18px;
-      border-radius: 8px;
+      padding: 10px 15px;
+      border-radius: 5px;
       font-size: 14px;
       font-family: Arial, sans-serif;
       min-width: 180px;
       display: none; /* Hidden by default */
-      z-index: 100;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
     }
     
     /* Loading indicator */
@@ -86,29 +82,13 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
-    
-    #replay {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: rgba(0, 0, 0, 0.7);
-      color: white;
-      border: none;
-      border-radius: 5px;
-      padding: 8px 15px;
-      font-size: 14px;
-      cursor: pointer;
-      z-index: 100;
-    }
-    #replay:hover {
-      background: rgba(0, 0, 0, 0.9);
-    }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.110.0/examples/js/controls/OrbitControls.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.110.0/examples/js/loaders/FBXLoader.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.110.0/examples/js/libs/inflate.min.js"></script>
   <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
+
 </head>
 <body>
   <!-- Loading screen -->
@@ -120,33 +100,14 @@
   <!-- Joint Info Box -->
   <div id="jointInfoBox"></div>
   
-  <button id="replay">Replay</button>
-  
-  <div id="controls">
-    <button id="rewind">⏪</button>
-    <button id="playPause">▶️</button>
-    <button id="forward">⏩</button>
-    <input id="seekBar" type="range" min="0" max="100" value="0">
-    <label style="color: white;">
-      <input id="centerAnimationCheckbox" type="checkbox" checked> Center Animation
-    </label>
-    <label style="color: white;">
-      Speed:
-      <select id="animationSpeed">
-        <option value="0.25">0.25x</option>
-        <option value="0.5">0.5x</option>
-        <option value="1" selected>1x</option>
-        <option value="2">2x</option>
-      </select>
-    </label>
-  </div>
-  
   <script>
     // Add loading screen handling
     window.addEventListener('load', function() {
       // The page has loaded, but we need to wait for the model to load
+      // This is handled in the viewer.js file
     });
     
+    // Function to hide loading screen, called from viewer.js
     function hideLoading() {
       const loadingScreen = document.getElementById('loadingScreen');
       if (loadingScreen) {
@@ -156,15 +117,7 @@
         }, 500);
       }
     }
-    
-    // Setup for Qt communication
-    window.qt = {
-      updateSliderFromWeb: function(timeValue) {
-        console.log("Placeholder for Qt communication - will be replaced");
-      }
-    };
   </script>
-  
   <script src="viewer.js"></script>
 </body>
 </html>

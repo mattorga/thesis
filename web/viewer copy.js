@@ -55,12 +55,12 @@ function createTileFloor() {
 	// Assign materials to create checkerboard pattern
 	const floor = new THREE.Mesh(floorGeometry, materials[0]);
 	floor.rotation.x = -Math.PI / 2; // Rotate to be horizontal
-	floor.position.y = -0.01; // Lower the floor to be below the hips
+	floor.position.y = -0.01; // Slightly below origin to avoid z-fighting
 	floor.receiveShadow = true;
 
 	// Create grid for checkerboard pattern (more subtle)
 	const grid = new THREE.GridHelper(floorSize, floorSize, 0x000000, 0x000000);
-	grid.position.y = 0; // Position slightly above floor to avoid z-fighting
+	grid.position.y = 0;
 	grid.material.opacity = 0.1; // Reduced opacity for subtlety
 	grid.material.transparent = true;
 
@@ -92,7 +92,7 @@ function createTileFloor() {
 			const tile = new THREE.Mesh(tileGeometry, tileMaterial);
 
 			tile.rotation.x = -Math.PI / 2;
-			tile.position.set(x, 0, z); // Position tiles at the same level as grid
+			tile.position.set(x, 0, z);
 			tile.receiveShadow = true;
 
 			tiledFloor.add(tile);
@@ -106,6 +106,50 @@ function createTileFloor() {
 const floor = createTileFloor();
 scene.add(floor);
 
+// New variables for toggleable features
+let centerAnimation = true; // Default to true, matching the initial button state
+let axisVisible = false; // Default to false, matching the initial button state
+let axisHelper = null; // Will hold the reference to the axis helper object
+
+// Function to toggle center animation feature
+function setCenterAnimation(enabled) {
+	centerAnimation = enabled;
+	console.log(`Center animation set to: ${enabled}`);
+}
+
+// Function to toggle axis visibility
+function setAxisVisible(visible) {
+	axisVisible = visible;
+	console.log(`Axis visibility set to: ${visible}`);
+
+	// Create or remove axis helper based on visibility setting
+	if (visible && !axisHelper) {
+		// Create axes helper if it doesn't exist and should be visible
+		axisHelper = new THREE.AxesHelper(5); // Size of the axes (5 units long)
+		scene.add(axisHelper);
+	} else if (!visible && axisHelper) {
+		// Remove axes helper if it exists and should not be visible
+		scene.remove(axisHelper);
+		axisHelper = null;
+	}
+}
+
+// Function to create axis helper on initial load
+function initializeAxisHelper() {
+	// Create the axes helper with the default visibility
+	if (axisVisible) {
+		axisHelper = new THREE.AxesHelper(5);
+		scene.add(axisHelper);
+	}
+}
+
+// Initialize axis helper
+initializeAxisHelper();
+
+// Expose these functions to be called from PyQt
+window.setCenterAnimation = setCenterAnimation;
+window.setAxisVisible = setAxisVisible;
+
 // Orbit Controls
 const controls = new THREE.OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
@@ -115,27 +159,16 @@ controls.maxDistance = 15; // Increased maximum zoom distance
 controls.target.set(0, 0.6, 0); // Lower the target point to match lower camera
 controls.update();
 
-
 let mixer;
 let clock = new THREE.Clock();
 let duration = 0;
+let currentTime = 0; // Track current time without seek bar
 
 // Initial state
 let isPlaying = false;
-let centerAnimation = true;
 let animatedObject; // Reference to the loaded object
 let timeScaleBuffer = 1; // Buffer for timeScale
-
-// Get references to the controls
-const centerAnimationCheckbox = document.getElementById(
-	"centerAnimationCheckbox"
-);
-const animationSpeedSelector = document.getElementById("animationSpeed");
-const playPauseBtn = document.getElementById("playPause");
-const rewindBtn = document.getElementById("rewind");
-const forwardBtn = document.getElementById("forward");
-const seekBar = document.getElementById("seekBar");
-const replayBtn = document.getElementById("replay");
+let pyQtControlled = false; // Flag to prevent feedback loops
 
 // Set up error handling function
 function handleLoadError(error) {
@@ -144,9 +177,9 @@ function handleLoadError(error) {
 }
 
 function loadFbxModel(fbxPath) {
-    console.log("Loading FBX from path:", fbxPath);
-    
-    // Clear existing model if any
+// Load FBX file - using relative URL path for better compatibility
+
+	// Clear existing model if any
     if (animatedObject) {
         scene.remove(animatedObject);
         animatedObject = null;
@@ -157,71 +190,77 @@ function loadFbxModel(fbxPath) {
         mixer.stopAllAction();
         mixer = null;
     }
-    
-    // Load the new FBX file
-    const loader = new THREE.FBXLoader();
-    loader.load(
-        fbxPath,
-        (object) => {
-            object.scale.set(0.01, 0.01, 0.01);
+	
+	const loader = new THREE.FBXLoader();
+	loader.load(
+		// Use a relative path instead of absolute
+		fbxPath,
+		(object) => {
+			// Hide the loading screen once the model is loaded
+			if (typeof hideLoading === "function") {
+				hideLoading();
+			}
+
+			// Scale down the model
+			object.scale.set(0.01, 0.01, 0.01);
+
+			// Enable shadows for all meshes in the model
+			object.traverse(function (child) {
+				if (child.isMesh) {
+					child.castShadow = true;
+					child.receiveShadow = true;
+				}
+			});
 
 			if (centerAnimation) {
 				// Compute the bounding box
 				const box = new THREE.Box3().setFromObject(object);
 				const center = box.getCenter(new THREE.Vector3());
-			
-				// Offset the model to center it at the origin
-				object.position.sub(center);
-				
-				// Adjust vertical position to ensure it's above the floor
+
+				// Position to center horizontally but keep vertical position
+				object.position.x = -center.x;
+				object.position.z = -center.z;
+				// Don't center vertically - keep model on the floor
 				object.position.y = 0;
 			}
 
-            scene.add(object);
-            animatedObject = object; // Save reference for tracking
+			scene.add(object);
+			animatedObject = object; // Save reference for tracking
 
-            console.log(
-                "Object loaded successfully. Animations:",
-                object.animations.length
-            );
+			console.log(
+				"Object loaded successfully. Animations:",
+				object.animations.length
+			);
 
-            // Only create mixer if animations exist
-            if (object.animations && object.animations.length > 0) {
-                // Create animation mixer
-                mixer = new THREE.AnimationMixer(object);
-                const action = mixer.clipAction(object.animations[0]);
-                action.play();
-                mixer.timeScale = 0; // Start animation paused
+			// Only create mixer if animations exist
+			if (object.animations && object.animations.length > 0) {
+				// Create animation mixer
+				mixer = new THREE.AnimationMixer(object);
+				const action = mixer.clipAction(object.animations[0]);
+				action.play();
+				mixer.timeScale = 0; // Start animation paused
 
-                // Get animation duration
-                duration = object.animations[0].duration;
+				// Get animation duration
+				duration = object.animations[0].duration;
+				console.log(`Animation loaded. Duration: ${duration} seconds, Expected frames: ${duration * 30}`);
+				// Listen for loop events
+				mixer.addEventListener("loop", () => {
+					if (isPlaying) {
+						currentTime = 0;
+						mixer.setTime(0);
+					}
+				});
 
-                // Update seekbar max value
-                seekBar.max = duration.toFixed(2); // Max value with two decimal places
-                seekBar.step = 0.01; // Granularity of 0.01 seconds
-
-                // Listen for loop events to reset seekbar
-                mixer.addEventListener("loop", () => {
-                    if (isPlaying) {
-                        seekBar.value = 0; // Reset seekbar position on loop
-                        mixer.setTime(0);
-                    }
-                });
-
-                console.log(`Animation loaded. Duration: ${duration} seconds`);
-                
-                // Notify PyQt if available
-                if (window.qt && typeof window.qt.updateSliderFromWeb === 'function') {
-                    window.qt.updateSliderFromWeb(0);
-                }
-            } else {
-                console.warn("No animations found in the model");
-            }
-        },
-        (xhr) => console.log((xhr.loaded / xhr.total) * 100 + "% loaded"),
-        handleLoadError
-    );
+				// console.log(`Animation loaded. Duration: ${duration} seconds`);
+			} else {
+				console.warn("No animations found in the model");
+			}
+		},
+		(xhr) => console.log((xhr.loaded / xhr.total) * 100 + "% loaded"),
+		handleLoadError
+	);
 }
+
 let defaultFbxPath = "Sample_working.fbx";
 
 if (window.pendingFbxPath) {
@@ -240,130 +279,41 @@ window.addEventListener("resize", () => {
 	renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-// Play/Pause functionality
-playPauseBtn.addEventListener("click", () => {
-	if (!mixer) return;
+// Function to be called from PyQt to set the animation time
+function setAnimationTime(normalizedTime) {
+	if (!mixer || !duration) return;
 
-	if (isPlaying) {
-		mixer.timeScale = 0; // Pause animation
-		isPlaying = false;
-		playPauseBtn.textContent = "▶️";
-	} else {
-		mixer.timeScale = timeScaleBuffer; // Resume animation
-		isPlaying = true;
-		playPauseBtn.textContent = "⏸️";
+	// Set the flag to prevent feedback loops
+	pyQtControlled = true;
+
+	try {
+		// Calculate the actual time based on the normalized value (0.0 to 1.0)
+		const targetTime = normalizedTime * duration;
+
+		// Update the current time tracking
+		currentTime = targetTime;
+		
+		// Update the animation time
+		if (!isPlaying) {
+			mixer.timeScale = timeScaleBuffer; // Resume animation temporarily
+			mixer.setTime(targetTime); // Update the animation time
+			mixer.timeScale = 0; // Pause animation
+		} else {
+			mixer.setTime(targetTime); // Update the animation time
+		}
+		console.log(`Setting animation time: ${targetTime}s / ${duration}s (normalized: ${normalizedTime})`);
+		// Update the joint info display if a joint is selected
+		updateJointInfo();
+	} finally {
+		// Reset the flag
+		setTimeout(() => {
+			pyQtControlled = false;
+		}, 50);
 	}
-});
+}
 
-// Rewind functionality
-rewindBtn.addEventListener("click", () => {
-	if (!mixer) return;
-
-	console.log(
-		`[Backward] Current mixer.time: ${mixer.time}, timeScale: ${timeScaleBuffer}`
-	);
-
-	if (isPlaying) {
-		mixer.timeScale = 1; // resume animation temporarily
-		mixer.setTime(Math.max(0, mixer.time - 1)); // Go back 1 second
-		seekBar.value = mixer.time; // Sync seekbar
-		mixer.timeScale = timeScaleBuffer; // resume with the correct speed
-	} else {
-		mixer.timeScale = 1; // resume animation temporarily
-		mixer.setTime(Math.max(0, mixer.time - 1)); // Go back 1 second
-		seekBar.value = mixer.time; // Sync seekbar
-		mixer.timeScale = 0; // Pause animation
-	}
-});
-
-// Forward functionality
-forwardBtn.addEventListener("click", () => {
-	if (!mixer) return;
-
-	console.log(
-		`[Forward] Current mixer.time: ${mixer.time}, timeScale: ${timeScaleBuffer}`
-	);
-
-	if (isPlaying) {
-		mixer.timeScale = 1; // resume animation temporarily
-		mixer.setTime(Math.min(duration, mixer.time + 1)); // Go forward 1 second
-		seekBar.value = mixer.time; // Sync seekbar
-		mixer.timeScale = timeScaleBuffer; // resume with the correct speed
-	} else {
-		mixer.timeScale = 1; // resume animation temporarily
-		mixer.setTime(Math.min(duration, mixer.time + 1)); // Go forward 1 second
-		seekBar.value = mixer.time; // Sync seekbar
-		mixer.timeScale = 0; // Pause animation
-	}
-});
-
-// Replay functionality
-replayBtn.addEventListener("click", () => {
-	if (!mixer) return;
-
-	mixer.setTime(0); // Reset to beginning
-	seekBar.value = 0; // Reset seekbar
-
-	if (!isPlaying) {
-		mixer.timeScale = timeScaleBuffer;
-		isPlaying = true;
-		playPauseBtn.textContent = "⏸️";
-	}
-});
-
-// Seekbar functionality
-seekBar.addEventListener("input", (e) => {
-	if (!mixer) return;
-
-	let newTime = parseFloat(e.target.value); // Parse value with higher precision
-
-	switch (timeScaleBuffer) {
-		case 0.25:
-			console.log("Time scale is 0.25x");
-			newTime = newTime * 4;
-			break;
-		case 0.5:
-			console.log("Time scale is 0.5x");
-			newTime = newTime * 2;
-			break;
-		case 1:
-			console.log("Time scale is 1x (normal speed)");
-			break;
-		case 2:
-			console.log("Time scale is 2x (double speed)");
-			newTime = newTime / 2;
-			break;
-		default:
-			console.log("Unknown time scale");
-	}
-
-	if (!isPlaying) {
-		mixer.timeScale = timeScaleBuffer; // Resume animation temporarily
-		mixer.setTime(newTime); // Update the animation time
-		mixer.timeScale = 0; // Pause animation
-	} else {
-		mixer.setTime(newTime); // Update the animation time
-	}
-});
-
-
-
-
-// Center animation checkbox
-centerAnimationCheckbox.addEventListener("change", () => {
-	centerAnimation = centerAnimationCheckbox.checked;
-});
-
-// Update animation speed based on selector value
-animationSpeedSelector.addEventListener("change", () => {
-	if (!mixer) return;
-
-	const speed = parseFloat(animationSpeedSelector.value);
-	timeScaleBuffer = speed;
-	if (isPlaying) {
-		mixer.timeScale = speed;
-	}
-});
+// Expose the function to the window object so PyQt can call it
+window.setAnimationTime = setAnimationTime;
 
 // Create a raycaster and mouse vector
 const raycaster = new THREE.Raycaster();
@@ -446,17 +396,30 @@ function animate() {
 		mixer.update(delta);
 		updateJointInfo();
 
-		// Sync seekbar with animation time if playing
+		// Update current time tracking if playing
 		if (isPlaying) {
-			const currentTime = (mixer.time % duration).toFixed(2); // Round to 2 decimal places
-			seekBar.value = currentTime; // Update seekbar position
+			currentTime = mixer.time % duration;
+
+			// Notify PyQt about the time change if playing and not controlled by PyQt
+			if (
+				!pyQtControlled &&
+				window.qt &&
+				typeof window.qt.updateSliderFromWeb === "function"
+			) {
+				window.qt.updateSliderFromWeb(currentTime);
+			}
 		}
 	}
 
 	const dampingFactor = 0.1; // Adjust for smoother or faster movement
+	// Only update camera target if centerAnimation is enabled
 	if (centerAnimation && animatedObject) {
+		// Compute the bounding box
 		const box = new THREE.Box3().setFromObject(animatedObject);
 		const center = box.getCenter(new THREE.Vector3());
+
+		// Add height offset to look at the model's center, not its feet
+		center.y += 0.1; // Lowered to match the camera height
 
 		// Smoothly interpolate the camera's target
 		controls.target.lerp(center, dampingFactor);
@@ -466,12 +429,34 @@ function animate() {
 	renderer.render(scene, camera);
 }
 
-// Update joint info when playback controls are used
-playPauseBtn.addEventListener("click", updateJointInfo);
-rewindBtn.addEventListener("click", updateJointInfo);
-forwardBtn.addEventListener("click", updateJointInfo);
-seekBar.addEventListener("input", updateJointInfo);
-replayBtn.addEventListener("click", updateJointInfo);
+// Function to set the playing state from outside (PyQt)
+function setPlaying(playing) {
+	if (playing && !isPlaying) {
+		// Start playing
+		if (mixer) {
+			mixer.timeScale = timeScaleBuffer; // Resume with current speed
+			isPlaying = true;
+
+			// If we're at the end, loop back to beginning
+			if (mixer.time >= duration) {
+				mixer.setTime(0);
+				currentTime = 0;
+			}
+		}
+	} else if (!playing && isPlaying) {
+		// Pause
+		if (mixer) {
+			mixer.timeScale = 0; // Pause animation
+			isPlaying = false;
+		}
+	}
+
+	// Log the state change for debugging
+	console.log(`Animation playback set to: ${isPlaying ? "playing" : "paused"}`);
+}
+
+// Expose function to window object so PyQt can access it
+window.setPlaying = setPlaying;
 
 // Start the animation
 animate();
