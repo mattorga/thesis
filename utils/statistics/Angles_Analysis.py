@@ -103,10 +103,10 @@ def analyze_gait_patterns(base_mot, versus_mot):
             p_values[col] = np.nan
     
     return {
-        # 'dtw_distances': dtw_distances,
-        # 'cross_corr_max': cross_corr_max,
-        # 'cross_corr_lags': cross_corr_lags,
-        # 'pearson_corr': pearson_corr,
+        'dtw_distances': dtw_distances,
+        'cross_corr_max': cross_corr_max,
+        'cross_corr_lags': cross_corr_lags,
+        'pearson_corr': pearson_corr,
         'ave_p_values': np.nanmean(p_values),
         'ave_dtw': np.nanmean(dtw_distances),
         'ave_corr': np.nanmean(cross_corr_lags),
