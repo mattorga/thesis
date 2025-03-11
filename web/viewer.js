@@ -1,30 +1,120 @@
 // Scene setup
 const scene = new THREE.Scene();
-scene.add(new THREE.AxesHelper(5));
+scene.background = new THREE.Color(0x2a2a2a);
 
-const light = new THREE.PointLight(0xffffff, 1);
-light.position.set(10, 10, 10);
-scene.add(light);
+// Set gray background
+scene.background = new THREE.Color(0x888888);
 
-const ambientLight = new THREE.AmbientLight(0x404040);
+// Add ambient light
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
 scene.add(ambientLight);
 
+// Add directional light
+const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+directionalLight.position.set(10, 10, 10);
+directionalLight.castShadow = true;
+scene.add(directionalLight);
+
+// Add point light for additional detail
+const light = new THREE.PointLight(0xffffff, 0.6);
+light.position.set(-10, 15, 5);
+scene.add(light);
+
+// Camera setup
 const camera = new THREE.PerspectiveCamera(
-	75,
+	45,
 	window.innerWidth / window.innerHeight,
 	0.1,
 	1000
 );
-camera.position.set(2, 2, 5);
+camera.position.set(-1, 1, 2);
 
-const renderer = new THREE.WebGLRenderer();
+const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 document.body.appendChild(renderer.domElement);
+
+// Add tile floor
+function createTileFloor() {
+	const floorSize = 20;
+	const tileSize = 1;
+	const floorGeometry = new THREE.PlaneGeometry(
+		floorSize,
+		floorSize,
+		floorSize,
+		floorSize
+	);
+
+	// Create subtle checkerboard material
+	const materials = [
+		new THREE.MeshStandardMaterial({ color: 0xe0e0e0, roughness: 0.9 }),
+		new THREE.MeshStandardMaterial({ color: 0xd0d0d0, roughness: 0.9 }),
+	];
+
+	// Assign materials to create checkerboard pattern
+	const floor = new THREE.Mesh(floorGeometry, materials[0]);
+	floor.rotation.x = -Math.PI / 2; // Rotate to be horizontal
+	floor.position.y = -0.01; // Lower the floor to be below the hips
+	floor.receiveShadow = true;
+
+	// Create grid for checkerboard pattern (more subtle)
+	const grid = new THREE.GridHelper(floorSize, floorSize, 0x000000, 0x000000);
+	grid.position.y = 0; // Position slightly above floor to avoid z-fighting
+	grid.material.opacity = 0.1; // Reduced opacity for subtlety
+	grid.material.transparent = true;
+
+	// Create tiled texture using a parent object
+	const tiledFloor = new THREE.Group();
+	tiledFloor.add(floor);
+	tiledFloor.add(grid);
+
+	// Create individual tiles with alternating colors
+	for (
+		let x = -floorSize / 2 + tileSize / 2;
+		x < floorSize / 2;
+		x += tileSize
+	) {
+		for (
+			let z = -floorSize / 2 + tileSize / 2;
+			z < floorSize / 2;
+			z += tileSize
+		) {
+			// Determine if this should be a dark or light tile
+			const isOffset =
+				(Math.floor(x + floorSize / 2) + Math.floor(z + floorSize / 2)) % 2 ===
+				0;
+			const tileGeometry = new THREE.PlaneGeometry(
+				tileSize - 0.05,
+				tileSize - 0.05
+			);
+			const tileMaterial = materials[isOffset ? 1 : 0];
+			const tile = new THREE.Mesh(tileGeometry, tileMaterial);
+
+			tile.rotation.x = -Math.PI / 2;
+			tile.position.set(x, 0, z); // Position tiles at the same level as grid
+			tile.receiveShadow = true;
+
+			tiledFloor.add(tile);
+		}
+	}
+
+	return tiledFloor;
+}
+
+// Add the floor to the scene
+const floor = createTileFloor();
+scene.add(floor);
 
 // Orbit Controls
 const controls = new THREE.OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.05;
+controls.minDistance = 1.5; // Increased minimum distance to prevent too close zoom
+controls.maxDistance = 15; // Increased maximum zoom distance
+controls.target.set(0, 0.6, 0); // Lower the target point to match lower camera
+controls.update();
+
 
 let mixer;
 let clock = new THREE.Clock();
@@ -75,14 +165,17 @@ function loadFbxModel(fbxPath) {
         (object) => {
             object.scale.set(0.01, 0.01, 0.01);
 
-            if (centerAnimation) {
-                // Compute the bounding box
-                const box = new THREE.Box3().setFromObject(object);
-                const center = box.getCenter(new THREE.Vector3());
-
-                // Offset the model to center it at the origin
-                object.position.sub(center);
-            }
+			if (centerAnimation) {
+				// Compute the bounding box
+				const box = new THREE.Box3().setFromObject(object);
+				const center = box.getCenter(new THREE.Vector3());
+			
+				// Offset the model to center it at the origin
+				object.position.sub(center);
+				
+				// Adjust vertical position to ensure it's above the floor
+				object.position.y = 0;
+			}
 
             scene.add(object);
             animatedObject = object; // Save reference for tracking
