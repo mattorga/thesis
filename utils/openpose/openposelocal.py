@@ -91,9 +91,9 @@ class OpenPoseRunner:
         
         # Default to no display and no rendering for headless operation
         if '--display' not in self.config:
-            cmd.extend(['--display', '0'])
+            cmd.extend(['--display', '1'])
         if '--render_pose' not in self.config:
-            cmd.extend(['--render_pose', '0'])
+            cmd.extend(['--render_pose', '1'])
 
         # Add the model folder to the command
         if self.model_folder:

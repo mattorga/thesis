@@ -78,13 +78,17 @@ def get_trc_num_frames(trc_path):
     try:
         with open(trc_path, 'r') as f:
             lines = f.readlines()
-            if len(lines) >= 4:
-                # The 4th line (index 3) contains frame info
-                header_parts = lines[3].strip().split()
-                if len(header_parts) >= 3:
-                    num_frames = int(header_parts[2])  # NumFrames is the 3rd value
+            if len(lines) >= 3:  # Make sure we have at least 3 lines
+                # Get the 3rd line (index 2) which has the values
+                values_line = lines[2].strip().split()
+                
+                # NumFrames is the 3rd value (index 2)
+                if len(values_line) > 2:
+                    num_frames = int(values_line[2])
                     print(f"Number of frames from TRC header: {num_frames}")
                     return num_frames
+                else:
+                    print(f"Values line doesn't have enough columns: {values_line}")
     except Exception as e:
         print(f"Error reading TRC file: {e}")
     
