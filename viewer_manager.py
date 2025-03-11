@@ -325,11 +325,15 @@ class ViewerManager:
             is_visible (bool): True to show axes, False to hide
         """
         js_code = f"""
-        // Toggle axes helper visibility
-        const axesHelper = scene.children.find(child => child instanceof THREE.AxesHelper);
-        if (axesHelper) {{
-            axesHelper.visible = {str(is_visible).lower()};
-        }}
+        (function() {{
+            // Find the axes helper and toggle visibility
+            for (var i = 0; i < scene.children.length; i++) {{
+                if (scene.children[i] instanceof THREE.AxesHelper) {{
+                    scene.children[i].visible = {str(is_visible).lower()};
+                    break;
+                }}
+            }}
+        }})();
         """
         self.page.runJavaScript(js_code)
 
@@ -379,14 +383,13 @@ class ViewerManager:
             callback (function): Function to call with the animation state
         """
         js_code = """
-        const state = {
-            isPlaying: isPlaying,
-            currentTime: mixer ? mixer.time : 0,
-            duration: duration,
-            speed: timeScaleBuffer,
-            centerAnimation: centerAnimation
-        };
-        state;
+        var animState = {};
+        animState.isPlaying = isPlaying || false;
+        animState.currentTime = mixer ? mixer.time : 0;
+        animState.duration = duration || 0;
+        animState.speed = timeScaleBuffer || 1.0;
+        animState.centerAnimation = centerAnimation || false;
+        animState;
         """
         self.page.runJavaScript(js_code, callback)
     
