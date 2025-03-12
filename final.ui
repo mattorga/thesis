@@ -499,10 +499,10 @@
      <widget class="QLabel" name="cameraSlot1">
       <property name="geometry">
        <rect>
-        <x>90</x>
-        <y>10</y>
-        <width>391</width>
-        <height>291</height>
+        <x>70</x>
+        <y>110</y>
+        <width>291</width>
+        <height>391</height>
        </rect>
       </property>
       <property name="font">
@@ -530,10 +530,10 @@
      <widget class="QLabel" name="cameraSlot2">
       <property name="geometry">
        <rect>
-        <x>500</x>
-        <y>10</y>
-        <width>391</width>
-        <height>291</height>
+        <x>380</x>
+        <y>110</y>
+        <width>291</width>
+        <height>391</height>
        </rect>
       </property>
       <property name="font">
@@ -561,10 +561,10 @@
      <widget class="QLabel" name="cameraSlot3">
       <property name="geometry">
        <rect>
-        <x>290</x>
-        <y>320</y>
-        <width>391</width>
-        <height>291</height>
+        <x>690</x>
+        <y>110</y>
+        <width>291</width>
+        <height>391</height>
        </rect>
       </property>
       <property name="font">
@@ -1525,19 +1525,6 @@
       </property>
      </widget>
     </widget>
-   </widget>
-   <widget class="Line" name="line_2">
-    <property name="geometry">
-     <rect>
-      <x>200</x>
-      <y>20</y>
-      <width>3</width>
-      <height>750</height>
-     </rect>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Vertical</enum>
-    </property>
    </widget>
   </widget>
  </widget>
