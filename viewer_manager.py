@@ -335,6 +335,7 @@ class ViewerManager:
             }}
         }})();
         """
+
         self.page.runJavaScript(js_code)
 
     def set_fbx_path(self, fbx_path):
@@ -392,6 +393,7 @@ class ViewerManager:
         animState;
         """
         self.page.runJavaScript(js_code, callback)
+        
     
     def sync_with_slider(self, value, max_value):
         """
