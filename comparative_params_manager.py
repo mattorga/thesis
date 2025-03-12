@@ -107,23 +107,23 @@ class ComparativeStatsDialog(QDialog):
                         )
                         return
                 
-                # Find CSV file in the kinematics directory
-                kinematics_dir = os.path.join(selected_path, "kinematics")
-                if not os.path.exists(kinematics_dir):
+                # Find CSV file in the statistics directory
+                statistics_dir = os.path.join(selected_path, "statistics")
+                if not os.path.exists(statistics_dir):
                     QMessageBox.warning(
                         self,
                         "Missing Data",
-                        f"No kinematics directory found in {trial_dir}."
+                        f"No statistics directory found in {trial_dir}."
                     )
                     return
                 
-                # Look for the motion.csv file
-                csv_file_path = os.path.join(kinematics_dir, "motion.csv")
+                # Look for the gait_parameters.csv file
+                csv_file_path = os.path.join(statistics_dir, "gait_parameters.csv")
                 if not os.path.exists(csv_file_path):
                     QMessageBox.warning(
                         self,
                         "Missing Data",
-                        f"No motion.csv file found in {kinematics_dir}."
+                        f"No gait_parameters.csv file found in {statistics_dir}."
                     )
                     return
                 
@@ -238,23 +238,23 @@ class ComparativeStatsDialog(QDialog):
                         )
                         return
                 
-                # Find CSV file in the kinematics directory
-                kinematics_dir = os.path.join(selected_path, "kinematics")
-                if not os.path.exists(kinematics_dir):
+                # Find CSV file in the statistics directory
+                statistics_dir = os.path.join(selected_path, "statistics")
+                if not os.path.exists(statistics_dir):
                     QMessageBox.warning(
                         self,
                         "Missing Data",
-                        f"No kinematics directory found in {trial_dir}."
+                        f"No statistics directory found in {trial_dir}."
                     )
                     return
                 
-                # Look for the motion.csv file
-                csv_file_path = os.path.join(kinematics_dir, "motion.csv")
+                # Look for the gait_parameters.csv file
+                csv_file_path = os.path.join(statistics_dir, "gait_parameters.csv")
                 if not os.path.exists(csv_file_path):
                     QMessageBox.warning(
                         self,
                         "Missing Data",
-                        f"No motion.csv file found in {kinematics_dir}."
+                        f"No gait_parameters.csv file found in {statistics_dir}."
                     )
                     return
                 
@@ -309,7 +309,7 @@ class ComparativeStatsDialog(QDialog):
                     if not self.base_csv_path and hasattr(main_window, 'directory_manager'):
                         base_trial_path = main_window.directory_manager.trial_path
                         if base_trial_path:
-                            self.base_csv_path = os.path.join(base_trial_path, "kinematics", "motion.csv")
+                            self.base_csv_path = os.path.join(base_trial_path, "statistics", "gait_parameters.csv")
                     
                     if not self.verse_csv_path and hasattr(main_window, 'versus_data_file'):
                         versus_dir = os.path.dirname(main_window.versus_data_file)
@@ -320,7 +320,7 @@ class ComparativeStatsDialog(QDialog):
                             versus_trial_path = os.path.dirname(os.path.dirname(versus_dir))
                         
                         if versus_trial_path:
-                            self.verse_csv_path = os.path.join(versus_trial_path, "kinematics", "motion.csv")
+                            self.verse_csv_path = os.path.join(versus_trial_path, "statistics", "gait_parameters.csv")
                 
                 # Check if we have all required paths
                 if not self.base_csv_path or not self.verse_csv_path:
@@ -450,6 +450,10 @@ class ComparativeStatsManager:
         self.base2_trial_name = None
         self.verse2_trial_name = None
         
+        # Cache for analysis results to avoid redundant calculations
+        self.cached_analysis_results = None
+        self.cached_analysis_inputs = None
+        
     def setup_connections(self):
         """Setup signal connections"""
         if hasattr(self.main_window.ui, 'comparativeStatsButton'):
@@ -527,12 +531,12 @@ class ComparativeStatsManager:
                     else:
                         versus_trial_path = os.path.dirname(os.path.dirname(versus_dir))
                 
-                # Construct paths to the CSV files
+                # Construct paths to the CSV files in statistics directory
                 if base_trial_path:
-                    base_csv_path = os.path.join(base_trial_path, "kinematics", "motion.csv")
+                    base_csv_path = os.path.join(base_trial_path, "statistics", "gait_parameters.csv")
                 
                 if versus_trial_path:
-                    versus_csv_path = os.path.join(versus_trial_path, "kinematics", "motion.csv")
+                    versus_csv_path = os.path.join(versus_trial_path, "statistics", "gait_parameters.csv")
                     
                 # Call Angles_Analysis.analyze_gait_patterns with the MOT files
                 angle_stats = analyze_gait_patterns(base_mot_file, versus_mot_file)

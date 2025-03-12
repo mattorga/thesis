@@ -16,7 +16,6 @@ def analyze_gait_parameters(base_trial, versus_trial):
         - 'sig_params': Number of significantly different parameters
         - 'total_params': Total number of parameters compared
         - 'sig_percent': Percentage of significant differences
-    output_str (str): Formatted string of the analysis results.
     """
     # Initialize dictionaries to store measurements
     base_data = {}
@@ -25,27 +24,33 @@ def analyze_gait_parameters(base_trial, versus_trial):
     # Read all base trial CSVs
     for csv_path in base_trial:
         df = pd.read_csv(csv_path)
-        for column in df.columns:
+        # Convert the Parameter-Value format to a format similar to original code
+        param_dict = df.set_index('Parameter')['Value'].to_dict()
+        for column, value in param_dict.items():
             if column not in base_data:
                 base_data[column] = []
-            base_data[column].append(df[column].values[0])  # Assuming single value per metric
+            # Convert value to float to ensure numeric operations work
+            base_data[column].append(float(value))
             
     # Read all versus trial CSVs
     for csv_path in versus_trial:
         df = pd.read_csv(csv_path)
-        for column in df.columns:
+        # Convert the Parameter-Value format to a format similar to original code
+        param_dict = df.set_index('Parameter')['Value'].to_dict()
+        for column, value in param_dict.items():
             if column not in versus_data:
                 versus_data[column] = []
-            versus_data[column].append(df[column].values[0])  # Assuming single value per metric
+            # Convert value to float to ensure numeric operations work
+            versus_data[column].append(float(value))
     
     # Initialize results dictionary
     results = {
         't_stats': {},
         'p_values': {},
-        'means_base': {},        # Renamed from 'means_abnormal'
-        'means_versus': {},      # Renamed from 'means_normal'
-        'std_base': {},          # Renamed from 'std_abnormal'
-        'std_versus': {}         # Renamed from 'std_normal'
+        'means_base': {},
+        'means_versus': {},
+        'std_base': {},
+        'std_versus': {}
     }
     
     # Perform paired t-test for each parameter
