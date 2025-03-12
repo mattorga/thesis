@@ -3,6 +3,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 import glob
+from pathlib import Path
+
 from Pose2Sim import Pose2Sim
 from Pose2Sim.Utilities import bodykin_from_mot_osim
 import toml
@@ -25,6 +27,10 @@ from chart_manager import ChartManager
 from viewer_manager import ViewerManager
 from comparative_params_manager import ComparativeStatsManager
 
+
+
+
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
@@ -41,6 +47,11 @@ class MainWindow(QMainWindow):
         self.ui.jointAnalyticsButton.setEnabled(False)
         
         self.directory_manager = DirectoryManager(self)
+        if getattr(sys, 'frozen', False):
+            # Create user documents directory if needed
+            user_docs = os.path.join(os.path.expanduser("~"), "Documents", "GaitScape")
+            os.makedirs(user_docs, exist_ok=True)
+            self.directory_manager.base_path = user_docs
         self.table_manager = TableManager(self)
         self.data_manager = DataManager()
         self.camera_manager = CameraManager(self)
@@ -1443,7 +1454,10 @@ class MainWindow(QMainWindow):
             print("Initializing 3D viewer...")
             # Pass self to ViewerManager to enable callbacks
             self.viewer_manager = ViewerManager(self.ui.visualizationWidget)
-
+            if getattr(sys, 'frozen', False):
+                if hasattr(self.viewer_manager, 'initialize_viewer'):
+                    # Use a timer to ensure the ViewerManager is fully initialized
+                    QTimer.singleShot(100, lambda: self.initialize_viewer_paths())
             QTimer.singleShot(5000, self.viewer_manager.force_hide_loading_screen)
             # Set initial states for the toggle buttons once the viewer is loaded
             QTimer.singleShot(2000, self.initialize_viewer_settings)
@@ -1727,6 +1741,40 @@ class MainWindow(QMainWindow):
             self.stats_manager.cleanup()
         
         super().closeEvent(event)
+    
+    def resource_path(relative_path):
+        """Get the absolute path to a resource, works for development and PyInstaller"""
+        if getattr(sys, 'frozen', False):
+            # Running as compiled executable
+            base_path = sys._MEIPASS
+        else:
+            # Running as script
+            base_path = os.path.dirname(os.path.abspath(__file__))
+        
+        return os.path.join(base_path, relative_path)
+
+
+    def initialize_viewer_paths(self):
+        """Initialize the correct paths for the viewer when running as an executable"""
+        try:
+            # Get the path to the HTML file in the packaged application
+            html_path = resource_path(os.path.join("web", "viewer.html"))
+            if not os.path.exists(html_path):
+                html_path = resource_path("viewer.html")
+                
+            if os.path.exists(html_path):
+                print(f"Using HTML path: {html_path}")
+                # Convert to QUrl
+                if os.name == 'nt':  # Windows
+                    viewer_url = QUrl.fromLocalFile(html_path)
+                else:  # macOS, Linux
+                    viewer_url = QUrl("file://" + html_path)
+                
+                # Load the URL in the browser
+                if hasattr(self.viewer_manager, 'browser'):
+                    self.viewer_manager.browser.load(viewer_url)
+        except Exception as e:
+            print(f"Error initializing viewer paths: {str(e)}")
     
 if __name__ == "__main__":
   app = QApplication(sys.argv)
