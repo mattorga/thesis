@@ -521,7 +521,7 @@
        <enum>QFrame::Plain</enum>
       </property>
       <property name="text">
-       <string>Camera 1</string>
+       <string>No feed</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -552,7 +552,7 @@
        <enum>QFrame::Raised</enum>
       </property>
       <property name="text">
-       <string>Camera 2</string>
+       <string>No feed</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -583,7 +583,7 @@
        <enum>QFrame::Raised</enum>
       </property>
       <property name="text">
-       <string>Camera 3</string>
+       <string>No feed</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -803,6 +803,45 @@
       </property>
       <property name="text">
        <string/>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_2">
+      <property name="geometry">
+       <rect>
+        <x>150</x>
+        <y>60</y>
+        <width>60</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Camera 1</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_3">
+      <property name="geometry">
+       <rect>
+        <x>500</x>
+        <y>60</y>
+        <width>60</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Camera 2</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_4">
+      <property name="geometry">
+       <rect>
+        <x>860</x>
+        <y>60</y>
+        <width>60</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Camera 3</string>
       </property>
      </widget>
     </widget>

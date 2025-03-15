@@ -12,12 +12,14 @@ import configparser
 import os
 import pathlib
 import subprocess
+
 from final import Ui_MainWindow
-from utils.gait_classification import gait_classification
+
+from utils import gait_classification, gait_metrics, gait_classification_faithful
 from utils.statistics import Calc_ST_params
+
+
 from params_manager import ParamsManager
-
-
 from camera_manager import Camera, CameraManager
 from directory_manager import DirectoryManager
 from table_manager import TableManager
@@ -1070,7 +1072,7 @@ class MainWindow(QMainWindow):
             
             # --- Step 1: Pose Estimation --- #
             if process_config.get('pose_estimation', True):
-                progress_dialog.setLabelText("Step 1/7: Pose Estimation...")
+                progress_dialog.setLabelText("Step 1/10: Pose Estimation...")
                 QApplication.processEvents()
 
                 # Update the pose_model in the Config.toml based on the selected algorithm
@@ -1292,7 +1294,13 @@ class MainWindow(QMainWindow):
             # --- Step 7: Gait Classification --- #
             progress_dialog.setLabelText("Step 7/10: Gait Classification...")
             QApplication.processEvents()
-            gait_classification(self.directory_manager.trial_path)
+            gait_classification.gait_classification(self.directory_manager.trial_path)
+            gait_classification_faithful.gait_classification(self.directory_manager.trial_path)
+            try:
+                gait_metrics.validate_gait_cycles(self.directory_manager.trial_path, max_cycles=3)
+                gait_metrics.validate_gait_cycles(self.directory_manager.trial_path, max_cycles=3, modified=False)
+            except Exception as e:
+                print(e)
             progress_dialog.setValue(7)
             
             # --- Step 8: Convert .mot to CSV --- #
@@ -1390,6 +1398,7 @@ class MainWindow(QMainWindow):
             trc_file_path  = glob.glob(os.path.join(pose_3d_dir, "*_LSTM.trc"))
             trc_file = trc_file_path[0]
             Calc_ST_params.analyze_gait(self.directory_manager.trial_path, trc_file)
+            
             if hasattr(self, 'params_manager'):
                 self.params_manager.refresh_dialog()
             progress_dialog.setValue(10)
@@ -1560,7 +1569,6 @@ class MainWindow(QMainWindow):
         
         # Display initial speed value
         self.update_speed_label(1.0)  # Default 1x speed
-
     def on_play_button_clicked(self):
         """Handle play button click"""
         if hasattr(self, 'viewer_manager') and self.viewer_manager:
@@ -1569,7 +1577,6 @@ class MainWindow(QMainWindow):
             
             # Query the current state to update UI accordingly
             self.viewer_manager.get_animation_state(self.update_ui_from_animation_state)
-
     def on_pause_button_clicked(self):
         """Handle pause button click"""
         if hasattr(self, 'viewer_manager') and self.viewer_manager:
@@ -1578,7 +1585,6 @@ class MainWindow(QMainWindow):
             
             # Query the current state to update UI accordingly
             self.viewer_manager.get_animation_state(self.update_ui_from_animation_state)
-
     def update_ui_from_animation_state(self, state):
         """Update UI based on the animation state received from JavaScript"""
         if state:
@@ -1588,7 +1594,6 @@ class MainWindow(QMainWindow):
             # Update speed label if needed
             speed = state.get('speed', 1.0)
             self.update_speed_label(speed)
-
     def update_playback_frame(self):
         """Update the current frame during playback"""
         if not self.is_playing:
@@ -1609,13 +1614,11 @@ class MainWindow(QMainWindow):
         if hasattr(self, 'viewer_manager') and self.viewer_manager:
             # Trigger the rewind button in viewer.js
             self.viewer_manager.rewind()
-
     def on_skip_button_clicked(self):
         """Move to the next frame when the skip button is clicked"""
         if hasattr(self, 'viewer_manager') and self.viewer_manager:
             # Trigger the forward button in viewer.js
             self.viewer_manager.forward()
-        
     def on_speed_up_button_clicked(self):
         """Increase the playback speed when the speed up button is clicked"""
         # Define speed increments - common multipliers for playback
@@ -1643,7 +1646,6 @@ class MainWindow(QMainWindow):
         
         # Update the speed label
         self.update_speed_label(next_speed)
-
     def on_speed_down_button_clicked(self):
         """Decrease the playback speed when the speed down button is clicked"""
         # Define speed increments - common multipliers for playback
@@ -1671,7 +1673,6 @@ class MainWindow(QMainWindow):
         
         # Update the speed label
         self.update_speed_label(next_speed)
-        
     def on_center_animation_toggled(self):
         """Handle the center animation button toggle"""
         # Get the checked state of the button
@@ -1680,7 +1681,6 @@ class MainWindow(QMainWindow):
         # Update the 3D viewer if available
         if hasattr(self, 'viewer_manager') and self.viewer_manager:
             self.viewer_manager.set_center_animation(is_center_enabled)
-
     def on_axis_toggled(self):
         """Handle the axis visibility button toggle"""
         # Get the checked state of the button
@@ -1689,7 +1689,6 @@ class MainWindow(QMainWindow):
         # Update the 3D viewer if available
         if hasattr(self, 'viewer_manager') and self.viewer_manager:
             self.viewer_manager.set_axis_visible(is_axis_visible)
-
     def update_speed_label(self, speed_multiplier):
         """Update the speed label with the current playback speed multiplier"""
         # Format the speed as a string with the 'x' suffix
@@ -1717,7 +1716,6 @@ class MainWindow(QMainWindow):
         
         # Initialize the speed label with the default speed (1x)
         self.update_speed_label(1.0)
-    
     def closeEvent(self, event):
         """Handle application closing"""
         self.process_manager.cleanup()
@@ -1741,7 +1739,6 @@ class MainWindow(QMainWindow):
             self.stats_manager.cleanup()
         
         super().closeEvent(event)
-    
     def resource_path(relative_path):
         """Get the absolute path to a resource, works for development and PyInstaller"""
         if getattr(sys, 'frozen', False):
@@ -1752,8 +1749,7 @@ class MainWindow(QMainWindow):
             base_path = os.path.dirname(os.path.abspath(__file__))
         
         return os.path.join(base_path, relative_path)
-
-
+    
     def initialize_viewer_paths(self):
         """Initialize the correct paths for the viewer when running as an executable"""
         try:
