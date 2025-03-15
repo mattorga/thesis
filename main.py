@@ -180,6 +180,10 @@ class MainWindow(QMainWindow):
             self.ui.analyticsButton.setEnabled(False)
             self.ui.jointAnalyticsButton.setEnabled(False)
 
+            # Close parameters dialog if it's open
+            if hasattr(self, 'params_manager'):
+                self.params_manager.close_dialog_and_uncheck_button()
+            
             if hasattr(self, 'stats_manager'):
                 self.stats_manager.reset_selected_trials()
             
@@ -203,6 +207,10 @@ class MainWindow(QMainWindow):
             self.ui.analyticsButton.setEnabled(False)
             self.ui.jointAnalyticsButton.setEnabled(False)
 
+            # Close parameters dialog if it's open
+            if hasattr(self, 'params_manager'):
+                self.params_manager.close_dialog_and_uncheck_button()
+            
             if hasattr(self, 'stats_manager'):
                 self.stats_manager.check_selected_trials_validity()
             
@@ -257,7 +265,12 @@ class MainWindow(QMainWindow):
             
             self.update_comparative_stats_button_state()
 
+            # Refresh the gait parameters and metrics in the params dialog
+            # This ensures the metrics are updated whenever a new trial is selected
             if hasattr(self, 'params_manager'):
+                # Force a complete refresh by resetting metrics and parameters
+                self.params_manager.current_metrics = {}
+                self.params_manager.current_parameters = {}
                 self.params_manager.refresh_dialog()
             
             # After resetting verse data, try to find a reference file
@@ -276,7 +289,11 @@ class MainWindow(QMainWindow):
                 # automatically go back to Cameras page
                 current_page = self.ui.stackedWidget.currentIndex()
                 if current_page in [2, 3]:  # 2=Analytics, 3=Comparative
-                    self.ui.stackedWidget.setCurrentIndex(1)  # 1=Cameras page 
+                    self.ui.stackedWidget.setCurrentIndex(1)  # 1=Cameras page
+        else:
+            # If trial selection was cleared or canceled, close parameters dialog
+            if hasattr(self, 'params_manager'):
+                self.params_manager.close_dialog_and_uncheck_button()
     def add_participant(self):
         self.directory_manager.add_participant()
     def add_trial(self):
