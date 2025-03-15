@@ -675,7 +675,7 @@ class DirectoryManager:
             return None
         
         # Look for the CSV file with trial name in it
-        csv_files = [f for f in os.listdir(gait_class_dir) if f.endswith('.csv')]
+        csv_files = [f for f in os.listdir(gait_class_dir) if f.endswith('_original.csv')]
         
         if csv_files:
             # Use the first CSV file found
