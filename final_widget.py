@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'final.ui'
+# Form implementation generated from reading ui file 'final_widget.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.11
 #
@@ -14,20 +14,16 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.setWindowModality(QtCore.Qt.NonModal)
-        MainWindow.resize(1280, 800)
+        MainWindow.resize(1320, 840)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(MainWindow.sizePolicy().hasHeightForWidth())
         MainWindow.setSizePolicy(sizePolicy)
-        MainWindow.setMinimumSize(QtCore.QSize(1280, 800))
-        MainWindow.setMaximumSize(QtCore.QSize(1280, 800))
-        MainWindow.setWindowOpacity(1.0)
-        self.centralwidget = QtWidgets.QWidget(MainWindow)
-        self.centralwidget.setObjectName("centralwidget")
-        self.sidebar_full = QtWidgets.QWidget(self.centralwidget)
-        self.sidebar_full.setGeometry(QtCore.QRect(0, 0, 195, 800))
+        MainWindow.setMinimumSize(QtCore.QSize(1320, 840))
+        MainWindow.setMaximumSize(QtCore.QSize(1320, 840))
+        self.sidebar_full = QtWidgets.QWidget(MainWindow)
+        self.sidebar_full.setGeometry(QtCore.QRect(20, 20, 195, 800))
         self.sidebar_full.setMinimumSize(QtCore.QSize(195, 800))
         self.sidebar_full.setMaximumSize(QtCore.QSize(195, 800))
         self.sidebar_full.setAutoFillBackground(False)
@@ -184,8 +180,11 @@ class Ui_MainWindow(object):
         self.analyticsButton.setCheckable(True)
         self.analyticsButton.setChecked(False)
         self.analyticsButton.setObjectName("analyticsButton")
-        self.stackedWidget = QtWidgets.QStackedWidget(self.centralwidget)
-        self.stackedWidget.setGeometry(QtCore.QRect(210, 30, 1051, 751))
+        self.bgWidget = QtWidgets.QWidget(MainWindow)
+        self.bgWidget.setGeometry(QtCore.QRect(100, 20, 1200, 800))
+        self.bgWidget.setObjectName("bgWidget")
+        self.stackedWidget = QtWidgets.QStackedWidget(self.bgWidget)
+        self.stackedWidget.setGeometry(QtCore.QRect(130, 30, 1051, 751))
         self.stackedWidget.setObjectName("stackedWidget")
         self.dashboardPage = QtWidgets.QWidget()
         self.dashboardPage.setObjectName("dashboardPage")
@@ -552,7 +551,8 @@ class Ui_MainWindow(object):
         self.comparativeStatsButton.setCheckable(True)
         self.comparativeStatsButton.setObjectName("comparativeStatsButton")
         self.stackedWidget.addWidget(self.analyticsPage)
-        MainWindow.setCentralWidget(self.centralwidget)
+        self.bgWidget.raise_()
+        self.sidebar_full.raise_()
 
         self.retranslateUi(MainWindow)
         self.stackedWidget.setCurrentIndex(0)
@@ -560,7 +560,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Form"))
         self.Logo.setText(_translate("MainWindow", "GaitScape"))
         self.exitButton.setText(_translate("MainWindow", "Exit"))
         self.mainMenu.setText(_translate("MainWindow", "Main Menu"))
