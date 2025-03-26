@@ -1,0 +1,106 @@
+QWidget#MainWindow {
+    background-color: #FFFCF8;
+    border-radius: 30px;
+}
+
+QWidget#bgWidget {
+    background-color: #FFFCF8;
+    border-radius: 30px;
+}
+
+QWidget#sidebar_full{
+    background-color: white;
+    border-radius: 30px;
+}
+
+QLabel {
+    font-family: Poppins-Black; 
+}
+
+QLabel#mainMenu,
+QLabel#directoryMenu {
+    color: #B0B0B0;
+    font-size: 10px;
+}
+
+/* ------ Navigation Bar Components ------ */
+QPushButton#camerasButton,
+QPushButton#analyticsButton,
+QPushButton#comparativeButton
+{
+    border-radius: 6px;
+    font-size: 13px;
+}
+
+QPushButton#exitButton
+{
+    border-radius: 6px;
+    font-size: 13px;
+    background: #FFFCF8;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+QPushButton#camerasButton:checked,
+QPushButton#analyticsButton:checked,
+QPushButton#comparativeButton:checked
+{
+    border: 1px solid #251F1C;
+    background: #251F1C;
+    color: #F8F4EF;
+}
+
+QPushButton#processButton:enabled,
+{
+    border-radius: 6px;
+    font-size: 13px;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+QPushButton#camerasButton:hover,
+QPushButton#analyticsButton:hover,
+QPushButton#comparativeButton:hover,
+QPushButton#exitButton:hover,
+QPushButton#processButton:hover
+{
+    border: 1px solid #251F1C;
+    background: #251F1C;
+    color: #F8F4EF;
+}
+
+QPushButton#sessionSelectButton,
+QPushButton#participantSelectButton,
+QPushButton#trialSelectButton
+{
+    border-radius: 6px;
+    font-size: 13px;
+    text-align: left;
+}
+
+QPushButton#sessionSelectButton:hover,
+QPushButton#participantSelectButton:hover,
+QPushButton#trialSelectButton:hover,
+QPushButton#processConfiguration:hover
+{
+    text-decoration: underline;
+}
+
+QPushButton#participantAddButton,
+QPushButton#trialAddButton
+{
+    border-radius: 6px;
+    font-size: 13px;
+}
+
+QPushButton#participantAddButton:hover,
+QPushButton#trialAddButton:hover
+{
+    border: 1px solid gray;
+}
+
+
+QLabel#sessionSelectedLabel,
+QLabel#participantSelectedLabel,
+QLabel#trialSelectedLabel
+{
+    color: #808080;
+}

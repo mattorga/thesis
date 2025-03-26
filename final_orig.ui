@@ -34,9 +34,6 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <property name="windowOpacity">
-   <double>1.000000000000000</double>
-  </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QWidget" name="sidebar_full" native="true">
     <property name="geometry">
@@ -134,8 +131,8 @@
      </property>
      <property name="geometry">
       <rect>
-       <x>140</x>
-       <y>600</y>
+       <x>142</x>
+       <y>546</y>
        <width>40</width>
        <height>40</height>
       </rect>
@@ -163,7 +160,7 @@
      <property name="geometry">
       <rect>
        <x>12</x>
-       <y>600</y>
+       <y>546</y>
        <width>125</width>
        <height>40</height>
       </rect>
@@ -203,10 +200,10 @@
      </property>
      <property name="geometry">
       <rect>
-       <x>48</x>
-       <y>360</y>
-       <width>120</width>
-       <height>20</height>
+       <x>12</x>
+       <y>317</y>
+       <width>16</width>
+       <height>16</height>
       </rect>
      </property>
      <property name="font">
@@ -215,10 +212,7 @@
       </font>
      </property>
      <property name="text">
-      <string>Session</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+      <string/>
      </property>
     </widget>
     <widget class="QPushButton" name="sessionSelectButton">
@@ -227,9 +221,9 @@
      </property>
      <property name="geometry">
       <rect>
-       <x>48</x>
+       <x>12</x>
        <y>320</y>
-       <width>131</width>
+       <width>170</width>
        <height>40</height>
       </rect>
      </property>
@@ -253,12 +247,6 @@
      <property name="checked">
       <bool>false</bool>
      </property>
-     <property name="default">
-      <bool>false</bool>
-     </property>
-     <property name="flat">
-      <bool>true</bool>
-     </property>
     </widget>
     <widget class="QLabel" name="participantSelectedLabel">
      <property name="enabled">
@@ -266,10 +254,10 @@
      </property>
      <property name="geometry">
       <rect>
-       <x>48</x>
-       <y>430</y>
-       <width>120</width>
-       <height>20</height>
+       <x>12</x>
+       <y>374</y>
+       <width>16</width>
+       <height>16</height>
       </rect>
      </property>
      <property name="font">
@@ -278,10 +266,7 @@
       </font>
      </property>
      <property name="text">
-      <string>Participant</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+      <string/>
      </property>
     </widget>
     <widget class="QLabel" name="trialSelectedLabel">
@@ -290,10 +275,10 @@
      </property>
      <property name="geometry">
       <rect>
-       <x>48</x>
-       <y>500</y>
-       <width>120</width>
-       <height>20</height>
+       <x>12</x>
+       <y>431</y>
+       <width>16</width>
+       <height>16</height>
       </rect>
      </property>
      <property name="font">
@@ -302,10 +287,7 @@
       </font>
      </property>
      <property name="text">
-      <string>Trial</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+      <string/>
      </property>
     </widget>
     <widget class="QPushButton" name="trialSelectButton">
@@ -314,9 +296,9 @@
      </property>
      <property name="geometry">
       <rect>
-       <x>48</x>
-       <y>460</y>
-       <width>90</width>
+       <x>12</x>
+       <y>420</y>
+       <width>125</width>
        <height>40</height>
       </rect>
      </property>
@@ -334,9 +316,6 @@
      <property name="checked">
       <bool>false</bool>
      </property>
-     <property name="flat">
-      <bool>true</bool>
-     </property>
     </widget>
     <widget class="QPushButton" name="trialAddButton">
      <property name="enabled">
@@ -344,10 +323,10 @@
      </property>
      <property name="geometry">
       <rect>
-       <x>150</x>
-       <y>470</y>
-       <width>25</width>
-       <height>25</height>
+       <x>142</x>
+       <y>420</y>
+       <width>40</width>
+       <height>40</height>
       </rect>
      </property>
      <property name="sizePolicy">
@@ -363,9 +342,6 @@
       <bool>false</bool>
      </property>
      <property name="checked">
-      <bool>false</bool>
-     </property>
-     <property name="flat">
       <bool>false</bool>
      </property>
     </widget>
@@ -375,9 +351,9 @@
      </property>
      <property name="geometry">
       <rect>
-       <x>48</x>
-       <y>390</y>
-       <width>90</width>
+       <x>12</x>
+       <y>370</y>
+       <width>125</width>
        <height>40</height>
       </rect>
      </property>
@@ -395,9 +371,6 @@
      <property name="checked">
       <bool>false</bool>
      </property>
-     <property name="flat">
-      <bool>true</bool>
-     </property>
     </widget>
     <widget class="QPushButton" name="participantAddButton">
      <property name="enabled">
@@ -405,10 +378,10 @@
      </property>
      <property name="geometry">
       <rect>
-       <x>150</x>
-       <y>400</y>
-       <width>25</width>
-       <height>25</height>
+       <x>142</x>
+       <y>370</y>
+       <width>40</width>
+       <height>40</height>
       </rect>
      </property>
      <property name="sizePolicy">
@@ -424,9 +397,6 @@
       <bool>false</bool>
      </property>
      <property name="checked">
-      <bool>false</bool>
-     </property>
-     <property name="flat">
       <bool>false</bool>
      </property>
     </widget>
@@ -448,7 +418,7 @@
       <string>Comparative</string>
      </property>
      <property name="checkable">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
      <property name="checked">
       <bool>false</bool>
@@ -472,10 +442,10 @@
       <string>Cameras</string>
      </property>
      <property name="checkable">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
      <property name="checked">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
     </widget>
     <widget class="QPushButton" name="analyticsButton">
@@ -496,7 +466,7 @@
       <string>Analytics</string>
      </property>
      <property name="checkable">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
      <property name="checked">
       <bool>false</bool>
@@ -513,7 +483,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="dashboardPage">
      <widget class="QLabel" name="dashboardLabel">

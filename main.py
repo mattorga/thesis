@@ -1,4 +1,5 @@
 import sys
+
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
@@ -13,11 +14,10 @@ import os
 import pathlib
 import subprocess
 
-from final import Ui_MainWindow
+from final_widget import Ui_MainWindow
 
 from utils import gait_classification, gait_metrics, gait_classification_faithful
 from utils.statistics import Calc_ST_params
-
 
 from params_manager import ParamsManager
 from camera_manager import Camera, CameraManager
@@ -29,24 +29,24 @@ from chart_manager import ChartManager
 from viewer_manager import ViewerManager
 from comparative_params_manager import ComparativeStatsManager
 
-
-
-
-
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
-    
+
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+        self.setWindowFlags(Qt.FramelessWindowHint)
+        self.setAttribute(Qt.WA_TranslucentBackground)
 
-        self.ui.stackedWidget.setCurrentIndex(1)
+        self.setup_shadow_effects()
+
+        self.ui.stackedWidget.setCurrentIndex(1)  # Start on cameras page
         self.current_highlighted_row = 0
         self.current_comparative_row = 0
         
         # Disable analytics and comparative buttons by default
         self.ui.analyticsButton.setEnabled(False)
-        self.ui.jointAnalyticsButton.setEnabled(False)
+        self.ui.comparativeButton.setEnabled(False)
         
         self.directory_manager = DirectoryManager(self)
         if getattr(sys, 'frozen', False):
@@ -71,9 +71,9 @@ class MainWindow(QMainWindow):
         QTimer.singleShot(1000, self.init_viewer)
 
         camera_slots = {
-        0: self.ui.cameraSlot1,
-        1: self.ui.cameraSlot2,
-        2: self.ui.cameraSlot3
+            0: self.ui.cameraSlot1,
+            1: self.ui.cameraSlot2,
+            2: self.ui.cameraSlot3
         }
         self.camera_manager.camera_slots = camera_slots
         
@@ -86,21 +86,53 @@ class MainWindow(QMainWindow):
 
         self.setup_connections()
         self.on_display_data()
+        
+        # Initialize sidebar button states to match current page
+        self.update_sidebar_buttons()
  
+    def setup_shadow_effects(self):
+        # Create shadow effect for sidebar
+        sidebar_shadow = QGraphicsDropShadowEffect()
+        sidebar_shadow.setBlurRadius(15)  # The blur radius (higher = more blurred)
+        sidebar_shadow.setColor(QColor(0, 0, 0, 80))  # Shadow color with 80/255 opacity
+        sidebar_shadow.setOffset(0, 0)  # X and Y offset - positive X moves shadow right
+        
+        # Apply the shadow effect to the sidebar
+        self.ui.sidebar_full.setGraphicsEffect(sidebar_shadow)
+
+        bg_widget_shadow = QGraphicsDropShadowEffect()
+        bg_widget_shadow.setBlurRadius(15)  # The blur radius (higher = more blurred)
+        bg_widget_shadow.setColor(QColor(0, 0, 0, 80))  # Shadow color with 80/255 opacity
+        bg_widget_shadow.setOffset(0, 0)  # X and Y offset - positive X moves shadow right
+        self.ui.bgWidget.setGraphicsEffect(bg_widget_shadow)
+  
   # --- Page Changing Functions --- #
   # Note: Simple enough to not need signal/slot implementation
     def on_dashboardButton_clicked(self):
         self.ui.stackedWidget.setCurrentIndex(0)
     def on_camerasButton_clicked(self):
         self.ui.stackedWidget.setCurrentIndex(1)
+        self.update_sidebar_buttons(1)
     def on_analyticsButton_clicked(self):
-    # Only change page if the button is enabled (meaning data is available)
+        """Handle analytics button click: switch to analytics page if enabled and update button states"""
         if self.ui.analyticsButton.isEnabled():
             self.ui.stackedWidget.setCurrentIndex(2)
-    def on_jointAnalyticsButton_clicked(self):
-    # Only change page if the button is enabled (meaning data is available)
-        if self.ui.jointAnalyticsButton.isEnabled():
+            self.update_sidebar_buttons(2)
+        else:
+            # If button is disabled, ensure it remains unchecked
+            self.ui.analyticsButton.setChecked(False)
+            # Update other buttons based on current page
+            self.update_sidebar_buttons()
+    def on_comparativeButton_clicked(self):
+        """Handle comparative button click: switch to comparative page if enabled and update button states"""
+        if self.ui.comparativeButton.isEnabled():
             self.ui.stackedWidget.setCurrentIndex(3)
+            self.update_sidebar_buttons(3)
+        else:
+            # If button is disabled, ensure it remains unchecked
+            self.ui.comparativeButton.setChecked(False)
+            # Update other buttons based on current page
+            self.update_sidebar_buttons()
 
     # --- Exit Program --- #
     def on_exitButton_clicked(self):
@@ -108,6 +140,12 @@ class MainWindow(QMainWindow):
   
     # --- Directory, Page, Process Setup --- #
     def setup_connections(self):      
+        # Sidebar buttons for syncronization
+        self.ui.camerasButton.clicked.connect(self.on_camerasButton_clicked)
+        self.ui.analyticsButton.clicked.connect(self.on_analyticsButton_clicked)
+        self.ui.comparativeButton.clicked.connect(self.on_comparativeButton_clicked)
+        self.ui.stackedWidget.currentChanged.connect(self.update_sidebar_buttons)
+
         # User Selection
         self.ui.sessionSelectButton.clicked.connect(self.on_select_session)
         self.ui.participantSelectButton.clicked.connect(self.on_select_participant)
@@ -156,6 +194,30 @@ class MainWindow(QMainWindow):
         self.params_manager.setup_connections()
         self.stats_manager.setup_connections()
 
+    # --- Sidebar Buttons Synchronization Functions --- #
+    def update_sidebar_buttons(self, index=None):
+        """
+        Update the checked state of sidebar buttons based on the current page.
+        
+        Args:
+            index (int, optional): The index of the current page. If None, uses current index.
+        """
+        if index is None:
+            index = self.ui.stackedWidget.currentIndex()
+        
+        # Uncheck all buttons initially
+        self.ui.camerasButton.setChecked(False)
+        self.ui.analyticsButton.setChecked(False)
+        self.ui.comparativeButton.setChecked(False)
+
+        # Button correspondence
+        if index == 1: # Cameras Page
+            self.ui.camerasButton.setChecked(True)
+        elif index == 2: # Analytics Page
+            self.ui.analyticsButton.setChecked(True)
+        elif index == 3: # Comparative
+            self.ui.comparativeButton.setChecked(True)
+
     # --- User Selection Functions --- #
     def on_select_session(self):
         self.directory_manager.set_session()
@@ -178,7 +240,7 @@ class MainWindow(QMainWindow):
             
             # Disable analytics and comparative buttons when changing session
             self.ui.analyticsButton.setEnabled(False)
-            self.ui.jointAnalyticsButton.setEnabled(False)
+            self.ui.comparativeButton.setEnabled(False)
 
             # Close parameters dialog if it's open
             if hasattr(self, 'params_manager'):
@@ -205,7 +267,7 @@ class MainWindow(QMainWindow):
             
             # Disable analytics and comparative buttons when changing participant
             self.ui.analyticsButton.setEnabled(False)
-            self.ui.jointAnalyticsButton.setEnabled(False)
+            self.ui.comparativeButton.setEnabled(False)
 
             # Close parameters dialog if it's open
             if hasattr(self, 'params_manager'):
@@ -247,7 +309,7 @@ class MainWindow(QMainWindow):
             # Enable or disable analytics and comparative buttons based on motion file existence
             has_data = self.motion_data_file is not None
             self.ui.analyticsButton.setEnabled(has_data)
-            self.ui.jointAnalyticsButton.setEnabled(has_data)
+            self.ui.comparativeButton.setEnabled(has_data)
             self.ui.processConfiguration.setEnabled(True)
             
             # Reset verse trial data when a new trial is selected
@@ -910,6 +972,9 @@ class MainWindow(QMainWindow):
         Args:
             index (int): The index of the newly selected tab
         """
+        # Update sidebar button states to match current tab
+        self.update_sidebar_buttons(index)
+        
         # Check if we're switching to the analytics/simulation page (tab index 2)
         if index == 2:  # Analytics tab        
             # If params button is checked, ensure dialog is shown
@@ -925,7 +990,6 @@ class MainWindow(QMainWindow):
                 # Uncheck the button to maintain consistency
                 if hasattr(self.ui, 'paramsButton'):
                     self.ui.paramsButton.setChecked(False)
-
         
         # Check if we're switching to the comparative page (tab index 3)
         elif index == 3:  # Comparative tab
@@ -1430,7 +1494,7 @@ class MainWindow(QMainWindow):
             if self.motion_data_file:
                 # Enable analytics and comparative buttons since a motion file now exists
                 self.ui.analyticsButton.setEnabled(True)
-                self.ui.jointAnalyticsButton.setEnabled(True)
+                self.ui.comparativeButton.setEnabled(True)
                 self.on_display_data()
                 
                 QMessageBox.information(
@@ -1790,9 +1854,14 @@ class MainWindow(QMainWindow):
             print(f"Error initializing viewer paths: {str(e)}")
     
 if __name__ == "__main__":
-  app = QApplication(sys.argv)
+    app = QApplication(sys.argv)
 
-  window = MainWindow()
-  window.show()
+    QFontDatabase.addApplicationFont("resources/fonts/poppins/Poppins-Bold.ttf")
 
-  sys.exit(app.exec()) 
+    with open("styles.qss", "r") as f:
+        app.setStyleSheet(f.read())
+
+    window = MainWindow()
+    window.show()
+
+    sys.exit(app.exec()) 
