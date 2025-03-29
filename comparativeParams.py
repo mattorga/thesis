@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(412, 284)
+        Dialog.resize(412, 282)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -114,9 +114,6 @@ class Ui_Dialog(object):
         self.avePearCorrLabel_3.setObjectName("avePearCorrLabel_3")
         self.label_2 = QtWidgets.QLabel(Dialog)
         self.label_2.setGeometry(QtCore.QRect(20, 250, 371, 21))
-        font = QtGui.QFont()
-        font.setPointSize(9)
-        self.label_2.setFont(font)
         self.label_2.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_2.setObjectName("label_2")
 
@@ -146,13 +143,3 @@ class Ui_Dialog(object):
         self.verse2Button.setText(_translate("Dialog", "Verse 2"))
         self.avePearCorrLabel_3.setText(_translate("Dialog", "Choose Gait Trials:"))
         self.label_2.setText(_translate("Dialog", "Note: At least two trial data of the same gait types is needed."))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    Dialog = QtWidgets.QDialog()
-    ui = Ui_Dialog()
-    ui.setupUi(Dialog)
-    Dialog.show()
-    sys.exit(app.exec_())

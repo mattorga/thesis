@@ -45,7 +45,7 @@ trc_file  = args.trc
 osim_file = args.osim
 csv_file  = args.csv
 fbx_output = args.fbx
-framerate = int(args.fps)
+framerate = args.fps
 
 ### -------------------- Install Pose2Sim -------------------- ###
 def install_pose2sim(zip_path, extract_to):

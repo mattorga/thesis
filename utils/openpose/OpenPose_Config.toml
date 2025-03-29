@@ -1,8 +1,0 @@
-# OpenPose configuration options
-OpenPose_path = none
-model_path = none
-face = false
-hand = false
-net_resolution = "320x240" # default -1x368
-model_pose = "BODY_25"
-number_people_max = 5

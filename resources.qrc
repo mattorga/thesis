@@ -1,0 +1,52 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource prefix="icons">
+        <file alias="analytics.png">resources/icons/analytics.png</file>
+        
+        <file alias="cameras.png">resources/icons/cameras.png</file>
+        <file alias="cameras-selected.png">resources/icons/cameras-selected.png</file>
+
+        <file alias="compare.png">resources/icons/compare.png</file>
+        <file alias="dashboard.png">resources/icons/dashboard.png</file>
+
+        <file alias="exit.png">resources/icons/exit.png</file>
+        <file alias="exit-hovered.png">resources/icons/exit-hovered.png</file>
+
+        <file alias="gaitscape.png">resources/icons/gaitscape.png</file>
+        <file alias="GS.png">resources/icons/GS.png</file>
+
+        <file alias="group.png">resources/icons/group.png</file>
+        
+        <file alias="pie.png">resources/icons/pie.png</file>
+        <file alias="pie-selected.png">resources/icons/pie-selected.png</file>
+
+        <file alias="left-arrow-single.png">resources/icons/left-arrow-single.png</file>
+        
+        <file alias="chevron-left.png">resources/icons/chevron-left.png</file>
+        <file alias="chevron-right.png">resources/icons/chevron-right.png</file>
+        
+        <file alias="pause.png">resources/icons/pause.png</file>
+        <file alias="pause-inverted.png">resources/icons/pause-inverted.png</file>
+
+        <file alias="play.png">resources/icons/play.png</file>
+        <file alias="play-inverted.png">resources/icons/play-inverted.png</file>
+
+        <file alias="processing.png">resources/icons/processing.png</file>
+        <file alias="right-arrow-single.png">resources/icons/right-arrow-single.png</file>
+        <file alias="session.png">resources/icons/session.png</file>
+        
+        <file alias="simulation.png">resources/icons/simulation.png</file>
+        <file alias="simulation-selected.png">resources/icons/simulation-selected.png</file>
+
+        <file alias="skip.png">resources/icons/skip.png</file>
+        <file alias="stacks.png">resources/icons/stacks.png</file>
+        <file alias="videocam-off.png">resources/icons/videocam-off.png</file>
+
+        <file alias="airplay.png">resources/icons/airplay.png</file>
+        <file alias="settings.png">resources/icons/settings.png</file>
+    </qresource>
+
+    <qresource prefix="fonts">
+        <file alias="Poppins-Regular.ttf">resources/fonts/poppins/Poppins-Regular.ttf</file>
+    </qresource>
+</RCC>
