@@ -3,6 +3,8 @@
 block_cipher = None
 
 # Read Pose2Sim path from the temporary file
+from PyInstaller.utils.hooks import collect_all
+
 
 pose2sim_path = None
 try:
@@ -14,27 +16,24 @@ except FileNotFoundError:
     pose2sim_path = os.path.dirname(Pose2Sim.__file__)
     print(f"Pose2Sim path file not found, using imported path: {pose2sim_path}")
 
-
-
 # Add data files that need to be included
 data_files = [
     ('blender_viz_orig', 'blender_viz_orig'),
-    ('final_ui', 'final_ui'),
     ('misc', 'misc'),
-    ('Statistics Scripts', 'Statistics Scripts'),
     ('utils', 'utils'),
     ('web', 'web'),
+    ('resources', 'resources'),
+    ('resources/icons', 'resources/icons'),
+    ('resources/fonts/poppins', 'resources/fonts/poppins'),
     ('analyticsParams.py', '.'),
     ('analyticsParams.ui', '.'),
     ('comparative_params_manager.py', '.'),
     ('comparativeParams.py', '.'),
     ('comparativeParams.ui', '.'),
-    ('final.ui', '.'),
     ('params_manager.py', '.'),
     ('patient_form.py', '.'),
     ('trial_form.py', '.'),
     ('trial_form.ui', '.'),
-    ('final.py', '.'),
     ('camera_manager.py', '.'),
     ('directory_manager.py', '.'),
     ('table_manager.py', '.'),
@@ -44,7 +43,12 @@ data_files = [
     ('viewer_manager.py', '.'),
     ('poseConfiguration.py', '.'),
     ('poseConfiguration.ui', '.'),
-
+    ('styles.qss', '.'),
+    ('resources.qrc', '.'),
+    ('resources_rc.py', '.'),
+    ('final_widget.py', '.'),
+    ('final_widget.ui', '.'),
+    ('final_orig.ui', '.'),
 ]
 
 # Add Pose2Sim directory to data_files
@@ -127,6 +131,8 @@ hidden_imports = [
     'utils.statistics.paired_t_test_gait',
 ]
 
+from PyInstaller.utils.hooks import collect_data_files
+
 a = Analysis(
     ['main.py'],
     pathex=[],
@@ -142,6 +148,22 @@ a = Analysis(
     cipher=block_cipher,
     noarchive=False,
 )
+
+import os
+from PyQt5.QtCore import QLibraryInfo
+
+# Get the plugins directory from PyQt5
+qt_plugins_dir = QLibraryInfo.location(QLibraryInfo.PluginsPath)
+
+# Add each plugin subdirectory
+for plugin_type in ['platforms', 'imageformats', 'styles', 'iconengines', 'webengine']:
+    plugin_dir = os.path.join(qt_plugins_dir, plugin_type)
+    if os.path.exists(plugin_dir):
+        for file in os.listdir(plugin_dir):
+            if file.endswith('.dll') or file.endswith('.so'):
+                source = os.path.join(plugin_dir, file)
+                target = os.path.join(plugin_type, file)
+                a.datas.append((target, source, 'DATA'))
 
 pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
 

@@ -1,3 +1,7 @@
+QWidget {
+    font-family: "Poppins"; 
+}
+
 QWidget#MainWindow {
     background-color: #FFFCF8;
     border-radius: 30px;
@@ -8,28 +12,24 @@ QWidget#bgWidget {
     border-radius: 30px;
 }
 
+/* ------ Navigation Bar ------ */
 QWidget#sidebar_full{
     background-color: white;
     border-radius: 30px;
 }
 
-QLabel {
-    font-family: Poppins-Black; 
-}
-
-QLabel#mainMenu,
-QLabel#directoryMenu {
-    color: #B0B0B0;
-    font-size: 10px;
-}
-
-/* ------ Navigation Bar Components ------ */
 QPushButton#camerasButton,
 QPushButton#analyticsButton,
 QPushButton#comparativeButton
 {
     border-radius: 6px;
     font-size: 13px;
+    text-align: left;
+    padding-left: 10px;
+}
+
+QPushButton::icon{
+    padding-right: 10px;
 }
 
 QPushButton#exitButton
@@ -37,7 +37,7 @@ QPushButton#exitButton
     border-radius: 6px;
     font-size: 13px;
     background: #FFFCF8;
-    border: 1px solid rgba(0, 0, 0, 0.5);
+    border: 1px solid #D0D0D0;
 }
 
 QPushButton#camerasButton:checked,
@@ -49,17 +49,26 @@ QPushButton#comparativeButton:checked
     color: #F8F4EF;
 }
 
-QPushButton#processButton:enabled,
+QPushButton#processButton:enabled
 {
     border-radius: 6px;
     font-size: 13px;
-    border: 1px solid rgba(0, 0, 0, 0.5);
+    border: 1px solid #D0D0D0;
 }
+
+QPushButton#exitButton:hover
+{
+    border: 1px solid #251F1C;
+}
+
 
 QPushButton#camerasButton:hover,
 QPushButton#analyticsButton:hover,
-QPushButton#comparativeButton:hover,
-QPushButton#exitButton:hover,
+QPushButton#comparativeButton:hover
+{
+    border: 1px solid #251F1C;
+}
+
 QPushButton#processButton:hover
 {
     border: 1px solid #251F1C;
@@ -78,10 +87,15 @@ QPushButton#trialSelectButton
 
 QPushButton#sessionSelectButton:hover,
 QPushButton#participantSelectButton:hover,
-QPushButton#trialSelectButton:hover,
-QPushButton#processConfiguration:hover
+QPushButton#trialSelectButton:hover
 {
     text-decoration: underline;
+}
+
+QPushButton#processConfiguration:hover
+{
+    border-radius: 6px;
+    border: 1px solid #808080;
 }
 
 QPushButton#participantAddButton,
@@ -97,10 +111,229 @@ QPushButton#trialAddButton:hover
     border: 1px solid gray;
 }
 
-
 QLabel#sessionSelectedLabel,
 QLabel#participantSelectedLabel,
 QLabel#trialSelectedLabel
 {
     color: #808080;
+}
+
+QLabel#mainMenu,
+QLabel#directoryMenu {
+    color: #B0B0B0;
+    font-size: 10px;
+}
+
+/* ------ Cameras Page ------ */
+QLabel#cameraSlot,
+QLabel#cameraSlot2,
+QLabel#cameraSlot3
+{
+    background: #929292;
+}
+
+QPushButton#detectCamerasButton,
+QPushButton#startRecordingButton,
+QPushButton#closeCamerasButton,
+QPushButton#stopRecordingButton
+{
+    background: #251F1C;
+    color: #FFFFFF;
+    border-radius: 6px;
+}
+
+QPushButton#detectCamerasButton:hover,
+QPushButton#startRecordingButton:hover,
+QPushButton#closeCamerasButton:hover,
+QPushButton#stopRecordingButton:hover
+{
+    background: #FFFFFF;
+    color: #251F1C;
+    border-radius: 6px;
+    border: 1px solid #251F1C;
+}
+
+/* ------ Analytics Page ------ */
+QPushButton#analyticsAllButton,
+QPushButton#analyticsHipButton,
+QPushButton#analyticsKneeButton,
+QPushButton#analyticsAnkleButton
+{   
+    background: #FFFFFF;
+}
+
+QPushButton#analyticsAllButton:hover,
+QPushButton#analyticsHipButton:hover,
+QPushButton#analyticsKneeButton:hover,
+QPushButton#analyticsAnkleButton:hover
+{   
+    background: #3A322C;
+    color: #FFFFFF;
+}
+
+QPushButton#analyticsAllButton:checked,
+QPushButton#analyticsHipButton:checked,
+QPushButton#analyticsKneeButton:checked,
+QPushButton#analyticsAnkleButton:checked
+{   
+    background: #251F1C;
+    color: #FFFFFF;
+}
+
+QPushButton#analyticsAllButton
+{
+    border-left: 1px solid #D0D0D0;
+    border-top: 1px solid #D0D0D0;
+    border-bottom: 1px solid #D0D0D0;
+}
+
+QPushButton#analyticsHipButton,
+QPushButton#analyticsKneeButton
+{
+    border-top: 1px solid #D0D0D0;
+    border-bottom: 1px solid #D0D0D0;
+}
+
+QPushButton#analyticsAnkleButton
+{
+    border-right: 1px solid #D0D0D0;
+    border-top: 1px solid #D0D0D0;
+    border-bottom: 1px solid #D0D0D0;
+}
+
+QPushButton#playButton,
+QPushButton#rewindButton,
+QPushButton#backButton,
+QPushButton#skipButton,
+QPushButton#fastForwardButton
+{
+    background: #FFFFFF;
+    border: 1px solid #D0D0D0;
+}
+
+QPushButton#playButton:hover,
+QPushButton#rewindButton:hover,
+QPushButton#backButton:hover,
+QPushButton#skipButton:hover,
+QPushButton#fastForwardButton:hover
+{
+    border: 1px solid #251F1C;
+}
+
+QPushButton#playButton:checked
+{
+        background: #251F1C;
+}
+
+QPushButton#rewindButton{
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+QPushButton#fastForwardButton{
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+QTableWidget#jointsTable
+{
+    border: 1px solid #D0D0D0;
+}
+
+QWidget#trialChart
+{
+    border: 1px solid #D0D0D0;
+}
+
+QPushButton#centerAnimationButton,
+QPushButton#paramsButton
+{
+    background: #FFFFFF;
+    border: 1px solid #D0D0D0;
+}
+
+QPushButton#centerAnimationButton:hover,
+QPushButton#paramsButton:hover
+{
+    background: #3A322C;
+    border: 1px solid #D0D0D0;
+    color: #FFFFFF;
+}
+
+QPushButton#centerAnimationButton:checked,
+QPushButton#paramsButton:checked
+{
+    background: #251F1C;
+    border: 1px solid #251F1C;
+    color: #FFFFFF;
+}
+
+QSlider::handle:horizontal {
+    background-color: #251F1C;
+    border: 1px solid #D0D0D0;
+    width: 15px;
+    height: 15px;
+    margin: -7px 0;
+    border-radius: 8px;
+}
+
+/* ------ Comparative Page ------ */
+QPushButton#comparativeAllButton,
+QPushButton#comparativeHipButton,
+QPushButton#comparativeKneeButton,
+QPushButton#comparativeAnkleButton,
+QPushButton#newVerseButton
+{   
+    background: #FFFFFF;
+}
+
+QPushButton#comparativeAllButton:hover,
+QPushButton#comparativeHipButton:hover,
+QPushButton#comparativeKneeButton:hover,
+QPushButton#comparativeAnkleButton:hover,
+QPushButton#newVerseButton:hover
+{   
+    background: #3A322C;
+    color: #FFFFFF;
+}
+
+QPushButton#comparativeAllButton:checked,
+QPushButton#comparativeHipButton:checked,
+QPushButton#comparativeKneeButton:checked,
+QPushButton#comparativeAnkleButton:checked,
+QPushButton#newVerseButton:checked
+{   
+    background: #251F1C;
+    color: #FFFFFF;
+}
+
+QPushButton#comparativeAllButton
+{
+    border-left: 1px solid #D0D0D0;
+    border-top: 1px solid #D0D0D0;
+    border-bottom: 1px solid #D0D0D0;
+}
+
+QPushButton#comparativeHipButton,
+QPushButton#comparativeKneeButton
+{
+    border-top: 1px solid #D0D0D0;
+    border-bottom: 1px solid #D0D0D0;
+}
+
+QPushButton#comparativeAnkleButton
+{
+    border-right: 1px solid #D0D0D0;
+    border-top: 1px solid #D0D0D0;
+    border-bottom: 1px solid #D0D0D0;
+}
+
+QPushButton#newVerseButton
+{
+    border: 1px solid #D0D0D0;
+}
+
+QPushButton#newVerseButton:checked
+{
+    border: 1px solid #D0D0D0;
 }

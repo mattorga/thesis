@@ -29,7 +29,7 @@ from chart_manager import ChartManager
 from viewer_manager import ViewerManager
 from comparative_params_manager import ComparativeStatsManager
 
-class MainWindow(QMainWindow):
+class MainWindow(QWidget):
     def __init__(self):
         super(MainWindow, self).__init__()
 
@@ -71,7 +71,7 @@ class MainWindow(QMainWindow):
         QTimer.singleShot(1000, self.init_viewer)
 
         camera_slots = {
-            0: self.ui.cameraSlot1,
+            0: self.ui.cameraSlot,
             1: self.ui.cameraSlot2,
             2: self.ui.cameraSlot3
         }
@@ -82,7 +82,6 @@ class MainWindow(QMainWindow):
         
         self.ui.slider.valueChanged.connect(self.on_slider_value_changed)
         self.ui.centerAnimationButton.setChecked(True)  # Default to centered
-        self.ui.axisButton.setChecked(False)  # Default to axes hidden
 
         self.setup_connections()
         self.on_display_data()
@@ -95,17 +94,13 @@ class MainWindow(QMainWindow):
         sidebar_shadow = QGraphicsDropShadowEffect()
         sidebar_shadow.setBlurRadius(15)  # The blur radius (higher = more blurred)
         sidebar_shadow.setColor(QColor(0, 0, 0, 80))  # Shadow color with 80/255 opacity
-        sidebar_shadow.setOffset(0, 0)  # X and Y offset - positive X moves shadow right
+        sidebar_shadow.setOffset(1, 0)  # X and Y offset - positive X moves shadow right
         
-        # Apply the shadow effect to the sidebar
+        # # Apply the shadow effect to the sidebar
         self.ui.sidebar_full.setGraphicsEffect(sidebar_shadow)
 
-        bg_widget_shadow = QGraphicsDropShadowEffect()
-        bg_widget_shadow.setBlurRadius(15)  # The blur radius (higher = more blurred)
-        bg_widget_shadow.setColor(QColor(0, 0, 0, 80))  # Shadow color with 80/255 opacity
-        bg_widget_shadow.setOffset(0, 0)  # X and Y offset - positive X moves shadow right
-        self.ui.bgWidget.setGraphicsEffect(bg_widget_shadow)
-  
+        pass
+    
   # --- Page Changing Functions --- #
   # Note: Simple enough to not need signal/slot implementation
     def on_dashboardButton_clicked(self):
@@ -188,7 +183,6 @@ class MainWindow(QMainWindow):
         self.ui.fastForwardButton.clicked.connect(self.on_speed_up_button_clicked)
         self.ui.rewindButton.clicked.connect(self.on_speed_down_button_clicked)
         self.ui.centerAnimationButton.clicked.connect(self.on_center_animation_toggled)
-        self.ui.axisButton.clicked.connect(self.on_axis_toggled)
 
         self.ui.processConfiguration.clicked.connect(self.on_process_configuration)
         self.params_manager.setup_connections()
@@ -1408,7 +1402,7 @@ class MainWindow(QMainWindow):
             bodykin_from_mot_osim.bodykin_from_mot_osim_func(mot_path, osim_path, csv_path)
             progress_dialog.setValue(8)
 
-            # --- Step 9: Generate FBX file using Blender ---
+            # --- Step 9: Generate FBX file using Blender --- #
             if os.name == 'nt':
                 progress_dialog.setLabelText("Step 9/10: Generating FBX file using Blender...")
                 QApplication.processEvents()
@@ -1559,9 +1553,6 @@ class MainWindow(QMainWindow):
             # Set initial center animation state
             self.viewer_manager.set_center_animation(self.ui.centerAnimationButton.isChecked())
             
-            # Set initial axis visibility state
-            self.viewer_manager.set_axis_visible(self.ui.axisButton.isChecked())
-
     @pyqtSlot(float)
     def update_slider_from_web(self, time):
         """
@@ -1631,8 +1622,7 @@ class MainWindow(QMainWindow):
         """Set up connections for play/pause buttons"""
         # Connect play and pause buttons
         self.ui.playButton.clicked.connect(self.on_play_button_clicked)
-        self.ui.pauseButton.clicked.connect(self.on_pause_button_clicked)
-        
+
         # Connect skip/back buttons
         self.ui.skipButton.clicked.connect(self.on_skip_button_clicked)
         self.ui.backButton.clicked.connect(self.on_back_button_clicked)
@@ -1642,9 +1632,7 @@ class MainWindow(QMainWindow):
         self.ui.rewindButton.clicked.connect(self.on_speed_down_button_clicked)
         
         # Connect center animation and axis toggle buttons
-        self.ui.centerAnimationButton.clicked.connect(self.on_center_animation_toggled)
-        self.ui.axisButton.clicked.connect(self.on_axis_toggled)
-        
+        self.ui.centerAnimationButton.clicked.connect(self.on_center_animation_toggled)        
         # Initialize playback state
         self.is_playing = False
         
@@ -1654,14 +1642,6 @@ class MainWindow(QMainWindow):
         """Handle play button click"""
         if hasattr(self, 'viewer_manager') and self.viewer_manager:
             # Toggle play/pause in the viewer.js
-            self.viewer_manager.play_pause()
-            
-            # Query the current state to update UI accordingly
-            self.viewer_manager.get_animation_state(self.update_ui_from_animation_state)
-    def on_pause_button_clicked(self):
-        """Handle pause button click"""
-        if hasattr(self, 'viewer_manager') and self.viewer_manager:
-            # This does the same as play - it toggles the state
             self.viewer_manager.play_pause()
             
             # Query the current state to update UI accordingly
@@ -1787,7 +1767,6 @@ class MainWindow(QMainWindow):
         """Set up connections for play/pause buttons"""
         # Connect play and pause buttons
         self.ui.playButton.clicked.connect(self.on_play_button_clicked)
-        self.ui.pauseButton.clicked.connect(self.on_pause_button_clicked)
         
         # Initialize playback state
         self.is_playing = False
@@ -1852,14 +1831,29 @@ class MainWindow(QMainWindow):
                     self.viewer_manager.browser.load(viewer_url)
         except Exception as e:
             print(f"Error initializing viewer paths: {str(e)}")
-    
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    QFontDatabase.applicationFontFamilies(QFontDatabase.addApplicationFont(":/fonts/Poppins-Regular.ttf"))
+    
+    # Determine if running in bundled mode
+    if getattr(sys, 'frozen', False):
+        # Running in a bundle
+        # Use the _MEIPASS attribute that PyInstaller sets
+        base_path = sys._MEIPASS
+    else:
+        # Running in a normal Python environment
+        base_path = os.path.dirname(os.path.abspath(__file__))
 
-    QFontDatabase.addApplicationFont("resources/fonts/poppins/Poppins-Bold.ttf")
-
-    with open("styles.qss", "r") as f:
-        app.setStyleSheet(f.read())
+    # Then when opening the file
+    try:
+        with open(os.path.join(base_path, "styles.qss"), "r") as f:
+            app.setStyleSheet(f.read())
+        print(f"Successfully loaded styles.qss from {os.path.join(base_path, 'styles.qss')}")
+    except Exception as e:
+        print(f"Error loading styles.qss: {e}")
+        print(f"Looking in: {os.path.join(base_path, 'styles.qss')}")
+        print(f"Files in base_path: {os.listdir(base_path)}")
 
     window = MainWindow()
     window.show()
