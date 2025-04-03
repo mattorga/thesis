@@ -72,6 +72,12 @@ class PoseConfigurationDialog(QDialog):
             self.ui.syncPerformed.setText("Yes")
         else:
             self.ui.syncPerformed.setText("No")
+
+        poseAssociation_dir = os.path.join(self.trial_path, "pose-associated")
+        if os.path.exists(poseAssociation_dir) and os.path.isdir(poseAssociation_dir) and len(os.listdir(poseAssociation_dir)) > 0:
+            self.ui.personAssociationPerformed.setText("Yes")
+        else:
+            self.ui.personAssociationPerformed.setText("No")
             
         # Check for triangulation (pose-3d folder with .trc files)
         triangulation_dir = os.path.join(self.trial_path, "pose-3d")
@@ -131,6 +137,7 @@ class PoseConfigurationDialog(QDialog):
             # Add process checkbox states
             "pose_estimation": self.ui.poseEstimationCheck.isChecked(),
             "synchronization": self.ui.syncCheck.isChecked(),
+            "person_association": self.ui.personAssociationCheck.isChecked(),
             "triangulation": self.ui.triangulationCheck.isChecked(),
             "filtering": self.ui.filteringCheck.isChecked(),
             "marker_augmentation": self.ui.markerAugCheck.isChecked()
@@ -163,6 +170,9 @@ class PoseConfigurationDialog(QDialog):
         
         if "synchronization" in config:
             self.ui.syncCheck.setChecked(config["synchronization"])
+
+        if "person_association" in config:
+            self.ui.personAssociationCheck.setChecked(config["person_association"])
             
         if "triangulation" in config:
             self.ui.triangulationCheck.setChecked(config["triangulation"])

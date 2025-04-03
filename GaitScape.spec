@@ -182,4 +182,5 @@ exe = EXE(
     upx_exclude=[],
     runtime_tmpdir=None,
     console=True,  # Set to True if you want a console window for debugging
+    icon='resources\icons\GS.ico'
 )

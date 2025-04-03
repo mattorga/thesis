@@ -1,17 +1,23 @@
 import sys
 
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
+from PyQt5.QtGui import QFontDatabase, QColor
+from PyQt5.QtWidgets import (
+    QWidget, 
+    QGraphicsDropShadowEffect,
+    QProgressDialog,
+    QApplication,
+    QMessageBox,
+    QButtonGroup
+)
+# from PyQt5.QtCore import *
+from PyQt5.QtCore import Qt, QTimer, pyqtSlot
 import glob
-from pathlib import Path
 
 from Pose2Sim import Pose2Sim
 from Pose2Sim.Utilities import bodykin_from_mot_osim
 import toml
 import configparser
 import os
-import pathlib
 import subprocess
 
 from final_widget import Ui_MainWindow
@@ -61,6 +67,8 @@ class MainWindow(QWidget):
         self.chart_manager = ChartManager(self)
         self.params_manager = ParamsManager(self)
         self.stats_manager = ComparativeStatsManager(self) 
+        QTimer.singleShot(100, self.apply_table_chart_sync_enhancements)
+
 
         self.motion_data_file = None
         self.versus_data_file = None
@@ -102,9 +110,6 @@ class MainWindow(QWidget):
         pass
     
   # --- Page Changing Functions --- #
-  # Note: Simple enough to not need signal/slot implementation
-    def on_dashboardButton_clicked(self):
-        self.ui.stackedWidget.setCurrentIndex(0)
     def on_camerasButton_clicked(self):
         self.ui.stackedWidget.setCurrentIndex(1)
         self.update_sidebar_buttons(1)
@@ -170,11 +175,11 @@ class MainWindow(QWidget):
         self.ui.comparativeHipButton.clicked.connect(lambda: self.on_joint_filter_changed('hip', 'comparative'))
         self.ui.comparativeKneeButton.clicked.connect(lambda: self.on_joint_filter_changed('knee', 'comparative'))
         self.ui.comparativeAnkleButton.clicked.connect(lambda: self.on_joint_filter_changed('ankle', 'comparative'))
+        self.ui.comparativeSlider.valueChanged.connect(self.on_comparative_slider_value_changed)
+
         self.ui.newVerseButton.clicked.connect(self.on_new_verse_clicked)
 
 
-        # Setup comparative page connections
-        self.setup_comparative_page()
 
         self.ui.stackedWidget.currentChanged.connect(self.on_tab_changed)
 
@@ -249,13 +254,25 @@ class MainWindow(QWidget):
                 self.ui.stackedWidget.setCurrentIndex(1)  # 1=Cameras page
 
     def on_select_participant(self):
+        """
+        Handle participant selection with improved handling of trial data.
+        Clears trial selection if participant changes.
+        """
+        # Store previous participant path to detect if selection changes
+        previous_participant_path = self.directory_manager.participant_path
+        
+        # Call directory manager's participant selection method
         self.directory_manager.set_participant()
         participant_name = self.directory_manager.participant_dir
         
-        if participant_name: 
+        # Check if participant was actually selected and changed
+        if participant_name and self.directory_manager.participant_path != previous_participant_path:
             self.ui.participantSelectedLabel.setText(participant_name)
             self.ui.trialSelectButton.setEnabled(True)
             self.ui.trialAddButton.setEnabled(True)
+            
+            # Reset trial-related data since participant has changed
+            self.ui.trialSelectedLabel.setText("")
             self.ui.processButton.setEnabled(False)
             self.ui.processConfiguration.setEnabled(False)
             
@@ -275,81 +292,99 @@ class MainWindow(QWidget):
             if current_page in [2, 3]:  # 2=Analytics, 3=Comparative
                 self.ui.stackedWidget.setCurrentIndex(1)  # 1=Cameras page
     def on_select_trial(self):
+        """
+        Handle trial selection with improved handling of dialog cancellation.
+        Also updates camera manager save directory.
+        """
+        # Store previous trial path to detect if selection was canceled
+        previous_trial_path = self.directory_manager.trial_path
+        
+        # Call the directory manager's trial selection method
         self.directory_manager.set_trial()
-        trial_name = self.directory_manager.trial_dir
+        
+        # Only proceed with updates if a new trial was actually selected
+        # (will be null/None if dialog was canceled)
+        if self.directory_manager.trial_path and self.directory_manager.trial_path != previous_trial_path:
+            trial_name = self.directory_manager.trial_dir
 
-        self.ui.directoryValue.setText(self.directory_manager.trial_dir)
+            # Update directory value in UI
+            self.ui.directoryValue.setText(self.directory_manager.trial_dir)
 
-        self.camera_manager.save_directory = self.directory_manager.trial_path
-        self.camera_manager.file_name = self.directory_manager.trial_name
+            # Update camera manager save directory and file name
+            self.camera_manager.save_directory = self.directory_manager.trial_path
+            self.camera_manager.file_name = self.directory_manager.trial_name
 
-        if trial_name:
-            # Update trial name in main sidebar
-            self.ui.trialSelectedLabel.setText(trial_name)
-            
-            # IMPORTANT: Update the base trial value in comparative page as well
-            # This ensures it's updated even if we don't switch tabs
-            if hasattr(self.ui, 'baseTrialValue'):
-                self.ui.baseTrialValue.setText(trial_name)
+            if trial_name:
+                # Update trial name in main sidebar
+                self.ui.trialSelectedLabel.setText(trial_name)
                 
-            self.ui.processButton.setEnabled(True)
-            
-            # Check if processed data already exists for this trial
-            self.motion_data_file = self.directory_manager.find_motion_csv_file()
-            
-            # Also store the MOT file path for use in comparative analysis
-            self.base_mot_file = self.directory_manager.find_motion_mot_file()
-            
-            # Enable or disable analytics and comparative buttons based on motion file existence
-            has_data = self.motion_data_file is not None
-            self.ui.analyticsButton.setEnabled(has_data)
-            self.ui.comparativeButton.setEnabled(has_data)
-            self.ui.processConfiguration.setEnabled(True)
-            
-            # Reset verse trial data when a new trial is selected
-            self.versus_data_file = None
-            self.versus_mot_file = None
-            if hasattr(self, 'versus_motion_data'):
-                self.versus_motion_data = None
-            
-            # Reset versus UI elements
-            if hasattr(self.ui, 'versusTrialValue'):
-                self.ui.versusTrialValue.setText("-")  # Reset to default value
-            
-            if hasattr(self, 'stats_manager'):
-                self.stats_manager.check_selected_trials_validity()
-            
-            self.update_comparative_stats_button_state()
-
-            # Refresh the gait parameters and metrics in the params dialog
-            # This ensures the metrics are updated whenever a new trial is selected
-            if hasattr(self, 'params_manager'):
-                # Force a complete refresh by resetting metrics and parameters
-                self.params_manager.current_metrics = {}
-                self.params_manager.current_parameters = {}
-                self.params_manager.refresh_dialog()
-            
-            # After resetting verse data, try to find a reference file
-            self.versus_data_file = self.directory_manager.find_reference_csv_file()
-            
-            # If data file was found, update display
-            if self.motion_data_file:
-                self.on_display_data()
+                # IMPORTANT: Update the base trial value in comparative page as well
+                # This ensures it's updated even if we don't switch tabs
+                if hasattr(self.ui, 'baseTrialValue'):
+                    self.ui.baseTrialValue.setText(trial_name)
+                    
+                self.ui.processButton.setEnabled(True)
                 
-                # If we're currently on the comparative page, we need to
-                # reload the comparative data with the new trial
-                if self.ui.stackedWidget.currentIndex() == 3:  # 3 = Comparative page
-                    self.load_comparative_data()
+                # Check if processed data already exists for this trial
+                self.motion_data_file = self.directory_manager.find_motion_csv_file()
+                
+                # Also store the MOT file path for use in comparative analysis
+                self.base_mot_file = self.directory_manager.find_motion_mot_file()
+                
+                # Enable or disable analytics and comparative buttons based on motion file existence
+                has_data = self.motion_data_file is not None
+                self.ui.analyticsButton.setEnabled(has_data)
+                self.ui.comparativeButton.setEnabled(has_data)
+                self.ui.processConfiguration.setEnabled(True)
+                
+                # Reset verse trial data when a new trial is selected
+                self.versus_data_file = None
+                self.versus_mot_file = None
+                if hasattr(self, 'versus_motion_data'):
+                    self.versus_motion_data = None
+                
+                # Reset versus UI elements
+                if hasattr(self.ui, 'versusTrialValue'):
+                    self.ui.versusTrialValue.setText("-")  # Reset to default value
+                
+                if hasattr(self, 'stats_manager'):
+                    self.stats_manager.check_selected_trials_validity()
+                
+                self.update_comparative_stats_button_state()
+
+                # Refresh the gait parameters and metrics in the params dialog
+                # This ensures the metrics are updated whenever a new trial is selected
+                if hasattr(self, 'params_manager'):
+                    # Force a complete refresh by resetting metrics and parameters
+                    self.params_manager.current_metrics = {}
+                    self.params_manager.current_parameters = {}
+                    self.params_manager.refresh_dialog()
+                
+                # After resetting verse data, try to find a reference file
+                self.versus_data_file = self.directory_manager.find_reference_csv_file()
+                
+                # Load the FBX file if it exists
+                self.load_fbx_file()
+                
+                # If data file was found, update display
+                if self.motion_data_file:
+                    self.on_display_data()
+                    
+                    # If we're currently on the comparative page, we need to
+                    # reload the comparative data with the new trial
+                    if self.ui.stackedWidget.currentIndex() == 3:  # 3 = Comparative page
+                        self.load_comparative_data()
+                else:
+                    # If we are on Analytics or Comparative page and there's no data,
+                    # automatically go back to Cameras page
+                    current_page = self.ui.stackedWidget.currentIndex()
+                    if current_page in [2, 3]:  # 2=Analytics, 3=Comparative
+                        self.ui.stackedWidget.setCurrentIndex(1)  # 1=Cameras page
             else:
-                # If we are on Analytics or Comparative page and there's no data,
-                # automatically go back to Cameras page
-                current_page = self.ui.stackedWidget.currentIndex()
-                if current_page in [2, 3]:  # 2=Analytics, 3=Comparative
-                    self.ui.stackedWidget.setCurrentIndex(1)  # 1=Cameras page
-        else:
-            # If trial selection was cleared or canceled, close parameters dialog
-            if hasattr(self, 'params_manager'):
-                self.params_manager.close_dialog_and_uncheck_button()
+                # If trial selection was cleared or canceled, close parameters dialog
+                if hasattr(self, 'params_manager'):
+                    self.params_manager.close_dialog_and_uncheck_button()
+            # If dialog was canceled, we do nothing
     def add_participant(self):
         self.directory_manager.add_participant()
     def add_trial(self):
@@ -366,6 +401,8 @@ class MainWindow(QWidget):
     def on_close_cameras(self):
         self.camera_manager.close_all_cameras()
         self.ui.camerasValue.setText(str(self.camera_manager.camera_count))
+        self.ui.resolutionValue.setText("")
+        self.ui.framerateValue.setText("")
     def on_start_recording(self):
         self.camera_manager.start_recording_all_cameras() 
     def on_stop_recording(self):
@@ -452,51 +489,17 @@ class MainWindow(QWidget):
                 
         except Exception as e:
             print(f"Error updating analytics chart: {str(e)}")
-    def on_slider_value_changed(self, value):
-        """
-        Handles when the slider value changes in the PyQt UI
+    def apply_table_chart_sync_enhancements(self):
+        """Apply enhancements for table and chart synchronization"""
+        # Connect the slider's sliderMoved signal (not just valueChanged)
+        self.ui.slider.sliderMoved.connect(self.on_slider_value_changed)
         
-        Args:
-            value (int): The current slider value
-        """
-        # Store the current row index
-        self.current_highlighted_row = value
-        
-        # Update the table highlight
-        self.table_manager.highlight_row(self.ui.jointsTable, value)
-        
-        # Update the vertical line position on the chart
-        self.chart_manager.update_vertical_line(value)
-        
-        # Update the gait stage value if data is available
-        self.update_gait_stage_value(value)
-        
-        # Sync the 3D viewer with the slider
-        if hasattr(self, 'viewer_manager') and self.viewer_manager:
-            max_value = self.ui.slider.maximum()
-            self.viewer_manager.sync_with_slider(value, max_value)
-            
-  # --- Comparative Page Functions --- #
-    def setup_comparative_page(self):
-        """Setup the comparative page with initial data and connections"""
-        # Connect joint filter buttons
-        self.ui.comparativeAllButton.clicked.connect(
-            lambda: self.on_comparative_joint_filter_changed('all'))
-        self.ui.comparativeHipButton.clicked.connect(
-            lambda: self.on_comparative_joint_filter_changed('hip'))
-        self.ui.comparativeKneeButton.clicked.connect(
-            lambda: self.on_comparative_joint_filter_changed('knee'))
-        self.ui.comparativeAnkleButton.clicked.connect(
-            lambda: self.on_comparative_joint_filter_changed('ankle'))
-        
-        # Connect file selection buttons (if they exist in the UI)
-        if hasattr(self.ui, 'selectBaseTrialButton'):
-            self.ui.selectBaseTrialButton.clicked.connect(self.select_base_trial_file)
-        if hasattr(self.ui, 'selectVersusTrialButton'):
-            self.ui.selectVersusTrialButton.clicked.connect(self.select_versus_trial_file)
-        
-        # Initialize with data if available
-        self.ui.comparativeSlider.valueChanged.connect(self.on_comparative_slider_value_changed)
+        # Also update when table selection changes
+        self.ui.jointsTable.selectionModel().selectionChanged.connect(
+            lambda selected, deselected: self.ui.slider.setValue(
+                selected.indexes()[0].row() if selected.indexes() else self.ui.slider.value()
+            ) if selected.indexes() else None
+        )
 
         self.load_comparative_data()
     def load_comparative_data(self):
@@ -594,49 +597,6 @@ class MainWindow(QWidget):
             print(f"Error loading comparative data: {str(e)}")
             import traceback
             traceback.print_exc()  # More detailed error information
-    def on_comparative_joint_filter_changed(self, joint_filter):
-        """
-        Handle joint filter button clicks on the comparative page
-        
-        Args:
-            joint_filter (str): Type of filter ("all", "hip", "knee", "ankle")
-        """
-        try:
-            print(f"Changing comparative filter to: {joint_filter}")
-            
-            # Update base trial display
-            if hasattr(self, 'base_motion_data') and self.base_motion_data:
-                self.table_manager.display_data_in_table(
-                    self.ui.baseTrialTable, 
-                    self.base_motion_data, 
-                    True,  # scrollable
-                    joint_filter
-                )
-                self.chart_manager.display_data_in_chart(
-                    self.ui.baseTrialChart, 
-                    self.base_motion_data, 
-                    False,  # not scrollable
-                    joint_filter
-                )
-                
-            # Update versus trial display
-            if hasattr(self, 'versus_motion_data') and self.versus_motion_data:
-                self.table_manager.display_data_in_table(
-                    self.ui.versusTrialTable, 
-                    self.versus_motion_data, 
-                    True,  # scrollable
-                    joint_filter
-                )
-                self.chart_manager.display_data_in_chart(
-                    self.ui.versusTrialChart, 
-                    self.versus_motion_data, 
-                    False,  # not scrollable
-                    joint_filter
-                )
-            
-            # Reapply highlighting and vertical lines after updates
-            QTimer.singleShot(5, self.reapply_comparative_table_highlighting)
-            QTimer.singleShot(5, self.reapply_comparative_chart_vertical_lines)
                 
         except Exception as e:
             print(f"Error updating comparative filter: {str(e)}")
@@ -1135,7 +1095,7 @@ class MainWindow(QWidget):
             trial_config_dict.get("project").update({"project_dir": self.directory_manager.trial_path})
 
             # Create progress dialog
-            progress_dialog = QProgressDialog("Processing trial...", "Cancel", 0, 10, self)
+            progress_dialog = QProgressDialog("Processing trial...", "Cancel", 0, 11, self)
             progress_dialog.setWindowTitle("Processing")
             progress_dialog.setWindowModality(Qt.WindowModal)
             progress_dialog.setValue(0)
@@ -1337,13 +1297,20 @@ class MainWindow(QWidget):
                 QApplication.processEvents()
                 Pose2Sim.synchronization(trial_config_dict)
             progress_dialog.setValue(2)
+
+            # --- Step 3: Person Association --- #
+            if process_config.get('person_association', True):
+                progress_dialog.setLabelText("Step 3/10: Person Association...")
+                QApplication.processEvents()
+                Pose2Sim.personAssociation(trial_config_dict)
+            progress_dialog.setValue(3)
             
-            # --- Step 3: Triangulation --- #
+            # --- Step 4: Triangulation --- #
             if process_config.get('triangulation', True):
-                progress_dialog.setLabelText("Step 3/10: Triangulation...")
+                progress_dialog.setLabelText("Step 4/10: triangulation...")
                 QApplication.processEvents()
                 Pose2Sim.triangulation(trial_config_dict)
-            progress_dialog.setValue(3)
+            progress_dialog.setValue(4)
             
             # --- Step 4: Filtering --- #
             if process_config.get('filtering', True):
@@ -1538,10 +1505,6 @@ class MainWindow(QWidget):
             print("Initializing 3D viewer...")
             # Pass self to ViewerManager to enable callbacks
             self.viewer_manager = ViewerManager(self.ui.visualizationWidget)
-            if getattr(sys, 'frozen', False):
-                if hasattr(self.viewer_manager, 'initialize_viewer'):
-                    # Use a timer to ensure the ViewerManager is fully initialized
-                    QTimer.singleShot(100, lambda: self.initialize_viewer_paths())
             QTimer.singleShot(5000, self.viewer_manager.force_hide_loading_screen)
             # Set initial states for the toggle buttons once the viewer is loaded
             QTimer.singleShot(2000, self.initialize_viewer_settings)
@@ -1552,7 +1515,47 @@ class MainWindow(QWidget):
         if hasattr(self, 'viewer_manager') and self.viewer_manager:
             # Set initial center animation state
             self.viewer_manager.set_center_animation(self.ui.centerAnimationButton.isChecked())
+    def load_fbx_file(self):
+        """
+        Loads the FBX file for the currently selected trial if it exists.
+        The FBX file is expected to be at [trial_path]/kinematics/exported_pose2sim.fbx
+        """
+        try:
+            # Check if we have a selected trial
+            if not hasattr(self, 'directory_manager') or not self.directory_manager.trial_path:
+                print("No trial selected, cannot load FBX file")
+                return
+                
+            # Construct the expected path to the FBX file
+            fbx_path = os.path.join(self.directory_manager.trial_path, "kinematics", "exported_pose2sim.fbx")
             
+            # Check if the FBX file exists
+            if not os.path.exists(fbx_path):
+                print(f"FBX file not found at {fbx_path}")
+                return
+                
+            print(f"Found FBX file at {fbx_path}")
+            
+            # Check if we have a viewer manager
+            if not hasattr(self, 'viewer_manager') or not self.viewer_manager:
+                print("Viewer manager not initialized, cannot load FBX file")
+                return
+                
+            # Set the FBX file path in the viewer
+            self.viewer_manager.set_fbx_path(fbx_path)
+            
+            # If we're on the analytics page, update the viewer
+            if self.ui.stackedWidget.currentIndex() == 2:  # 2=Analytics page
+                # Use a small delay to ensure the viewer has time to load the new FBX
+                QTimer.singleShot(500, lambda: self.viewer_manager.sync_with_slider(
+                    self.ui.slider.value(), self.ui.slider.maximum()))
+                    
+            print("FBX file loaded successfully")
+            
+        except Exception as e:
+            print(f"Error loading FBX file: {str(e)}")
+            import traceback
+            traceback.print_exc()        
     @pyqtSlot(float)
     def update_slider_from_web(self, time):
         """
@@ -1618,36 +1621,42 @@ class MainWindow(QWidget):
         if hasattr(self, 'viewer_manager') and self.viewer_manager:
             max_value = self.ui.slider.maximum()
             self.viewer_manager.sync_with_slider(value, max_value)
-    def setup_player_controls(self):
-        """Set up connections for play/pause buttons"""
-        # Connect play and pause buttons
-        self.ui.playButton.clicked.connect(self.on_play_button_clicked)
-
-        # Connect skip/back buttons
-        self.ui.skipButton.clicked.connect(self.on_skip_button_clicked)
-        self.ui.backButton.clicked.connect(self.on_back_button_clicked)
-        
-        # Connect speed buttons
-        self.ui.fastForwardButton.clicked.connect(self.on_speed_up_button_clicked)
-        self.ui.rewindButton.clicked.connect(self.on_speed_down_button_clicked)
-        
-        # Connect center animation and axis toggle buttons
-        self.ui.centerAnimationButton.clicked.connect(self.on_center_animation_toggled)        
-        # Initialize playback state
-        self.is_playing = False
-        
-        # Display initial speed value
-        self.update_speed_label(1.0)  # Default 1x speed
     def on_play_button_clicked(self):
-        """Handle play button click"""
+        """Handle play button click with enhanced synchronization"""
         if hasattr(self, 'viewer_manager') and self.viewer_manager:
+            # Before toggling, get the current slider position to ensure sync
+            current_slider_value = self.ui.slider.value()
+            
             # Toggle play/pause in the viewer.js
             self.viewer_manager.play_pause()
             
+            # Set a flag to track that we just toggled play state
+            self.just_toggled_play = True
+            
             # Query the current state to update UI accordingly
             self.viewer_manager.get_animation_state(self.update_ui_from_animation_state)
+            
+            # When unpausing, explicitly sync the 3D viewer to the current slider position
+            if self.ui.playButton.isChecked():
+                max_value = self.ui.slider.maximum()
+                self.viewer_manager.sync_with_slider(current_slider_value, max_value)
+                
+                # Setup polling timer with a faster rate for better sync
+                if not hasattr(self, 'animation_poll_timer') or not self.animation_poll_timer.isActive():
+                    self.animation_poll_timer = QTimer()
+                    self.animation_poll_timer.timeout.connect(self.poll_animation_state)
+                    self.animation_poll_timer.start(16)  # ~60fps updates for smoother sync
+            else:
+                # Stop polling timer if paused to prevent unnecessary updates
+                if hasattr(self, 'animation_poll_timer') and self.animation_poll_timer.isActive():
+                    self.animation_poll_timer.stop()
     def update_ui_from_animation_state(self, state):
-        """Update UI based on the animation state received from JavaScript"""
+        """
+        Update UI based on the animation state received from JavaScript
+        
+        Args:
+            state (dict): Dictionary containing animation state from JavaScript
+        """
         if state:
             # Update playing state
             self.is_playing = state.get('isPlaying', False)
@@ -1655,31 +1664,64 @@ class MainWindow(QWidget):
             # Update speed label if needed
             speed = state.get('speed', 1.0)
             self.update_speed_label(speed)
-    def update_playback_frame(self):
-        """Update the current frame during playback"""
-        if not self.is_playing:
-            return
             
-        current_value = self.ui.slider.value()
-        max_value = self.ui.slider.maximum()
-        
-        # Move to next frame, loop back to beginning if at the end
-        next_value = current_value + 1
-        if next_value > max_value:
-            next_value = 0
-        
-        # Update the slider value, which will trigger all necessary updates
-        self.ui.slider.setValue(next_value)
+            # If animation is playing, get current time and update UI accordingly
+            if self.is_playing and 'currentTime' in state and 'duration' in state:
+                current_time = state.get('currentTime', 0)
+                
+                # Skip the first update after toggling play state to avoid jumps
+                if hasattr(self, 'just_toggled_play') and self.just_toggled_play:
+                    self.just_toggled_play = False
+                    return
+                    
+                # Convert the current animation time to a slider index
+                if hasattr(self, 'motion_data') and self.motion_data and 'time' in self.motion_data:
+                    time_data = self.motion_data['time']
+                    
+                    # Find the closest time index
+                    closest_idx = 0
+                    min_diff = float('inf')
+                    
+                    for i, t in enumerate(time_data):
+                        diff = abs(t - current_time)
+                        if diff < min_diff:
+                            min_diff = diff
+                            closest_idx = i
+                    
+                    # Only update if the index has changed to avoid redundant updates
+                    if closest_idx != self.current_highlighted_row:
+                        # Temporarily block signals to avoid feedback loop
+                        self.ui.slider.blockSignals(True)
+                        self.ui.slider.setValue(closest_idx)
+                        self.ui.slider.blockSignals(False)
+                        
+                        # Update the highlighted row and vertical line
+                        self.current_highlighted_row = closest_idx
+                        self.table_manager.highlight_row(self.ui.jointsTable, closest_idx)
+                        self.chart_manager.update_vertical_line(closest_idx)
+                        self.update_gait_stage_value(closest_idx)
     def on_back_button_clicked(self):
-        """Move to the previous frame when the back button is clicked"""
+        """Move forward by 5 frames when the skip button is clicked"""
         if hasattr(self, 'viewer_manager') and self.viewer_manager:
-            # Trigger the rewind button in viewer.js
-            self.viewer_manager.rewind()
+            # Get current slider value
+            current_value = self.ui.slider.value()
+            
+            # Calculate new position (5 frames ahead)
+            new_value = min(current_value - 5, self.ui.slider.maximum())
+            
+            # Set the slider to the new position (this will trigger value changed events)
+            self.ui.slider.setValue(new_value)
     def on_skip_button_clicked(self):
-        """Move to the next frame when the skip button is clicked"""
+        """Move forward by 5 frames when the skip button is clicked"""
         if hasattr(self, 'viewer_manager') and self.viewer_manager:
-            # Trigger the forward button in viewer.js
-            self.viewer_manager.forward()
+            # Get current slider value
+            current_value = self.ui.slider.value()
+            
+            # Calculate new position (5 frames ahead)
+            new_value = min(current_value + 5, self.ui.slider.maximum())
+            
+            # Set the slider to the new position (this will trigger value changed events)
+            self.ui.slider.setValue(new_value)
     def on_speed_up_button_clicked(self):
         """Increase the playback speed when the speed up button is clicked"""
         # Define speed increments - common multipliers for playback
@@ -1764,18 +1806,31 @@ class MainWindow(QWidget):
         # Update the speedLabel text
         self.ui.speedLabel.setText(speed_text)
     def setup_player_controls(self):
-        """Set up connections for play/pause buttons"""
+        """Set up connections for play/pause buttons with enhanced synchronization"""
         # Connect play and pause buttons
         self.ui.playButton.clicked.connect(self.on_play_button_clicked)
+
+        # Connect skip/back buttons
+        self.ui.skipButton.clicked.connect(self.on_skip_button_clicked)
+        self.ui.backButton.clicked.connect(self.on_back_button_clicked)
+        
+        # Connect speed buttons
+        self.ui.fastForwardButton.clicked.connect(self.on_speed_up_button_clicked)
+        self.ui.rewindButton.clicked.connect(self.on_speed_down_button_clicked)
+        
+        # Connect center animation and axis toggle buttons
+        self.ui.centerAnimationButton.clicked.connect(self.on_center_animation_toggled)
         
         # Initialize playback state
         self.is_playing = False
-        self.playback_timer = QTimer()
-        self.playback_timer.timeout.connect(self.update_playback_frame)
-        self.playback_speed = 30  # Default to 30 fps
         
-        # Initialize the speed label with the default speed (1x)
-        self.update_speed_label(1.0)
+        # Create animation polling timer
+        self.animation_poll_timer = QTimer()
+        self.animation_poll_timer.timeout.connect(self.poll_animation_state)
+        
+        # Display initial speed value
+        self.update_speed_label(1.0)  # Default 1x speed
+    
     def closeEvent(self, event):
         """Handle application closing"""
         self.process_manager.cleanup()
@@ -1798,39 +1853,14 @@ class MainWindow(QWidget):
         if hasattr(self, 'stats_manager'):
             self.stats_manager.cleanup()
         
+        # Clean up animation poll timer if it exists
+        if hasattr(self, 'animation_poll_timer') and self.animation_poll_timer.isActive():
+            self.animation_poll_timer.stop()
         super().closeEvent(event)
-    def resource_path(relative_path):
-        """Get the absolute path to a resource, works for development and PyInstaller"""
-        if getattr(sys, 'frozen', False):
-            # Running as compiled executable
-            base_path = sys._MEIPASS
-        else:
-            # Running as script
-            base_path = os.path.dirname(os.path.abspath(__file__))
-        
-        return os.path.join(base_path, relative_path)
-    
-    def initialize_viewer_paths(self):
-        """Initialize the correct paths for the viewer when running as an executable"""
-        try:
-            # Get the path to the HTML file in the packaged application
-            html_path = resource_path(os.path.join("web", "viewer.html"))
-            if not os.path.exists(html_path):
-                html_path = resource_path("viewer.html")
-                
-            if os.path.exists(html_path):
-                print(f"Using HTML path: {html_path}")
-                # Convert to QUrl
-                if os.name == 'nt':  # Windows
-                    viewer_url = QUrl.fromLocalFile(html_path)
-                else:  # macOS, Linux
-                    viewer_url = QUrl("file://" + html_path)
-                
-                # Load the URL in the browser
-                if hasattr(self.viewer_manager, 'browser'):
-                    self.viewer_manager.browser.load(viewer_url)
-        except Exception as e:
-            print(f"Error initializing viewer paths: {str(e)}")
+    def poll_animation_state(self):
+        """Poll the current animation state to keep UI in sync"""
+        if hasattr(self, 'viewer_manager') and self.viewer_manager:
+            self.viewer_manager.get_animation_state(self.update_ui_from_animation_state)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

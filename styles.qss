@@ -142,6 +142,15 @@ QPushButton#stopRecordingButton
     border-radius: 6px;
 }
 
+QPushButton#startRecordingButton:disabled,
+QPushButton#closeCamerasButton:disabled,
+QPushButton#stopRecordingButton:disabled
+{
+    background: rgb(37, 31, 28, 0.7);
+}
+
+
+
 QPushButton#detectCamerasButton:hover,
 QPushButton#startRecordingButton:hover,
 QPushButton#closeCamerasButton:hover,

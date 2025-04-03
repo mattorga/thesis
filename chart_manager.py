@@ -1,5 +1,5 @@
-from PyQt5.QtChart import QChart, QChartView, QLineSeries, QValueAxis, QScatterSeries, QLegend
-from PyQt5.QtCore import Qt, QPointF, QMargins
+from PyQt5.QtChart import QChart, QChartView, QLineSeries, QValueAxis, QLegend
+from PyQt5.QtCore import Qt, QMargins
 from PyQt5.QtGui import QPen, QColor, QPainter, QFont, QBrush
 
 from PyQt5 import QtWidgets
