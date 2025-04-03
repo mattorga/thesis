@@ -34,14 +34,6 @@
      <height>20</height>
     </rect>
    </property>
-   <property name="font">
-    <font>
-     <weight>50</weight>
-     <bold>false</bold>
-     <underline>false</underline>
-     <strikeout>false</strikeout>
-    </font>
-   </property>
    <property name="text">
     <string>Spatio-temporal Parameters</string>
    </property>
@@ -1381,10 +1373,61 @@
     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
    </property>
   </widget>
+  <zorder>GS_termLSw</zorder>
+  <zorder>midLSWLabel</zorder>
+  <zorder>initRSWLabel</zorder>
+  <zorder>actual_initRSw</zorder>
+  <zorder>midRSWLabel</zorder>
+  <zorder>GS_midRSw</zorder>
+  <zorder>GS_initLSw</zorder>
+  <zorder>relErr_midLSw</zorder>
+  <zorder>absErr_initRSw</zorder>
+  <zorder>relErr_DSt1</zorder>
+  <zorder>absErr_DSt2</zorder>
+  <zorder>relErr_DSt2</zorder>
+  <zorder>actual_midLSw</zorder>
+  <zorder>GS_initRSw</zorder>
+  <zorder>actual_midRSw</zorder>
+  <zorder>absErr_termRSw</zorder>
+  <zorder>relErr_termRSw</zorder>
+  <zorder>dst2Label</zorder>
+  <zorder>GS_DSt2</zorder>
+  <zorder>relErr_initLSw</zorder>
+  <zorder>actual_DSt2</zorder>
+  <zorder>GS_DSt1</zorder>
+  <zorder>relErr_midRSw</zorder>
+  <zorder>absErr_midRSw</zorder>
+  <zorder>actual_termLSw</zorder>
+  <zorder>GS_termRSw</zorder>
+  <zorder>termRSWLabel</zorder>
+  <zorder>actual_termRSw</zorder>
+  <zorder>GS_midLSw</zorder>
+  <zorder>phaseLabel</zorder>
+  <zorder>absErr_initLSw</zorder>
+  <zorder>absErr_termLSw</zorder>
+  <zorder>absErrLabel</zorder>
+  <zorder>termLSWLabel</zorder>
+  <zorder>relErr_termLSw</zorder>
+  <zorder>gsLabel</zorder>
+  <zorder>initLSWLabel</zorder>
+  <zorder>relErr_initRSw</zorder>
+  <zorder>relErrLabel</zorder>
+  <zorder>actual_initLSw</zorder>
+  <zorder>absErr_DSt1</zorder>
+  <zorder>actualLabel</zorder>
+  <zorder>actual_DSt1</zorder>
+  <zorder>absErr_midLSw</zorder>
+  <zorder>dst1Label</zorder>
+  <zorder>strideTimeValue</zorder>
+  <zorder>strideTimeLabel</zorder>
+  <zorder>gaitSpeedValue</zorder>
+  <zorder>gaitSpeedLabel</zorder>
+  <zorder>strideWidthValue</zorder>
+  <zorder>strideWidthLabel</zorder>
+  <zorder>strideLengthLabel</zorder>
+  <zorder>strideLengthValue</zorder>
   <zorder>spatiotemporalLabel</zorder>
   <zorder>label</zorder>
-  <zorder>layoutWidget</zorder>
-  <zorder>layoutWidget</zorder>
   <zorder>line</zorder>
   <zorder>line_2</zorder>
   <zorder>line_3</zorder>

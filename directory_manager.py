@@ -240,34 +240,62 @@ class DirectoryManager:
             QMessageBox.warning(self.main_window, "Invalid Selection", 
                             "Please select a session folder directly under GaitScape folder.")  
   def set_participant(self):
+    """
+    Open a file dialog for selecting a participant folder.
+    Clear trial data and camera save directory if a new participant is selected.
+    """
     dialog = QFileDialog(self.main_window)
     dialog.setFileMode(QFileDialog.Directory)
     dialog.setOption(QFileDialog.ShowDirsOnly, True)
     dialog.setDirectory(self._session_path)
     
     if dialog.exec_():
-        selected_path =  dialog.selectedFiles()[0]
+        selected_path = dialog.selectedFiles()[0]
         if os.path.dirname(selected_path) == self._session_path:
-          self.participant_path = selected_path
+            # Update participant path using setter
+            self.participant_path = selected_path
+            
+            # Clear trial path and camera save directory
+            self.trial_path = None
+            
+            # Explicitly clear camera save directory when participant changes
+            if hasattr(self.main_window, 'camera_manager'):
+                self.main_window.camera_manager.save_directory = None
+                self.main_window.camera_manager.file_name = None
+                
+            # Clear the directory value label in the UI
+            if hasattr(self.main_window.ui, 'directoryValue'):
+                self.main_window.ui.directoryValue.setText("")
         else:
             QMessageBox.warning(self.main_window, "Invalid Selection", 
                               f"Please select a participant folder directly under {os.path.basename(self._session_path)} folder.")
   def set_trial(self):
+    """
+    Open a file dialog for selecting a trial folder. 
+    Update trial path only if user makes a valid selection.
+    """
     dialog = QFileDialog(self.main_window)
     dialog.setFileMode(QFileDialog.Directory)
     dialog.setOption(QFileDialog.ShowDirsOnly, True)
     dialog.setDirectory(self._participant_path)
 
     if dialog.exec_():
-      selected_path = dialog.selectedFiles()[0]
-      if os.path.dirname(selected_path) == self._participant_path:
-        self.trial_path = selected_path
-        
-        self.trial_name = self.trial_dir.split("_",1)[1]
+        selected_path = dialog.selectedFiles()[0]
+        if os.path.dirname(selected_path) == self._participant_path:
+            # Valid selection - update trial path using setter (triggers related updates)
+            self.trial_path = selected_path
+            
+            # Update trial name 
+            self.trial_name = self.trial_dir.split("_",1)[1]
 
-      else:
-         QMessageBox.warning(self.main_window, "Invalid Selection", 
-                              f"Please select a trial folder directly under {os.path.basename(self._participant_path)} folder.")
+            # Update camera manager save directory directly
+            if hasattr(self.main_window, 'camera_manager'):
+                self.main_window.camera_manager.save_directory = self.trial_path
+                self.main_window.camera_manager.file_name = self.trial_name
+        else:
+            QMessageBox.warning(self.main_window, "Invalid Selection", 
+                            f"Please select a trial folder directly under {os.path.basename(self._participant_path)} folder.")
+    # If dialog was canceled, we simply return without making any changes
 
   # --- OpenPose Utility Methods --- #
   def get_openpose_config_dict(self):

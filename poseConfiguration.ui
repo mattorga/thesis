@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>491</width>
-    <height>483</height>
+    <height>512</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <property name="geometry">
     <rect>
      <x>120</x>
-     <y>430</y>
+     <y>460</y>
      <width>341</width>
      <height>32</height>
     </rect>
@@ -32,9 +32,9 @@
   <widget class="QGroupBox" name="poseEstimationGroup">
    <property name="geometry">
     <rect>
-     <x>40</x>
+     <x>70</x>
      <y>20</y>
-     <width>411</width>
+     <width>331</width>
      <height>201</height>
     </rect>
    </property>
@@ -78,7 +78,7 @@
      <rect>
       <x>10</x>
       <y>80</y>
-      <width>381</width>
+      <width>301</width>
       <height>101</height>
      </rect>
     </property>
@@ -104,7 +104,7 @@
        <rect>
         <x>150</x>
         <y>10</y>
-        <width>211</width>
+        <width>141</width>
         <height>31</height>
        </rect>
       </property>
@@ -133,7 +133,7 @@
        <rect>
         <x>150</x>
         <y>60</y>
-        <width>211</width>
+        <width>141</width>
         <height>31</height>
        </rect>
       </property>
@@ -165,8 +165,8 @@
   <widget class="QCheckBox" name="poseEstimationCheck">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>40</y>
+     <x>40</x>
+     <y>30</y>
      <width>21</width>
      <height>20</height>
     </rect>
@@ -179,6 +179,9 @@
    </property>
   </widget>
   <widget class="QCheckBox" name="syncCheck">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>40</x>
@@ -198,7 +201,7 @@
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>330</y>
+     <y>360</y>
      <width>131</width>
      <height>20</height>
     </rect>
@@ -214,7 +217,7 @@
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>300</y>
+     <y>330</y>
      <width>131</width>
      <height>20</height>
     </rect>
@@ -230,7 +233,7 @@
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>360</y>
+     <y>390</y>
      <width>161</width>
      <height>20</height>
     </rect>
@@ -260,7 +263,7 @@
     <rect>
      <x>270</x>
      <y>270</y>
-     <width>51</width>
+     <width>25</width>
      <height>16</height>
     </rect>
    </property>
@@ -272,8 +275,8 @@
    <property name="geometry">
     <rect>
      <x>270</x>
-     <y>300</y>
-     <width>61</width>
+     <y>330</y>
+     <width>25</width>
      <height>16</height>
     </rect>
    </property>
@@ -285,8 +288,8 @@
    <property name="geometry">
     <rect>
      <x>270</x>
-     <y>330</y>
-     <width>81</width>
+     <y>360</y>
+     <width>25</width>
      <height>16</height>
     </rect>
    </property>
@@ -298,8 +301,8 @@
    <property name="geometry">
     <rect>
      <x>270</x>
-     <y>360</y>
-     <width>71</width>
+     <y>390</y>
+     <width>25</width>
      <height>16</height>
     </rect>
    </property>
@@ -324,7 +327,7 @@
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>390</y>
+     <y>420</y>
      <width>161</width>
      <height>20</height>
     </rect>
@@ -340,8 +343,37 @@
    <property name="geometry">
     <rect>
      <x>270</x>
-     <y>390</y>
-     <width>71</width>
+     <y>420</y>
+     <width>25</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>No</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="personAssociationCheck">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>300</y>
+     <width>131</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Person Association</string>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="personAssociationPerformed">
+   <property name="geometry">
+    <rect>
+     <x>270</x>
+     <y>300</y>
+     <width>25</width>
      <height>16</height>
     </rect>
    </property>

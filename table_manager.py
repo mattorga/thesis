@@ -1,4 +1,4 @@
-from PyQt5 import QtWidgets, QtCore, Qt, QtGui
+from PyQt5 import QtWidgets, QtCore, QtGui
 
 class TableManager:
     def __init__(self, main_window):

@@ -1,4 +1,3 @@
-import sys
 import threading
 import http.server
 import socketserver
