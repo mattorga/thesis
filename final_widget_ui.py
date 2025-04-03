@@ -421,7 +421,7 @@ class Ui_MainWindow(object):
         self.slider.setObjectName("slider")
         self.visualizationWidget = QtWidgets.QWidget(self.simulationPage)
         self.visualizationWidget.setEnabled(True)
-        self.visualizationWidget.setGeometry(QtCore.QRect(10, 50, 501, 551))
+        self.visualizationWidget.setGeometry(QtCore.QRect(-90, -30, 501, 551))
         self.visualizationWidget.setObjectName("visualizationWidget")
         self.leftOnlyButton = QtWidgets.QRadioButton(self.simulationPage)
         self.leftOnlyButton.setEnabled(True)
@@ -677,7 +677,7 @@ class Ui_MainWindow(object):
         self.sidebar_full.raise_()
 
         self.retranslateUi(MainWindow)
-        self.stackedWidget.setCurrentIndex(1)
+        self.stackedWidget.setCurrentIndex(2)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
