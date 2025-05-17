@@ -5,7 +5,7 @@
 ## Project Description
 
 ## Installation
-1. Install [Pose2Sim](https://github.com/perfanalytics/pose2sim)
+
 ## How to use the application
 
 ## Credits
