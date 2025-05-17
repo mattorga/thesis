@@ -1,11 +1,11 @@
+# WIP
+
 # Markerless Gait Analysis using 3D Human Pose Estimation for Physical Assessment
 
 ## Project Description
 
 ## Installation
 1. Install [Pose2Sim](https://github.com/perfanalytics/pose2sim)
-  a. 
-3. 
 ## How to use the application
 
 ## Credits
